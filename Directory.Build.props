@@ -1,0 +1,17 @@
+<Project>
+    <PropertyGroup>
+        <VersionPrefix>0.0.1</VersionPrefix>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <Authors>Caner Patir</Authors>
+        <Company>Algorist</Company>
+        <Product>Algorist</Product>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks</RepositoryUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/canerpatir/OpenStore.BuildingBlocks/master/icon.png</PackageIconUrl>
+        <Copyright>OpenStore Community</Copyright>
+        <PackageLicenseUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks/blob/master/LICENCE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks</PackageProjectUrl>
+        <LangVersion>latest</LangVersion>
+<!--        <Nullable>enable</Nullable>-->
+    </PropertyGroup>
+</Project>

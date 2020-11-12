@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OpenStore.Infrastructure.Data.NoSql.Couchbase\OpenStore.Infrastructure.Data.NoSql.Couchbase.csproj" />
+      <ProjectReference Include="..\OpenStore.Infrastructure.Data.NoSql.MongoDb\OpenStore.Infrastructure.Data.NoSql.MongoDb.csproj" />
+      <ProjectReference Include="..\OpenStore.Infrastructure.Data.NoSql.RavenDb\OpenStore.Infrastructure.Data.NoSql.RavenDb.csproj" />
+    </ItemGroup>
+
+</Project>

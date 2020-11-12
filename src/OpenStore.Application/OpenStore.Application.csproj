@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Description>Contains application level abstractions and application wide special data structers</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OpenStore.Domain\OpenStore.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="9.0.0" />
+      <PackageReference Include="System.Text.Json" Version="5.0.0" />
+    </ItemGroup>
+
+</Project>
