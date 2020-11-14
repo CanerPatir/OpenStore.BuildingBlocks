@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,14 @@ namespace OpenStore.Infrastructure.CommandBus
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var logger = _loggerFactory.CreateLogger(typeof(TRequest));
+            var requestType = typeof(TRequest);
+            var logger = _loggerFactory.CreateLogger(requestType);
+            var scopeVariables = new Dictionary<string, object>
+            {
+                {OpenStoreConstants.CorrelationIdKey, Guid.NewGuid()},
+                {"IRequest", requestType.Name}
+            };
+            var scope = logger.BeginScope(scopeVariables);
             logger.LogInformation("Handling");
             try
             {
@@ -30,6 +38,10 @@ namespace OpenStore.Infrastructure.CommandBus
             {
                 logger.LogError(e.Demystify(), "Handling error");
                 throw;
+            }
+            finally
+            {
+                scope.Dispose();
             }
         }
     }

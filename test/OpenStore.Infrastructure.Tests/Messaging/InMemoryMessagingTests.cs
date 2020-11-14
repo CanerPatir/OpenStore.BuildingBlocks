@@ -71,8 +71,6 @@ namespace OpenStore.Infrastructure.Tests.Messaging
                 
                 Interlocked.Increment(ref _testInstance.assertionCounter);
                 throw new Exception();
-                
-                return Task.CompletedTask;
             }
         }
         
