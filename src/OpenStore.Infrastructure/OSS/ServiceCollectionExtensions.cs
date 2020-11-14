@@ -24,7 +24,8 @@ namespace OpenStore.Infrastructure.OSS
                 OpenStoreOssProvider.FileSystem => services.AddFileSystemOss(config.FileSystem),
                 OpenStoreOssProvider.AwsS3 => services.AddS3Oss(config.AwsS3),
                 OpenStoreOssProvider.Azure => services.AddAzureOss(config.Azure),
-                OpenStoreOssProvider.GoogleCloudStorage => services.AddGoogleCloudOss(config.GoogleCloudStorage),
+                // OpenStoreOssProvider.GoogleCloudStorage => services.AddGoogleCloudOss(config.GoogleCloudStorage),
+                OpenStoreOssProvider.GoogleCloudStorage => throw new NotSupportedException("google cloud not supported"),
                 _ => throw new ArgumentException("config.Provider invalid")
             };
         }
@@ -49,15 +50,16 @@ namespace OpenStore.Infrastructure.OSS
             return services;
         }
 
-        private static IServiceCollection AddGoogleCloudOss(this IServiceCollection services, GoogleCloudStorageOssConfig config)
-        {
-            var storage = StorageFactory
-                .Blobs
-                .GoogleCloudStorageFromJson(config.BucketName, config.CredentialsJsonString, config.IsBase64EncodedString);
-
-            AddDefaults(services, storage);
-            return services;
-        }
+        // todo: support again
+        // private static IServiceCollection AddGoogleCloudOss(this IServiceCollection services, GoogleCloudStorageOssConfig config)
+        // {
+        //     var storage = StorageFactory
+        //         .Blobs
+        //         .GoogleCloudStorageFromJson(config.BucketName, config.CredentialsJsonString, config.IsBase64EncodedString);
+        //
+        //     AddDefaults(services, storage);
+        //     return services;
+        // }
 
         private static IServiceCollection AddFileSystemOss(this IServiceCollection services, FileSystemOssConfig config)
         {

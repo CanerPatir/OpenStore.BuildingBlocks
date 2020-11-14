@@ -12,7 +12,7 @@ namespace OpenStore.Infrastructure.OSS
         public FileSystemOssConfig FileSystem { get; set; } = new FileSystemOssConfig();
         public AwsS3OssConfig AwsS3 { get; set; } = new AwsS3OssConfig();
         public AzureOssConfig Azure { get; set; } = new AzureOssConfig();
-        public GoogleCloudStorageOssConfig GoogleCloudStorage { get; set; } = new GoogleCloudStorageOssConfig();
+        // public GoogleCloudStorageOssConfig GoogleCloudStorage { get; set; } = new GoogleCloudStorageOssConfig();
     }
 
     public enum OpenStoreOssProvider
@@ -47,10 +47,10 @@ namespace OpenStore.Infrastructure.OSS
         public string AzureBlobConnectionString { get; set; }
     }
 
-    public class GoogleCloudStorageOssConfig
-    {
-        public string BucketName { get; set; }
-        public string CredentialsJsonString { get; set; }
-        public bool IsBase64EncodedString { get; set; }
-    }
+    // public class GoogleCloudStorageOssConfig
+    // {
+    //     public string BucketName { get; set; }
+    //     public string CredentialsJsonString { get; set; }
+    //     public bool IsBase64EncodedString { get; set; }
+    // }
 }
