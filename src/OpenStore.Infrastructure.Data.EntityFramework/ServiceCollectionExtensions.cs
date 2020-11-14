@@ -6,9 +6,17 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Infrastructure.Data.EntityFramework.Crud;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace OpenStore.Infrastructure.Data.EntityFramework
 {
+    /// <summary>
+    /// config json example:
+    ///   "ActiveConnection": "SqLite",
+    ///   "ConnectionStrings": {
+    ///       "SqLite": "Data Source=app.db"
+    ///   },
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         public static EntityFrameworkDataSource GetActiveDataSource(this IConfiguration configuration)
