@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenStore.Application;
@@ -31,17 +32,21 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
             return configuration.GetConnectionString(dataSource.ToString());
         }
 
-        public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, IConfiguration configuration, Action<DbContextOptionsBuilder> optionsBuilder = null)
+        public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, 
+            IConfiguration configuration, 
+            string migrationAssembly = null,
+            Action<DbContextOptionsBuilder> optionsBuilder = null)
             where TDbContext : DbContext
             where TDbContextImplementation : TDbContext
         {
             var dataSource = configuration.GetActiveDataSource();
             var connStr = configuration.GetActiveConnectionString();
 
-            return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(connStr, dataSource, optionsBuilder);
+            return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(connStr, dataSource, migrationAssembly, optionsBuilder);
         }
         
         public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, string connStr, EntityFrameworkDataSource dataSource,
+            string migrationAssembly = null,
             Action<DbContextOptionsBuilder> optionsBuilder = null)
             where TDbContext : DbContext
             where TDbContextImplementation : TDbContext
@@ -51,16 +56,40 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
                 switch (dataSource)
                 {
                     case EntityFrameworkDataSource.SqLite:
-                        options.UseSqlite(connStr);
+                        options.UseSqlite(connStr, dbOpts =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                            {
+                                dbOpts.MigrationsAssembly(migrationAssembly);
+                            }
+                        });
                         break;
                     case EntityFrameworkDataSource.PostgreSql:
-                        options.UseNpgsql(connStr);
+                        options.UseNpgsql(connStr, dbOpts =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                            {
+                                dbOpts.MigrationsAssembly(migrationAssembly);
+                            }
+                        });
                         break;
                     case EntityFrameworkDataSource.MySql:
-                        options.UseMySql(connStr, ServerVersion.AutoDetect(connStr));
+                        options.UseMySql(connStr, ServerVersion.AutoDetect(connStr), dbOpts =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                            {
+                                dbOpts.MigrationsAssembly(migrationAssembly);
+                            }
+                        });
                         break;
                     case EntityFrameworkDataSource.MsSql:
-                        options.UseSqlServer(connStr);
+                        options.UseSqlServer(connStr, dbOpts =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                            {
+                                dbOpts.MigrationsAssembly(migrationAssembly);
+                            }
+                        });
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
