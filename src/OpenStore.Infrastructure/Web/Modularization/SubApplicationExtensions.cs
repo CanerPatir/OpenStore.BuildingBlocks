@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -31,7 +32,13 @@ namespace OpenStore.Infrastructure.Web.Modularization
                 configuration,
                 env
             });
-
+            
+            var prop = subAppStartup.GetType().GetProperty(nameof(ModuleStartup.RoutePrefix), BindingFlags.Public | BindingFlags.Instance);
+            if(null != prop && prop.CanWrite)
+            {
+                prop.SetValue(subAppStartup, path, null);
+            }
+            
             if (subAppStartup == null) throw new Exception($"Module startup could not be activated. Startup: {typeof(TStartup).FullName}");
             return app.Isolate(
                 builder => builder.Map(path, subApp => { subAppStartup.Start(subApp, app.ApplicationServices.GetService<IHostApplicationLifetime>().ApplicationStopping).ConfigureAwait(false).GetAwaiter().GetResult(); }), services =>

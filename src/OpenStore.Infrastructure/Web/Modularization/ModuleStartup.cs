@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 // ReSharper disable MemberCanBeProtected.Global
@@ -18,8 +19,15 @@ namespace OpenStore.Infrastructure.Web.Modularization
         protected IConfiguration Configuration { get; }
         protected IWebHostEnvironment Environment { get; }
         protected Assembly Assembly => GetType().Assembly;
+        /// <summary>
+        /// Returns true if underlying module is not a sub application
+        /// </summary>
         protected bool IsSeparatedService => Assembly.GetEntryAssembly() == Assembly;
         protected virtual IEnumerable<string> ModuleSettingFileNames => Enumerable.Empty<string>();
+        /// <summary>
+        /// Returns route prefix of sub application. Returns null if underlying module is not a sub application
+        /// </summary>
+        public PathString RoutePrefix { get; internal set; }
 
         protected ModuleStartup(IConfiguration configuration, IWebHostEnvironment environment)
         {
