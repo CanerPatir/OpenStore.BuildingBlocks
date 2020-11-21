@@ -12,12 +12,20 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
 {
     public class ApplicationErrorMiddleware
     {
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next, PathString errorHandlingPath)
+        private readonly RequestDelegate _next;
+        private readonly PathString _errorHandlingPath;
+
+        public ApplicationErrorMiddleware(RequestDelegate next, PathString errorHandlingPath)
+        {
+            _next = next;
+            _errorHandlingPath = errorHandlingPath;
+        }
+        public async Task InvokeAsync(HttpContext context)
         {
             Exception ex = null;
             try
             {
-                await next(context);
+                await _next(context);
             }
             catch (Exception e)
             {
@@ -31,7 +39,7 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
 
             if (!context.IsApiController())
             {
-                context.Response.Redirect(errorHandlingPath);
+                context.Response.Redirect(_errorHandlingPath);
                 return;
             }
 
