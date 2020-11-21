@@ -35,13 +35,13 @@ namespace OpenStore.Infrastructure.Tasks.InMemory.Queued
             }
         }
 
-        private Task ExecuteInternal(Func<IServiceProvider, CancellationToken, Task> workItem, CancellationToken cancellation)
+        private async Task ExecuteInternal(Func<IServiceProvider, CancellationToken, Task> workItem, CancellationToken cancellation)
         {
             try
             {
                 _logger.LogInformation($"Starting to proceed queued job: {nameof(workItem)}.");
                 
-                TaskHelper.RunBgLong(async () =>
+                await TaskHelper.RunBgLong(async () =>
                 {
                     using var scope = _serviceScopeFactory.CreateScope();
                     await workItem(scope.ServiceProvider, cancellation);
@@ -52,8 +52,6 @@ namespace OpenStore.Infrastructure.Tasks.InMemory.Queued
             {
                 _logger.LogError(ex.Demystify(), $"Error occurred executing queued job: {nameof(workItem)}.");
             }
-            
-            return Task.CompletedTask;
         }
     }
 }

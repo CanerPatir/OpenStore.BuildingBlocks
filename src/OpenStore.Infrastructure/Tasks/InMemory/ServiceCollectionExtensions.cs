@@ -12,9 +12,9 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
     {
         public static IServiceCollection AddInMemoryBackgroundTasks(this IServiceCollection services)
         {
-            var channel = Channel.CreateBounded<Func<IServiceProvider, CancellationToken, Task>>(new BoundedChannelOptions(100)
+            var channel = Channel.CreateBounded<Func<IServiceProvider, CancellationToken, Task>>(new BoundedChannelOptions(1)
             {
-                SingleReader = false
+                SingleReader = true
             });
             return services
                     .AddSingleton<ITaskManager, InMemoryTaskManager>(sp => new InMemoryTaskManager(channel.Writer))

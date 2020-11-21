@@ -32,7 +32,7 @@ namespace OpenStore.Infrastructure.Tests.Tasks
                 Interlocked.Increment(ref counter);
             });
             
-            taskManager.QueueTask((sp, token) =>
+            taskManager.QueueTask( (sp, token) =>
             {
                 forAssertion.Enqueue("Second");
                 Interlocked.Increment(ref counter);

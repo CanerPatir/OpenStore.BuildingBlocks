@@ -22,10 +22,11 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
         /// are multiple gaps in thread use that may be long.
         /// Use for example when talking to a slow webservice.
         /// </summary>
-        public static void RunBgLong(Func<Task> fn)
+        public static Task RunBgLong(Func<Task> fn)
         {
-            Task.Factory.StartNew(fn, TaskCreationOptions.LongRunning)
-                .ConfigureAwait(false);
+            var t = Task.Factory.StartNew(fn, TaskCreationOptions.LongRunning);
+            t.ConfigureAwait(false);
+            return t;
         }
     }
 }
