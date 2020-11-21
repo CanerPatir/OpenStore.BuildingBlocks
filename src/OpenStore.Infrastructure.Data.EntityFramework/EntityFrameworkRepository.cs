@@ -26,7 +26,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
 
         public override async Task<TAggregateRoot> GetAsync(object id, CancellationToken token = default)
         {
-            return await EfUow.Context.FindAsync<TAggregateRoot>(id);
+            return await EfUow.Context.Set<TAggregateRoot>().FindAsync(new[] {id}, token);
         }
 
         public override async Task SaveAsync(TAggregateRoot aggregateRoot, CancellationToken token = default)
@@ -41,13 +41,14 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
 
             try
             {
-                aggregateRoot.Version ++;
+                aggregateRoot.Version++;
                 await Uow.SaveChangesAsync(token);
             }
             catch (DbUpdateConcurrencyException ex)
             {
                 throw new ConcurrencyException(ex.Message, ex);
             }
+
             aggregateRoot.Commit();
         }
 

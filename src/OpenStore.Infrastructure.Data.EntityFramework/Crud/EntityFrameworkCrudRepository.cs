@@ -22,7 +22,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Crud
 
         public async Task<TEntity> GetAsync(object id, CancellationToken cancellationToken = default)
         {
-            return await Set.FindAsync(id, cancellationToken);
+            return await Set.FindAsync(new[] {id}, cancellationToken);
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
