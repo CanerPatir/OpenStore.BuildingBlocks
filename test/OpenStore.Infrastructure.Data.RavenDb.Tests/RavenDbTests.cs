@@ -49,7 +49,7 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
             services.AddSingleton<IDocumentStore>(testStore);
         }
 
-        [Fact(Skip = "wait .net support")]
+        [Fact]
         public void DiResolve()
         {
             // Arrange
@@ -68,7 +68,7 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
         }
 
         
-        [Fact(Skip = "wait .net support")]
+        [Fact]
         public async Task Create()
         {
             // Arrange
@@ -89,7 +89,7 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
             Assert.True(entity == loadedEntity);
         }
 
-        [Fact(Skip = "wait .net support")]
+        [Fact]
         public async Task Update()
         {
             // Arrange
@@ -112,7 +112,7 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
             Assert.True(lastState.InventoryCode == "mutated");
         }
 
-        [Fact(Skip = "wait .net support")]
+        [Fact]
         public async Task Delete()
         {
             // Arrange
@@ -138,7 +138,7 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
             Assert.Null(lastState);
         }
 
-        [Fact(Skip = "wait .net support")]
+        [Fact]
         public async Task Query()
         {
             // Arrange
