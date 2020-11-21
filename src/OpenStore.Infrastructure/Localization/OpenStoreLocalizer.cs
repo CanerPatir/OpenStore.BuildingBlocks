@@ -20,9 +20,9 @@ namespace OpenStore.Infrastructure.Localization
             return _localizer[key];
         }
         
-        public LocalizedString GetLocalizedHtmlString(string key, params object[] argumants)
+        public LocalizedString GetLocalizedHtmlString(string key, params object[] arguments)
         {
-            return _localizer[key, argumants];
+            return _localizer[key, arguments];
         }
     }
 }

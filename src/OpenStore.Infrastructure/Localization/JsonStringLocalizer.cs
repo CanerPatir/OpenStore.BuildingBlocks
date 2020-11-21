@@ -49,9 +49,6 @@ namespace OpenStore.Infrastructure.Localization
                 : _resources.Value[AppLocalizationContext.DefaultUiCulture].TryGetValue(name, out value);
         }
 
-        //        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => _resources.Value.Select(r => new LocalizedString(r.Key, r.Value));
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => new LocalizedString[0];
-
-        public IStringLocalizer WithCulture(CultureInfo culture) => throw new System.NotSupportedException("Obsolete API. See: https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.localization.istringlocalizer.withculture");
     }
 }

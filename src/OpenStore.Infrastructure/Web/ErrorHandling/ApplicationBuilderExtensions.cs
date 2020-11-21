@@ -1,7 +1,5 @@
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -9,31 +7,39 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseOpenStoreErrorHandling(this IApplicationBuilder appBuilder, PathString errorHandlingPath)
+        /// <summary>
+        /// Error handler for MVC apps
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="errorHandlingPath"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseOpenStoreMvcErrorHandling(this IApplicationBuilder app, PathString errorHandlingPath)
         {
-            var env = appBuilder.ApplicationServices.GetRequiredService<IHostEnvironment>();
+            var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
+            app.UseStatusCodePagesWithReExecute(errorHandlingPath, "?statusCode={0}");
+            
+            if (env.IsDevelopment())
+            {
+                return app.UseDeveloperExceptionPage().UseDatabaseErrorPage();
+            }
 
-            appBuilder.UseWhen(context => context.IsApiController(), app => app.UseMiddleware<ApplicationErrorMiddleware>(errorHandlingPath));
-            return appBuilder.UseWhen(context => !context.IsApiController(), 
-                app =>
-                {
-                    if (env.IsDevelopment())
-                    {
-                        app
-                            .UseStatusCodePagesWithReExecute(errorHandlingPath, "?statusCode={0}")
-                            .UseDeveloperExceptionPage().UseDatabaseErrorPage();
-                    }
-                    else
-                    {
-                        app.UseMiddleware<ApplicationErrorMiddleware>(errorHandlingPath);
-                    }
-                });
+            return app.UseMiddleware<MvcErrorMiddleware>(errorHandlingPath);
         }
 
-        internal static bool IsApiController(this HttpContext context)
+        /// <summary>
+        /// Error handler for web api apps. Please configure your api behavior in the Startup.ConfigureServices as below.
+        /// services.AddControllers()
+        ///      .ConfigureApiBehaviorOptions(options =>
+        ///      {
+        ///          options.SuppressModelStateInvalidFilter = true;
+        ///      });
+        /// </summary>
+        /// <param name="appBuilder"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseOpenStoreApiErrorHandling(this IApplicationBuilder appBuilder)
         {
-            var endpoint = context.GetEndpoint();
-            return endpoint != null && endpoint.Metadata.Any(x => x.GetType() == typeof(ApiControllerAttribute));
+            return appBuilder.UseMiddleware<ApiErrorMiddleware>();
         }
+
     }
 }
