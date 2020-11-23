@@ -1,15 +1,16 @@
 using System;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
 
-namespace OpenStore.Infrastructure.Interaction.Email.Smtp.MailKit
+namespace OpenStore.Infrastructure.Interaction.Email.Smtp
 {
     public class DefaultMailKitSmtpBuilder : IMailKitSmtpBuilder
     {
         public SmtpEmailSenderConfiguration SmtpEmailSenderConfiguration { get; }
 
-        public DefaultMailKitSmtpBuilder(SmtpEmailSenderConfiguration smtpEmailSenderConfiguration)
+        public DefaultMailKitSmtpBuilder(IOptions<SmtpEmailSenderConfiguration> smtpEmailSenderConfiguration)
         {
-            SmtpEmailSenderConfiguration = smtpEmailSenderConfiguration;
+            SmtpEmailSenderConfiguration = smtpEmailSenderConfiguration.Value;
         }
 
         public virtual SmtpClient Build()

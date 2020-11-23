@@ -18,36 +18,11 @@ namespace OpenStore.Infrastructure.Interaction.Email
             Configuration = configuration;
         }
 
-        public virtual async Task SendEmailAsync(string to, string subject, string body, bool isBodyHtml = true, CancellationToken cancellationToken = default)
+        public Task SendEmailAsync(MailBuilder mailBuilder, CancellationToken cancellationToken = default)
         {
-            await SendEmailAsync(new MailMessage
-            {
-                To = {to},
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = isBodyHtml
-            }, cancellationToken);
-        }
-
-        public virtual async Task SendEmailAsync(string from, string to, string subject, string body, bool isBodyHtml = true, CancellationToken cancellationToken = default) => await SendEmailAsync(new MailMessage(@from, to, subject, body) {IsBodyHtml = isBodyHtml}, cancellationToken);
-
-        public virtual async Task SendEmailAsync(MailMessage mail, bool normalize = true, CancellationToken cancellationToken = default)
-        {
-            if (normalize)
-            {
-                NormalizeMail(mail);
-            }
-
-            await SendEmailAsync(mail, cancellationToken);
-        }
-
-        public virtual Task SendEmailAsync(string email, string subject, string htmlMessage)
-        {
-            return SendEmailAsync(new MailBuilder()
-                .AddTo(email)
-                .Subject(subject)
-                .UseHtmlBody()
-                .Body(htmlMessage).Build(), CancellationToken.None);
+            var mailMessage = mailBuilder.Build();
+            NormalizeMail(mailMessage);
+            return SendEmailAsync(mailMessage, CancellationToken.None);
         }
 
         /// <summary>

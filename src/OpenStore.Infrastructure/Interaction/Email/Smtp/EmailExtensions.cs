@@ -5,9 +5,9 @@ using System.Text;
 using MimeKit;
 using MimeKit.IO;
 
-namespace OpenStore.Infrastructure.Interaction.Email.Smtp.MailKit
+namespace OpenStore.Infrastructure.Interaction.Email.Smtp
 {
-    public static class EmailExtensions
+    internal static class EmailExtensions
     {
          /// <summary>
         /// A modified version of CreateFromMailMessage() method in https://github.com/jstedfast/MimeKit/blob/master/MimeKit/MimeMessage.cs

@@ -6,12 +6,6 @@ namespace OpenStore.Infrastructure.Interaction.Email.Templating
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddRazorEmailTemplateEngine(this IServiceCollection services)
-        {
-            services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
-            return services;
-        }
-        
         public static async Task<MailBuilder> UseTemplate<TModel>(this MailBuilder mailBuilder, IServiceProvider serviceProvider, string templateViewPath, TModel model)
         {
             var razorViewToStringRenderer = serviceProvider.GetRequiredService<IRazorViewToStringRenderer>();

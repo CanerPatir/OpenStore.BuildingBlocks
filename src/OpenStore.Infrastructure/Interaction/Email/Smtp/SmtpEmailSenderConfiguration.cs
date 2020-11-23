@@ -1,4 +1,3 @@
-
 namespace OpenStore.Infrastructure.Interaction.Email.Smtp
 {
     public class SmtpEmailSenderConfiguration : EmailSenderConfiguration
@@ -10,6 +9,5 @@ namespace OpenStore.Infrastructure.Interaction.Email.Smtp
         public string Domain { get; set; }
         public bool EnableSsl { get; set; }
         public bool UseDefaultCredentials { get; set; }
-        
     }
 }
