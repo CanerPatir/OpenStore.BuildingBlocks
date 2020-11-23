@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenStore.Infrastructure.Interaction.Email
+namespace OpenStore.Application.Email
 {
     public interface IAppEmailSender
     {

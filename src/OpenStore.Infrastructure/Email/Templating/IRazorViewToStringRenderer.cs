@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace OpenStore.Infrastructure.Interaction.Email.Templating
+namespace OpenStore.Infrastructure.Email.Templating
 {
     public interface IRazorViewToStringRenderer
     {

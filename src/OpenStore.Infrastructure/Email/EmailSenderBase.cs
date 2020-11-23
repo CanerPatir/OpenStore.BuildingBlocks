@@ -2,8 +2,9 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenStore.Application.Email;
 
-namespace OpenStore.Infrastructure.Interaction.Email
+namespace OpenStore.Infrastructure.Email
 {
     public abstract class EmailSenderBase : IAppEmailSender
     {

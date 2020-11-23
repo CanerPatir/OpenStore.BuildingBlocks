@@ -1,8 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using OpenStore.Application.Email;
 
-namespace OpenStore.Infrastructure.Interaction.Email.Templating
+namespace OpenStore.Infrastructure.Email.Templating
 {
     public static class ServiceCollectionExtensions
     {

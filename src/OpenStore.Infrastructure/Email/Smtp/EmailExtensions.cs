@@ -5,7 +5,7 @@ using System.Text;
 using MimeKit;
 using MimeKit.IO;
 
-namespace OpenStore.Infrastructure.Interaction.Email.Smtp
+namespace OpenStore.Infrastructure.Email.Smtp
 {
     internal static class EmailExtensions
     {

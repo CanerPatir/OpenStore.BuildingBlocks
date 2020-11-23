@@ -1,9 +1,10 @@
 using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenStore.Application.Email;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
-namespace OpenStore.Infrastructure.Interaction.Email.Smtp
+namespace OpenStore.Infrastructure.Email.Smtp
 {
     public class MailKitEmailSender : EmailSenderBase, IAppEmailSender
     {

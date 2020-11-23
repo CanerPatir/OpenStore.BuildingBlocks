@@ -1,4 +1,4 @@
-namespace OpenStore.Infrastructure.Interaction.Email
+namespace OpenStore.Infrastructure.Email
 {
     public abstract class EmailSenderConfiguration
     {

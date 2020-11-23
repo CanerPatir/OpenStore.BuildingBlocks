@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 
-namespace OpenStore.Infrastructure.Interaction.Email.Templating
+namespace OpenStore.Infrastructure.Email.Templating
 {
     public class RazorViewToStringRenderer : IRazorViewToStringRenderer
     {

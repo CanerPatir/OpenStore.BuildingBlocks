@@ -2,7 +2,7 @@ using System;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 
-namespace OpenStore.Infrastructure.Interaction.Email.Smtp
+namespace OpenStore.Infrastructure.Email.Smtp
 {
     public class DefaultMailKitSmtpBuilder : IMailKitSmtpBuilder
     {

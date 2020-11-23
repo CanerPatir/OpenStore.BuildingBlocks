@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Mail;
 using System.Text;
 
-namespace OpenStore.Infrastructure.Interaction.Email
+namespace OpenStore.Application.Email
 {
     public class MailBuilder
     {
