@@ -50,7 +50,13 @@ namespace OpenStore.Infrastructure.Data.Crud
 
         public virtual async Task<TDto> Get(object id, CancellationToken cancellationToken = default)
         {
-            return Mapper.Map<TDto>(await Repository.GetAsync(id, cancellationToken));
+            var entity = await Repository.GetAsync(id, cancellationToken);
+            if (entity == default)
+            {
+                throw new ResourceNotFoundException();
+            }
+
+            return Mapper.Map<TDto>(entity);
         }
 
         public abstract Task<PagedList<TDto>> GetAll(int? pageNumber = null, int? pageSize = null, CancellationToken cancellationToken = default);
