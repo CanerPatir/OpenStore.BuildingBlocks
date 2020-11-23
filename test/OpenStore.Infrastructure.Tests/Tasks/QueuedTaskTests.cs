@@ -13,7 +13,7 @@ namespace OpenStore.Infrastructure.Tests.Tasks
     {
         protected override void ConfigureServices(IServiceCollection services)
         {
-            services.AddInMemoryBackgroundTasks();
+            services.AddOpenStoreInMemoryBackgroundTasks();
         }
 
         [Fact]

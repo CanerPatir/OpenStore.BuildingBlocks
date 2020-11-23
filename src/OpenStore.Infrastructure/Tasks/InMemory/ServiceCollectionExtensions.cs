@@ -10,7 +10,7 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddInMemoryBackgroundTasks(this IServiceCollection services)
+        public static IServiceCollection AddOpenStoreInMemoryBackgroundTasks(this IServiceCollection services)
         {
             var channel = Channel.CreateBounded<Func<IServiceProvider, CancellationToken, Task>>(new BoundedChannelOptions(1)
             {
@@ -23,7 +23,7 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
                 ;
         }
 
-        public static IServiceCollection AddRecurringHostedService<TSchedule>(this IServiceCollection services)
+        public static IServiceCollection AddOpenStoreRecurringJob<TSchedule>(this IServiceCollection services)
             where TSchedule : RecurringHostedService
         {
             return services.AddHostedService<TSchedule>();
