@@ -5,5 +5,4 @@ namespace OpenStore.Domain
         object Id { get; }
         ulong Version { get; set; }
     }
-
 }

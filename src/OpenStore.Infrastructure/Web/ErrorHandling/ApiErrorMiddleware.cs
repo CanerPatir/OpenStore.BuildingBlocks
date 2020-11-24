@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using OpenStore.Application.Exceptions;
 using OpenStore.Domain;
 using OpenStore.Infrastructure.Localization;
-using ApplicationException = System.ApplicationException;
 
 namespace OpenStore.Infrastructure.Web.ErrorHandling
 {
@@ -42,7 +41,7 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
             context.Response.StatusCode = ex switch
             {
                 ResourceNotFoundException => 404,
-                OpenStore.Application.Exceptions.ApplicationException => 400,
+                Application.Exceptions.ApplicationException => 400,
                 DomainException => 400,
                 ValidationException => 400,
                 _ => 500
@@ -53,7 +52,7 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
             var errorDto = ex switch
             {
                 ResourceNotFoundException resourceNotFoundException => new OpenStoreWebErrorDto(loc[resourceNotFoundException.Message], ArraySegment<string>.Empty),
-                OpenStore.Application.Exceptions.ApplicationException applicationException => new OpenStoreWebErrorDto(loc[applicationException.Message], ArraySegment<string>.Empty),
+                Application.Exceptions.ApplicationException applicationException => new OpenStoreWebErrorDto(loc[applicationException.Message], ArraySegment<string>.Empty),
                 DomainException domainException => new OpenStoreWebErrorDto(loc[domainException.Message], ArraySegment<string>.Empty),
                 ValidationException validationException => new OpenStoreWebErrorDto(loc[validationException.Message], validationException.Errors.Select(x => loc[x.Message].ToString())),
                 _ => new OpenStoreWebErrorDto("Generic error", new []{ex.Message}),
