@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenStore.Application;
@@ -35,7 +36,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
         public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, 
             IConfiguration configuration, 
             string migrationAssembly = null,
-            Action<DbContextOptionsBuilder> optionsBuilder = null)
+            Action<DbContextOptionsBuilder> optionsBuilder = null, 
+             Assembly[] assemblies = null)
             where TDbContext : DbContext
             where TDbContextImplementation : TDbContext
         {
@@ -47,7 +49,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
         
         public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, string connStr, EntityFrameworkDataSource dataSource,
             string migrationAssembly = null,
-            Action<DbContextOptionsBuilder> optionsBuilder = null)
+            Action<DbContextOptionsBuilder> optionsBuilder = null, 
+            Assembly[] assemblies = null)
             where TDbContext : DbContext
             where TDbContextImplementation : TDbContext
         {
@@ -98,19 +101,26 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
                 optionsBuilder?.Invoke(options);
             });
 
-            AddOpenStoreEfCoreDefaults<TDbContext>(services);
+            AddOpenStoreEfCoreDefaults<TDbContext>(services, assemblies);
 
             return services;
         }
 
-        private static void AddOpenStoreEfCoreDefaults<TDbContext>(IServiceCollection services)
+        private static void AddOpenStoreEfCoreDefaults<TDbContext>(IServiceCollection services, Assembly[] assemblies)
             where TDbContext : DbContext
         {
             // add repositories automatically
+            
+            assemblies ??= Array.Empty<Assembly>();
+
+            var assemblyList = new List<Assembly>();
+            assemblyList.AddRange(assemblies);
+            assemblyList.Add(typeof(TDbContext).Assembly);
+            
             services.Scan(scan =>
             {
                 scan
-                    .FromAssemblyOf<TDbContext>()
+                    .FromAssemblies(assemblyList )
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(IRepository<>)))
                     .AsImplementedInterfaces()
@@ -118,7 +128,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
                     ;
                 
                 scan
-                    .FromAssemblyOf<TDbContext>()
+                    .FromAssemblies(assemblyList)
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(ICrudService<,>)))
                     .AsImplementedInterfaces()
@@ -126,7 +136,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
                     ;
                 
                 scan
-                    .FromAssemblyOf<TDbContext>()
+                    .FromAssemblies(assemblyList)
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(ICrudRepository<>)))
                     .AsImplementedInterfaces()
