@@ -27,11 +27,11 @@ namespace OpenStore.Infrastructure.CommandBus
                 {"IRequest", requestType.Name}
             };
             var scope = logger.BeginScope(scopeVariables);
-            logger.LogInformation("Handling");
+            logger.LogDebug("Handling");
             try
             {
                 var response = await next();
-                logger.LogInformation("Handled successfully");
+                logger.LogDebug("Handled successfully");
                 return response;
             }
             catch (Exception e)

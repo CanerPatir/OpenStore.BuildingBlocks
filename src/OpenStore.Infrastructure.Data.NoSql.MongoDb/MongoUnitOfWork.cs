@@ -18,7 +18,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
                 Session.StartTransaction();
                 _transactionSupported = true;
             }
-            catch (NotSupportedException e)
+            catch (NotSupportedException)
             {
             }
         }
