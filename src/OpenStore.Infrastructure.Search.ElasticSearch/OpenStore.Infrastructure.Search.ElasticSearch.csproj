@@ -5,15 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(NetPackagesVersion)" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(NetPackagesVersion)" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(NetPackagesVersion)" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="$(NetPackagesVersion)" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(NetPackagesVersion)" />
       <PackageReference Include="NEST" Version="7.10.0" />
       <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
       <PackageReference Include="Polly" Version="7.2.1" />
-      <PackageReference Include="System.Text.Json" Version="5.0.0" />
+      <PackageReference Include="System.Text.Json" Version="$(NetPackagesVersion)" />
     </ItemGroup>
 
 </Project>

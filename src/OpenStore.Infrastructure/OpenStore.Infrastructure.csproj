@@ -13,12 +13,13 @@
         <PackageReference Include="MediatR" Version="9.0.0" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
         <PackageReference Include="MailKit" Version="2.10.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(NetPackagesVersion)" />
         <PackageReference Include="ncrontab" Version="3.3.1" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="3.1.0" />
         <PackageReference Include="Serilog.Sinks.Graylog" Version="2.2.2" />

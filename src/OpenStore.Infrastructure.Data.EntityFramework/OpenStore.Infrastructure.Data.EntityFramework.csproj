@@ -7,13 +7,13 @@
     <ItemGroup>
         <PackageReference Include="Scrutor" Version="3.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NetPackagesVersion)" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(NetPackagesVersion)" />
     </ItemGroup>
 
     <ItemGroup>
