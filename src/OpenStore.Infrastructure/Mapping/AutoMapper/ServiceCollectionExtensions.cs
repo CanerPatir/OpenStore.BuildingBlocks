@@ -15,10 +15,8 @@ namespace OpenStore.Infrastructure.Mapping.AutoMapper
         /// <returns></returns>
         public static IServiceCollection AddOpenStoreObjectMapper(this IServiceCollection services, Action<IMapperConfigurationExpression> configure)
         {
-            var mappingConfig = new MapperConfiguration(configure);
             services
-                .AddSingleton(sp => mappingConfig.CreateMapper())
-                .AddSingleton<IConfigurationProvider>(mappingConfig)
+                .AddAutoMapper(configure, assemblies: null, serviceLifetime: ServiceLifetime.Singleton)
                 .AddSingleton<IOpenStoreObjectMapper, AutoMapperOpenStoreObjectMapper>();
 
             return services;
