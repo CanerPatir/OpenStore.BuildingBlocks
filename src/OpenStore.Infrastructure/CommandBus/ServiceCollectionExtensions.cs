@@ -12,9 +12,9 @@ namespace OpenStore.Infrastructure.CommandBus
             return services
                     .AddTransient<IEventNotifier, MediatrEventNotifier>()
                     .AddMediatR(Assembly.GetAssembly(typeof(TAnyHandler)))
+                    .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                     .AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>))
                     .AddTransient(typeof(IPipelineBehavior<,>), typeof(DisposeBehavior<,>))
-                    .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                 ;
         }
 

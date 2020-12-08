@@ -1,14 +1,17 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using OpenStore.Infrastructure.Data.EntityFramework.Extensions;
 
 namespace OpenStore.Infrastructure.Data.EntityFramework
 {
-    public class EntityFrameworkUnitOfWork<TDbContext> : IEntityFrameworkCoreUnitOfWork
+    public class EntityFrameworkUnitOfWork<TDbContext> : IEntityFrameworkCoreUnitOfWork, IAsyncDisposable
         where TDbContext : DbContext
     {
+        private IDbContextTransaction _tx;
         public DbContext Context { get; }
 
         public EntityFrameworkUnitOfWork(TDbContext dbContext)
@@ -18,16 +21,29 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
 
         public async Task BeginTransactionAsync(CancellationToken token = default)
         {
-            var tx =  Context.Database.CurrentTransaction ?? await Context.Database.BeginTransactionAsync(token);
+             _tx =  Context.Database.CurrentTransaction ?? await Context.Database.BeginTransactionAsync(token);
         }
 
         public async Task SaveChangesAsync(CancellationToken token = default)
         {
+            if (_tx != null)
+            {
+                await _tx.CommitAsync(token);
+            }
+            
             var result = await Context.SaveChangesWithValidationAsync(token: token);
 
             if (!result.IsValid)
             {
                 throw new EntityValidationException(result.Message, result.Errors.Select(x => x.ErrorResult));
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_tx != null)
+            {
+                await _tx.DisposeAsync();
             }
         }
     }
