@@ -8,7 +8,7 @@ using OpenStore.Infrastructure.Data.EntityFramework.Extensions;
 
 namespace OpenStore.Infrastructure.Data.EntityFramework
 {
-    public class EntityFrameworkUnitOfWork<TDbContext> : IEntityFrameworkCoreUnitOfWork, IAsyncDisposable
+    public class EntityFrameworkUnitOfWork<TDbContext> : IEntityFrameworkCoreUnitOfWork, IDisposable
         where TDbContext : DbContext
     {
         private IDbContextTransaction _tx;
@@ -39,12 +39,9 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
             }
         }
 
-        public async ValueTask DisposeAsync()
+        public void Dispose()
         {
-            if (_tx != null)
-            {
-                await _tx.DisposeAsync();
-            }
+            _tx?.Dispose();
         }
     }
 }
