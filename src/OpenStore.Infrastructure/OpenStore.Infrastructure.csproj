@@ -40,4 +40,39 @@
         <ProjectReference Include="..\OpenStore.Application\OpenStore.Application.csproj" />
     </ItemGroup>
 
+
+
+    <ItemGroup>
+        <Compile Update="Web\ReCaptcha\Templates\RecaptchaV2Checkbox.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>RecaptchaV2Checkbox.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Web\ReCaptcha\Templates\RecaptchaV2Invisible.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>RecaptchaV2Invisible.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Web\ReCaptcha\Templates\RecaptchaV3HiddenInput.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>RecaptchaV3HiddenInput.tt</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Web\ReCaptcha\Templates\RecaptchaV2Checkbox.tt">
+            <Generator>TextTemplatingFilePreprocessor</Generator>
+            <LastGenOutput>RecaptchaV2Checkbox.cs</LastGenOutput>
+        </None>
+        <None Update="Web\ReCaptcha\Templates\RecaptchaV2Invisible.tt">
+            <Generator>TextTemplatingFilePreprocessor</Generator>
+            <LastGenOutput>RecaptchaV2Invisible.cs</LastGenOutput>
+        </None>
+        <None Update="Web\ReCaptcha\Templates\RecaptchaV3HiddenInput.tt">
+            <Generator>TextTemplatingFilePreprocessor</Generator>
+            <LastGenOutput>RecaptchaV3HiddenInput.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
+
 </Project>
