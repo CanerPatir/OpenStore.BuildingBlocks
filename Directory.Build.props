@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>0.1.27</VersionPrefix>
+        <VersionPrefix>0.1.30</VersionPrefix>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Authors>Caner Patir</Authors>
         <Company>Algorist</Company>
@@ -12,7 +12,6 @@
         <PackageLicenseUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks/blob/master/LICENCE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks</PackageProjectUrl>
         <LangVersion>latest</LangVersion>
-        <NetPackagesVersion>5.0.0</NetPackagesVersion>
 <!--        <Nullable>enable</Nullable>-->
     </PropertyGroup>
 </Project>
