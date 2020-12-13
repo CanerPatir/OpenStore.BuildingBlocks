@@ -4,6 +4,6 @@ namespace OpenStore.Infrastructure.Email.Templating
 {
     public interface IRazorViewToStringRenderer
     {
-        Task<string> RenderViewToStringAsync<TModel>(string viewPath, TModel model);
+        Task<string> RenderViewToStringAsync<TModel>(string key, TModel model);
     }
 }
