@@ -63,7 +63,7 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
                 DomainException domainException => new OpenStoreWebErrorDto(loc[domainException.Message], ArraySegment<string>.Empty),
                 ValidationException validationException => new OpenStoreWebErrorDto(loc[validationException.Message],
                     validationException.Errors.Select(x => loc[x.Message].ToString())),
-                _ => new OpenStoreWebErrorDto(GenericErrorKey, new[] {ex.Message}),
+                _ => new OpenStoreWebErrorDto(GenericErrorKey, new[] {GenericErrorKey}),
             };
 
             context.Response.ContentType = "application/json";
