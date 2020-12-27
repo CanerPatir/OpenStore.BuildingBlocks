@@ -10,7 +10,7 @@ namespace OpenStore.Infrastructure.Localization
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddOpenStoreLocalization(this IServiceCollection services) => AddOpenStoreLocalization(services, options => { });
+        public static IServiceCollection AddOpenStoreLocalization(this IServiceCollection services) => AddOpenStoreLocalization(services, _ => { });
 
         public static IServiceCollection AddOpenStoreLocalization(this IServiceCollection services, Action<OpenStoreRequestLocalizationOptions> optionsBuilder)
         {
@@ -41,7 +41,8 @@ namespace OpenStore.Infrastructure.Localization
                     };
                 })
                 .AddSingleton<IOpenStoreLocalizer, OpenStoreLocalizer>()
-                .AddHostedService<LocalizationResourceChangeWatcher>();
+                // .AddHostedService<LocalizationResourceChangeWatcher>()
+                ;
 
             return services;
         }
