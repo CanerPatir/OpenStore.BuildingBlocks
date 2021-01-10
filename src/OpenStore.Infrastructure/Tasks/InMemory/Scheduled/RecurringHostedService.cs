@@ -9,53 +9,26 @@ using NCrontab;
 
 namespace OpenStore.Infrastructure.Tasks.InMemory.Scheduled
 {
-    public abstract class RecurringHostedService : IHostedService
+    internal class RecurringHostedService<TJob> : BackgroundService
+        where TJob: IRecurringJob
     {
         private Task _executingTask;
-        private readonly CancellationTokenSource _stoppingCts = new CancellationTokenSource();
+        private readonly CancellationTokenSource _stoppingCts = new();
+        
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly ILogger _logger;
         private readonly CrontabSchedule _schedule;
         private DateTime _nextRun;
-
-        protected abstract string CronExpression { get; }
-        protected ILogger Logger { get; }
-
-        protected RecurringHostedService(IServiceProvider serviceProvider)
+        
+        public RecurringHostedService(string cronExpression, IServiceScopeFactory serviceScopeFactory, ILogger<RecurringHostedService<TJob>> logger)
         {
-            _serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-            Logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(GetType().FullName);
-            _schedule = CrontabSchedule.Parse(CronExpression);
+            _serviceScopeFactory = serviceScopeFactory;
+            _logger = logger;
+            _schedule = CrontabSchedule.Parse(cronExpression);
             _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
         }
 
-        public virtual Task StartAsync(CancellationToken cancellationToken)
-        {
-            // Store the task we are executing
-            _executingTask = StartInternal(_stoppingCts.Token);
-
-            // If the task is completed then return it,
-            // this will bubble cancellation and failure to the caller
-            if (_executingTask.IsCompleted)
-            {
-                return _executingTask;
-            }
-
-            return Task.CompletedTask;
-        }
-
-        public virtual async Task StopAsync(CancellationToken cancellationToken)
-        {
-            try
-            {
-                _stoppingCts.Cancel();
-            }
-            finally
-            {
-                await Task.WhenAny(_executingTask, Task.Delay(Timeout.Infinite, cancellationToken));
-            }
-        }
-
-        private async Task StartInternal(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             do
             {
@@ -72,19 +45,19 @@ namespace OpenStore.Infrastructure.Tasks.InMemory.Scheduled
 
         private async Task ExecuteInternal(CancellationToken stoppingToken)
         {
-            Logger.LogInformation("Scheduled job executing");
+            _logger.LogInformation("Scheduled job executing");
             try
             {
                 using var scope = _serviceScopeFactory.CreateScope();
-                await Execute(scope.ServiceProvider, stoppingToken);
-                Logger.LogInformation("Scheduled job done");
+                var job = scope.ServiceProvider.GetRequiredService<TJob>();
+                await job.Execute(stoppingToken);
+                _logger.LogInformation("Scheduled job done");
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.Demystify(), "Scheduled job error");
+                _logger.LogError(ex.Demystify(), "Scheduled job error");
             }
         }
-
-        protected abstract Task Execute(IServiceProvider serviceProvider, CancellationToken token);
+ 
     }
 }

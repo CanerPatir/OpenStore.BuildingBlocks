@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OpenStore.Infrastructure.Tasks.InMemory.Queued;
 using OpenStore.Infrastructure.Tasks.InMemory.Scheduled;
 
@@ -19,14 +20,19 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
             return services
                     .AddSingleton<ITaskManager, InMemoryTaskManager>(sp => new InMemoryTaskManager(channel.Writer))
                     .AddHostedService(sp => new InMemoryQueuedJobHost(sp, channel.Reader))
-                    .AddHostedService<InMemorySchedulerHost>()
                 ;
         }
 
-        public static IServiceCollection AddOpenStoreRecurringJob<TSchedule>(this IServiceCollection services)
-            where TSchedule : RecurringHostedService
+        public static IServiceCollection AddOpenStoreRecurringJob<TRecurringJob>(this IServiceCollection services, string cronExpression)
+            where TRecurringJob : class, IRecurringJob
         {
-            return services.AddHostedService<TSchedule>();
+            services.AddScoped<TRecurringJob>();
+            return services.AddHostedService(sp => new RecurringHostedService<TRecurringJob>(
+                    cronExpression,
+                    sp.GetRequiredService<IServiceScopeFactory>(),
+                    sp.GetRequiredService<ILogger<RecurringHostedService<TRecurringJob>>>()
+                )
+            );
         }
     }
 }

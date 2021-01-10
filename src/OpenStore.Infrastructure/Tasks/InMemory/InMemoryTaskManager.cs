@@ -9,8 +9,6 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
 {
     public class InMemoryTaskManager : ITaskManager
     {
-        internal ConcurrentBag<ScheduledJobDescriptor> ScheduledJobItems { get; } = new ConcurrentBag<ScheduledJobDescriptor>();
-
         private readonly ChannelWriter<Func<IServiceProvider, CancellationToken, Task>> _queuedJobItems;
 
         public InMemoryTaskManager(ChannelWriter<Func<IServiceProvider, CancellationToken, Task>> queuedJobItems)
@@ -32,11 +30,5 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
             throw new NotImplementedException();
         }
         
-        public void Schedule(IBackgroundTask task, string cronExpression) => Schedule(task.Run, cronExpression);
-
-        public void Schedule(Func<IServiceProvider, CancellationToken, Task> workItem, string cronExpression)
-        {
-            ScheduledJobItems.Add(new ScheduledJobDescriptor(workItem, cronExpression));
-        }
     }
 }
