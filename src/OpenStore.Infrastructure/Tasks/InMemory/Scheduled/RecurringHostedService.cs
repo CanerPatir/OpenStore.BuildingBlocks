@@ -10,16 +10,13 @@ using NCrontab;
 namespace OpenStore.Infrastructure.Tasks.InMemory.Scheduled
 {
     internal class RecurringHostedService<TJob> : BackgroundService
-        where TJob: IRecurringJob
+        where TJob : IRecurringJob
     {
-        private Task _executingTask;
-        private readonly CancellationTokenSource _stoppingCts = new();
-        
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ILogger _logger;
         private readonly CrontabSchedule _schedule;
         private DateTime _nextRun;
-        
+
         public RecurringHostedService(string cronExpression, IServiceScopeFactory serviceScopeFactory, ILogger<RecurringHostedService<TJob>> logger)
         {
             _serviceScopeFactory = serviceScopeFactory;
@@ -58,6 +55,5 @@ namespace OpenStore.Infrastructure.Tasks.InMemory.Scheduled
                 _logger.LogError(ex.Demystify(), "Scheduled job error");
             }
         }
- 
     }
 }
