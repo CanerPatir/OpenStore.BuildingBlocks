@@ -1,4 +1,4 @@
-namespace OpenStore.Infrastructure.Email.Smtp
+namespace OpenStore.Infrastructure.Email.SendGrid
 {
     public class SendGridSenderConfiguration : EmailSenderConfiguration
     {

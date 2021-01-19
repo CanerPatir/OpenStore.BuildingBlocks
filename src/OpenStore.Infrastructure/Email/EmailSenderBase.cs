@@ -1,3 +1,4 @@
+using System;
 using System.Net.Mail;
 using System.Text;
 using System.Threading;
@@ -19,11 +20,22 @@ namespace OpenStore.Infrastructure.Email
             Configuration = configuration;
         }
 
-        public Task SendEmailAsync(MailBuilder mailBuilder, CancellationToken cancellationToken = default)
+        public async Task SendEmailAsync(MailBuilder mailBuilder, CancellationToken cancellationToken = default)
         {
-            var mailMessage = mailBuilder.Build();
-            NormalizeMail(mailMessage);
-            return SendEmailAsync(mailMessage, CancellationToken.None);
+            try
+            {
+                var mailMessage = mailBuilder.Build();
+                NormalizeMail(mailMessage);
+                await SendEmailAsync(mailMessage, CancellationToken.None);
+            }
+            catch (MailSenderException e)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new MailSenderException("Generic mail sender error. See the inner exception.", e);
+            }
         }
 
         /// <summary>
@@ -32,7 +44,7 @@ namespace OpenStore.Infrastructure.Email
         /// <param name="mail">Mail to be sent</param>
         /// <param name="cancellationToken"></param>
         protected abstract Task SendEmailAsync(MailMessage mail, CancellationToken cancellationToken = default);
-        
+
         /// <summary>
         /// Normalizes given email.
         /// Fills <see cref="MailMessage.From"/> if it's not filled before.
@@ -54,6 +66,5 @@ namespace OpenStore.Infrastructure.Email
             mail.SubjectEncoding ??= Encoding.UTF8;
             mail.BodyEncoding ??= Encoding.UTF8;
         }
-
     }
 }

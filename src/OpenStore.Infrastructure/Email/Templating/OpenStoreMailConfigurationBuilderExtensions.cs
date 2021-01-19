@@ -1,12 +1,8 @@
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenStore.Application.Email;
-using OpenStore.Infrastructure.Email.Smtp;
-using OpenStore.Infrastructure.Email.Templating;
 using RazorLight;
 
-namespace OpenStore.Infrastructure.Email
+namespace OpenStore.Infrastructure.Email.Templating
 {
     public static class OpenStoreMailConfigurationBuilderExtensions
     {
