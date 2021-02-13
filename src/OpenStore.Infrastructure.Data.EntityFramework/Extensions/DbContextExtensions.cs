@@ -50,9 +50,9 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
         {
             var status = context.ExecuteValidation();
             if (!status.IsValid) return status;
-            
+
             context.ApplyAuditableEntities();
-            
+
             // var changedEntityNames = context.GetChangedEntityNames();
             var result = await context.SaveChangesWithExtrasAsync(config, true, token);
             // context.InvalidateCache(changedEntityNames);
@@ -66,7 +66,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
         //     // context.GetService<IEFCacheServiceProvider>().ClearAllCachedEntries();
         // }
 
-        private static async Task<IStatusGeneric> SaveChangesWithExtrasAsync(this DbContext context, IGenericServicesConfig config, bool turnOffChangeTracker, CancellationToken token)
+        private static async Task<IStatusGeneric> SaveChangesWithExtrasAsync(this DbContext context, IGenericServicesConfig config, bool turnOffChangeTracker,
+            CancellationToken token)
         {
             var status = config?.BeforeSaveChanges != null ? config.BeforeSaveChanges(context) : new StatusGenericHandler();
             if (!status.IsValid)
@@ -101,16 +102,20 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
                 .ToList();
 
             string userInfo = null;
-            var httpContextAccessor =  context.GetService<IHttpContextAccessor>();
-            if (httpContextAccessor != null)
+            try
             {
-               userInfo = httpContextAccessor
-                   .HttpContext?
-                   .User?.Claims
-                   .FirstOrDefault(x => x.Type == "email" || x.Type == ClaimTypes.Email)?
-                   .Value;
-            }
+                var httpContextAccessor = context.GetService<IHttpContextAccessor>();
 
+                userInfo = httpContextAccessor
+                    .HttpContext?
+                    .User?.Claims
+                    .FirstOrDefault(x => x.Type == "email" || x.Type == ClaimTypes.Email)?
+                    .Value;
+            }
+            catch (InvalidOperationException)
+            {
+            }
+            
             foreach (var item in auditableEntityEntries)
             {
                 if (item.State == EntityState.Added)
@@ -118,7 +123,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
                     item.CurrentValues[nameof(IAuditableEntity.CreatedAt)] = DateTime.UtcNow;
                     item.CurrentValues[nameof(IAuditableEntity.CreatedBy)] = userInfo;
                 }
-                
+
                 if (item.State == EntityState.Modified)
                 {
                     item.CurrentValues[nameof(IAuditableEntity.UpdatedAt)] = DateTime.UtcNow;
