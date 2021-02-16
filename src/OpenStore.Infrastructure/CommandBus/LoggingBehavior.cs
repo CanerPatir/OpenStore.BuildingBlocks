@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using OpenStore.Application.Exceptions;
 
 namespace OpenStore.Infrastructure.CommandBus
 {
@@ -36,7 +37,10 @@ namespace OpenStore.Infrastructure.CommandBus
             }
             catch (Exception e)
             {
-                logger.LogError(e.Demystify(), "Handling error");
+                if (e is not ResourceNotFoundException)
+                {
+                    logger.LogError(e.Demystify(), "Handling error");
+                }
                 throw;
             }
             finally
