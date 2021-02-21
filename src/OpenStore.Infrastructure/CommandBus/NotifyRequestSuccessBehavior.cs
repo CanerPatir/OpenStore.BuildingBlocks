@@ -1,6 +1,8 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using OpenStore.Application;
 
@@ -8,11 +10,11 @@ namespace OpenStore.Infrastructure.CommandBus
 {
     public class NotifyRequestSuccessBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IServiceProvider _serviceProvider;
 
-        public NotifyRequestSuccessBehavior(IServiceScopeFactory serviceScopeFactory)
+        public NotifyRequestSuccessBehavior(IServiceProvider serviceProvider)
         {
-            _serviceScopeFactory = serviceScopeFactory;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -21,19 +23,21 @@ namespace OpenStore.Infrastructure.CommandBus
 
             if (request is INotifySuccessRequest || request is INotifySuccessRequest<TResponse>)
             {
-                PublishAndForget((IBaseRequest) request);
+                var httpContextAccessor = _serviceProvider.GetService<IHttpContextAccessor>();
+                var currentUrl = httpContextAccessor?.HttpContext?.GetCurrentUrl();;
+                PublishAndForget((IBaseRequest) request, currentUrl);
             }
 
             return response;
         }
 
-        private void PublishAndForget(IBaseRequest notifySuccessRequest)
+        private void PublishAndForget(IBaseRequest notifySuccessRequest, string currentUrl)
         {
             Task.Run(async () =>
             {
-                using var scope = _serviceScopeFactory.CreateScope();
+                using var scope = _serviceProvider.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                await mediator.Publish(new RequestSuccessNotification(notifySuccessRequest));
+                await mediator.Publish(new RequestSuccessNotification(notifySuccessRequest, currentUrl));
             });
         }
     }
