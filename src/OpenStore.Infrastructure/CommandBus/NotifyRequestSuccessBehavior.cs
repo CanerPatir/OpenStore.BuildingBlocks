@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -24,20 +25,21 @@ namespace OpenStore.Infrastructure.CommandBus
             if (request is INotifySuccessRequest || request is INotifySuccessRequest<TResponse>)
             {
                 var httpContextAccessor = _serviceProvider.GetService<IHttpContextAccessor>();
-                var currentUrl = httpContextAccessor?.HttpContext?.GetCurrentUrl();;
-                PublishAndForget((IBaseRequest) request, currentUrl);
+                var currentUrl = httpContextAccessor?.HttpContext?.GetCurrentUrl();
+                var claimsPrincipal = httpContextAccessor?.HttpContext?.User;
+                PublishAndForget((IBaseRequest) request, currentUrl, claimsPrincipal);
             }
 
             return response;
         }
 
-        private void PublishAndForget(IBaseRequest notifySuccessRequest, string currentUrl)
+        private void PublishAndForget(IBaseRequest notifySuccessRequest, string currentUrl, ClaimsPrincipal claimsPrincipal)
         {
             Task.Run(async () =>
             {
                 using var scope = _serviceProvider.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                await mediator.Publish(new RequestSuccessNotification(notifySuccessRequest, currentUrl));
+                await mediator.Publish(new RequestSuccessNotification(notifySuccessRequest, currentUrl, claimsPrincipal));
             });
         }
     }

@@ -1,25 +1,33 @@
 using System;
+using System.Security.Claims;
 using MediatR;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace OpenStore.Infrastructure.CommandBus
 {
     public class RequestSuccessNotification : INotification
     {
-        public RequestSuccessNotification(IBaseRequest request, string currentUrl)
+        public RequestSuccessNotification(IBaseRequest request, string currentUrl, ClaimsPrincipal claimsPrincipal)
         {
             Request = request ?? throw new ArgumentNullException(nameof(request));
             CurrentUrl = currentUrl;
+            ClaimsPrincipal = claimsPrincipal;
         }
 
         public IBaseRequest Request { get; }
 
         /// <summary>
-        /// Null if current context is not and http context
+        /// Null if current context is not http context
         /// </summary>
-        public string CurrentUrl { get; set; }
+        public string CurrentUrl { get; }
 
-        public T As<T>() where T: class, IBaseRequest
+        /// <summary>
+        /// Null if current context is not http or no authentication context
+        /// </summary>
+        public ClaimsPrincipal ClaimsPrincipal { get; }
+
+        public T As<T>() where T : class, IBaseRequest
         {
             return Request as T;
         }
