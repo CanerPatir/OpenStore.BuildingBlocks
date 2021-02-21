@@ -7,11 +7,11 @@ using OpenStore.Domain;
 
 namespace OpenStore.Infrastructure.CommandBus
 {
-    internal class MediatrEventNotifier : IEventNotifier
+    internal class MediatrDomainEventNotifier : IDomainEventNotifier
     {
         private readonly IMediator _mediator;
 
-        public MediatrEventNotifier(IMediator mediator)
+        public MediatrDomainEventNotifier(IMediator mediator)
         {
             _mediator = mediator;
         }

@@ -4,7 +4,7 @@ using OpenStore.Domain;
 
 namespace OpenStore.Application
 {
-    public interface IEventNotifier
+    public interface IDomainEventNotifier
     {
         Task Notify(IDomainEvent @event);
         Task NotifyMany(IEnumerable<IDomainEvent> events);

@@ -9,14 +9,19 @@ namespace OpenStore.Infrastructure.CommandBus
     {
         public static IServiceCollection AddCommandBus<TAnyHandler>(this IServiceCollection services)
         {
+            return services.AddCommandBus(Assembly.GetAssembly(typeof(TAnyHandler)));
+        }
+
+        public static IServiceCollection AddCommandBus(this IServiceCollection services, params Assembly[] assemblies)
+        {
             return services
-                    .AddTransient<IEventNotifier, MediatrEventNotifier>()
-                    .AddMediatR(Assembly.GetAssembly(typeof(TAnyHandler)))
+                    .AddTransient<IDomainEventNotifier, MediatrDomainEventNotifier>()
+                    .AddMediatR(assemblies)
                     .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
+                    .AddTransient(typeof(IPipelineBehavior<,>), typeof(NotifyRequestSuccessBehavior<,>))
                     .AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>))
                     .AddTransient(typeof(IPipelineBehavior<,>), typeof(DisposeBehavior<,>))
                 ;
         }
-
     }
 }

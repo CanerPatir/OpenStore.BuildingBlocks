@@ -17,16 +17,16 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
     {
         private readonly IEventStorageProvider<TAggregate> _eventStorageProvider;
         private readonly ISnapshotStorageProvider<TAggregate, TSnapshot> _snapshotStorageProvider;
-        private readonly IEventNotifier _eventNotifier;
+        private readonly IDomainEventNotifier _domainEventNotifier;
 
         public EventSourcingRepository(
             IEventStorageProvider<TAggregate> eventStorageProvider,
-            IEventNotifier eventNotifier,
+            IDomainEventNotifier domainEventNotifier,
             ISnapshotStorageProvider<TAggregate, TSnapshot> snapshotStorageProvider)
         {
             _eventStorageProvider = eventStorageProvider;
             _snapshotStorageProvider = snapshotStorageProvider;
-            _eventNotifier = eventNotifier;
+            _domainEventNotifier = domainEventNotifier;
         }
 
         public async Task<TAggregate> GetAsync(object id, CancellationToken cancellationToken = default)
@@ -111,11 +111,11 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
             await _eventStorageProvider.SaveAsync(aggregate);
 
             //Publish to event publisher asynchronously
-            if (_eventNotifier != null)
+            if (_domainEventNotifier != null)
             {
                 foreach (var e in changesToCommit)
                 {
-                    await _eventNotifier.Notify(e);
+                    await _domainEventNotifier.Notify(e);
                 }
             }
             

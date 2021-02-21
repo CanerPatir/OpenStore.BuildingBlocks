@@ -14,14 +14,14 @@ namespace OpenStore.Infrastructure.Data
     /// </summary>
     public abstract class OutBoxService : IOutBoxService
     {
-        protected IEventNotifier EventNotifier { get; }
+        protected IDomainEventNotifier DomainEventNotifier { get; }
         protected IUnitOfWork Uow { get; }
 
         protected ILogger Logger { get; }
 
-        protected OutBoxService(IUnitOfWork uow, IEventNotifier eventNotifier, ILogger logger)
+        protected OutBoxService(IUnitOfWork uow, IDomainEventNotifier domainEventNotifier, ILogger logger)
         {
-            EventNotifier = eventNotifier;
+            DomainEventNotifier = domainEventNotifier;
             Uow = uow;
             Logger = logger;
         }
@@ -98,7 +98,7 @@ namespace OpenStore.Infrastructure.Data
 
             if (recreate is IDomainEvent domainEvent)
             {
-                await EventNotifier.Notify(domainEvent);
+                await DomainEventNotifier.Notify(domainEvent);
             }
             else
             {
