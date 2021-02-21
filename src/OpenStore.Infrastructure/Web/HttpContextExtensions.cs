@@ -2,7 +2,7 @@
 
 namespace Microsoft.AspNetCore.Http
 {
-    public static class Extensions
+    public static class HttpContextExtensions
     {
         public static string GetCurrentUrl(this HttpContext httpContext)
         {
