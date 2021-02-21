@@ -26,20 +26,21 @@ namespace OpenStore.Infrastructure.CommandBus
             {
                 var httpContextAccessor = _serviceProvider.GetService<IHttpContextAccessor>();
                 var currentUrl = httpContextAccessor?.HttpContext?.GetCurrentUrl();
+                var userAgent = httpContextAccessor?.HttpContext?.GetUserAgent();
                 var claimsPrincipal = httpContextAccessor?.HttpContext?.User;
-                PublishAndForget((IBaseRequest) request, response is Unit ? null : response, currentUrl, claimsPrincipal);
+                PublishAndForget((IBaseRequest) request, response is Unit ? null : response, currentUrl, userAgent, claimsPrincipal);
             }
 
             return response;
         }
 
-        private void PublishAndForget(IBaseRequest notifySuccessRequest, object response, string currentUrl, ClaimsPrincipal claimsPrincipal)
+        private void PublishAndForget(IBaseRequest notifySuccessRequest, object response, string currentUrl, string userAgent, ClaimsPrincipal claimsPrincipal)
         {
             Task.Run(async () =>
             {
                 using var scope = _serviceProvider.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                await mediator.Publish(new RequestSuccessNotification(notifySuccessRequest, response, currentUrl, claimsPrincipal));
+                await mediator.Publish(new RequestSuccessNotification(notifySuccessRequest, response, currentUrl, userAgent, claimsPrincipal));
             });
         }
     }

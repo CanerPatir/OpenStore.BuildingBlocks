@@ -8,11 +8,12 @@ namespace OpenStore.Infrastructure.CommandBus
 {
     public class RequestSuccessNotification : INotification
     {
-        public RequestSuccessNotification(IBaseRequest request, object response, string currentUrl, ClaimsPrincipal claimsPrincipal)
+        public RequestSuccessNotification(IBaseRequest request, object response, string currentUrl, string userAgent, ClaimsPrincipal claimsPrincipal)
         {
             Request = request ?? throw new ArgumentNullException(nameof(request));
             Response = response;
             CurrentUrl = currentUrl;
+            UserAgent = userAgent;
             ClaimsPrincipal = claimsPrincipal;
         }
 
@@ -27,6 +28,8 @@ namespace OpenStore.Infrastructure.CommandBus
         /// Null if current context is not http context
         /// </summary>
         public string CurrentUrl { get; }
+
+        public string UserAgent { get; }
 
         /// <summary>
         /// Null if current context is not http or no authentication context
