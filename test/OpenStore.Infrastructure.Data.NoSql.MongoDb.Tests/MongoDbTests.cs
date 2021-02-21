@@ -36,7 +36,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Tests
             _runner = MongoDbRunner.Start();
 
             services.AddLogging();
-            services.AddCommandBus<MongoDbTests>();
+            services.AddOpenStoreCommandBus<MongoDbTests>();
             services.AddMongoDbDataInfrastructure(options => { }, "IntegrationTest");
             services.AddSingleton(sp => new MongoClient(_runner.ConnectionString));
         }

@@ -44,7 +44,7 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
             EmbeddedServer.Instance.StartServer();
             var testStore = EmbeddedServer.Instance.GetDocumentStore(TestStoreName);
             services.AddLogging();
-            services.AddCommandBus<RavenDbTests>();
+            services.AddOpenStoreCommandBus<RavenDbTests>();
             services.AddRavenDbDataInfrastructure(options => { });
             services.AddSingleton<IDocumentStore>(testStore);
         }

@@ -15,7 +15,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         protected override void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
-            services.AddCommandBus<EntityFrameworkCoreTests>();
+            services.AddOpenStoreCommandBus<EntityFrameworkCoreTests>();
             services.AddOpenStoreEfCore<TestDbContext, TestDbContext>("test conn str", EntityFrameworkDataSource.PostgreSql);
         }
 

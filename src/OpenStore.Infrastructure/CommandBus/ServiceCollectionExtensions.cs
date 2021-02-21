@@ -7,12 +7,12 @@ namespace OpenStore.Infrastructure.CommandBus
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCommandBus<TAnyHandler>(this IServiceCollection services)
+        public static IServiceCollection AddOpenStoreCommandBus<TAnyHandler>(this IServiceCollection services)
         {
-            return services.AddCommandBus(Assembly.GetAssembly(typeof(TAnyHandler)));
+            return services.AddOpenStoreCommandBus(Assembly.GetAssembly(typeof(TAnyHandler)));
         }
 
-        public static IServiceCollection AddCommandBus(this IServiceCollection services, params Assembly[] assemblies)
+        public static IServiceCollection AddOpenStoreCommandBus(this IServiceCollection services, params Assembly[] assemblies)
         {
             return services
                     .AddTransient<IDomainEventNotifier, MediatrDomainEventNotifier>()

@@ -23,7 +23,7 @@ namespace OpenStore.Infrastructure.Tests.CommandBus
         protected override void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
-            services.AddCommandBus(typeof(CommandBusTests).Assembly);
+            services.AddOpenStoreCore(typeof(CommandBusTests).Assembly);
         }
 
         [Fact]
