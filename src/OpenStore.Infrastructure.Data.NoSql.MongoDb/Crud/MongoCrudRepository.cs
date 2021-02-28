@@ -44,9 +44,14 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Crud
                 new ReplaceOptions(), cancellationToken);
         }
 
-        public Task DeleteAsync(object id, CancellationToken cancellationToken = default)
+        public Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default)
         {
             return MongoCollection.DeleteOneAsync(UnitOfWork.Session, x => x.Id == id.ToString(), new DeleteOptions(), cancellationToken);
+        }
+
+        public void Remove(TEntity entity)
+        {
+            MongoCollection.DeleteOne(UnitOfWork.Session, x => x.Id == entity.Id);
         }
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)

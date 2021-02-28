@@ -36,10 +36,15 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Crud
             return UnitOfWork.Session.StoreAsync(entity, cancellationToken);
         }
 
-        public Task DeleteAsync(object id, CancellationToken cancellationToken = default)
+        public Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default)
         {
             UnitOfWork.Session.Delete(id.ToString());
             return Task.CompletedTask;
+        }
+
+        public void Remove(TEntity entity)
+        {
+            UnitOfWork.Session.Delete(entity);
         }
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)

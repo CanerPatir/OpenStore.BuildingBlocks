@@ -12,7 +12,8 @@ namespace OpenStore.Application.Crud
         Task<TEntity> GetAsync(object id, CancellationToken cancellationToken = default);
         Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-        Task DeleteAsync(object id, CancellationToken cancellationToken = default);
+        Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default);
+        void Remove(TEntity entity);
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

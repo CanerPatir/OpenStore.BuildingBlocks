@@ -53,7 +53,13 @@ namespace OpenStore.Infrastructure.Data.NoSql.Couchbase.Crud
             }
         }
 
-        public Task DeleteAsync(object id, CancellationToken cancellationToken = default) => _collection.RemoveAsync(id.ToString());
+        public Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default) => _collection.RemoveAsync(id.ToString());
+        
+        public void Remove(TEntity entity)
+        {
+            throw new NotSupportedException();
+            _collection.RemoveAsync(entity.Id);
+        }
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {

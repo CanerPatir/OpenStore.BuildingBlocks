@@ -44,7 +44,7 @@ namespace OpenStore.Infrastructure.Data.Crud
 
         public virtual async Task Delete(object id, CancellationToken cancellationToken = default)
         {
-            await Repository.DeleteAsync(id, cancellationToken);
+            await Repository.RemoveByIdAsync(id, cancellationToken);
             await Repository.SaveChangesAsync(cancellationToken);
         }
 
