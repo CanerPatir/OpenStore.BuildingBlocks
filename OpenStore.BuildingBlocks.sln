@@ -43,6 +43,8 @@ ProjectSection(SolutionItems) = preProject
 	nuget-local.sh = nuget-local.sh
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.BB.TestProject", "test\OpenStore.BB.TestProject\OpenStore.BB.TestProject.csproj", "{FD89C3C5-BD45-435F-B2A6-68FFF1AB91CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,7 @@ Global
 		{6D6B7E95-D60C-44FD-B0F8-260D43288325} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
 		{6D358347-F486-41A7-96F3-5C50DB28B53B} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
 		{AD4BDD51-50F0-4DEF-AA15-238FDFE81372} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
+		{FD89C3C5-BD45-435F-B2A6-68FFF1AB91CD} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8D8D9039-9BD1-45F1-A28E-610BB0A9EE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -131,5 +134,9 @@ Global
 		{AD4BDD51-50F0-4DEF-AA15-238FDFE81372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD4BDD51-50F0-4DEF-AA15-238FDFE81372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD4BDD51-50F0-4DEF-AA15-238FDFE81372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD89C3C5-BD45-435F-B2A6-68FFF1AB91CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD89C3C5-BD45-435F-B2A6-68FFF1AB91CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD89C3C5-BD45-435F-B2A6-68FFF1AB91CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD89C3C5-BD45-435F-B2A6-68FFF1AB91CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
