@@ -4,9 +4,9 @@ namespace OpenStore.Domain
 {
     public interface IDomainEvent
     {
-        object Id { get; }
-        ulong Version { get; }
-        DateTime CommittedTimestamp { get; }
+        string Id { get; }
+        ulong Version { get; set; }
+        DateTime CommittedTimestamp { get; set; }
         string CorrelationId { get; }
     }
 }

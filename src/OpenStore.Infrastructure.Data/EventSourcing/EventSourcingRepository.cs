@@ -104,10 +104,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
             //perform pre commit actions
             foreach (var e in changesToCommit)
             {
-                if (e is DomainEvent domainEvent)
-                {
-                    domainEvent.CommittedTimestamp = DateTime.UtcNow;
-                }
+                e.CommittedTimestamp = DateTime.UtcNow;
             }
 
             //CommitAsync events to storage provider
@@ -121,7 +118,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
                     await _domainEventNotifier.Notify(e);
                 }
             }
-            
+
             //If the Aggregate implements snapshottable
             if (aggregate is ISnapshottable<TSnapshot> snapshottable &&
                 _snapshotStorageProvider != null)
@@ -129,8 +126,8 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
                 //Every N events we save a snapshot
                 if (aggregate.Version >= _snapshotStorageProvider.SnapshotFrequency &&
                     (
-                        (ulong)changesToCommit.Count >= _snapshotStorageProvider.SnapshotFrequency ||
-                        aggregate.Version % _snapshotStorageProvider.SnapshotFrequency < (ulong)changesToCommit.Count ||
+                        (ulong) changesToCommit.Count >= _snapshotStorageProvider.SnapshotFrequency ||
+                        aggregate.Version % _snapshotStorageProvider.SnapshotFrequency < (ulong) changesToCommit.Count ||
                         aggregate.Version % _snapshotStorageProvider.SnapshotFrequency == 0
                     )
                 )
@@ -148,6 +145,5 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
             // todo: activate over reflection to avoid forcing strict empty constructor declaration
             return new TAggregate();
         }
-
     }
 }

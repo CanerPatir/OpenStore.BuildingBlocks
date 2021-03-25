@@ -11,7 +11,7 @@ namespace OpenStore.Infrastructure.Data.EventStore.Tests
 {
     public class EventStoreTests : WithIoC
     {
-        public record StockCreate(object Id) : DomainEvent(Id), INotification;
+        public record StockCreate(string Id) : DomainEvent(Id), INotification;
 
         public class StockCreatedNotifHandler : INotificationHandler<StockCreate>
         {

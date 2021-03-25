@@ -10,8 +10,8 @@ namespace OpenStore.Domain.EventSourcing
     /// </summary>
     public abstract class EventSourcedAggregateRoot : AggregateRoot<string>
     {
-        private readonly object _applyLock = new object();
-        private readonly object _loadLock = new object();
+        private readonly object _applyLock = new();
+        private readonly object _loadLock = new();
         private readonly Dictionary<Type, string> _eventHandlerCache;
 
         public sealed override ulong Version { get; set; }
