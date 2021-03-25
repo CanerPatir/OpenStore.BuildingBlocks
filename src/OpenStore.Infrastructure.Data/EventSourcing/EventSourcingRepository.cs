@@ -104,7 +104,10 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
             //perform pre commit actions
             foreach (var e in changesToCommit)
             {
-                DoPreCommitTasks(e);
+                if (e is DomainEvent domainEvent)
+                {
+                    domainEvent.CommittedTimestamp = DateTime.UtcNow;
+                }
             }
 
             //CommitAsync events to storage provider
@@ -146,10 +149,5 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
             return new TAggregate();
         }
 
-        private static void DoPreCommitTasks(IDomainEvent e)
-        {
-            e.CommittedTimestamp = DateTimeOffset.Now;
-        }
-        
     }
 }

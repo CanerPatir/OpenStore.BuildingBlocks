@@ -27,7 +27,10 @@ namespace OpenStore.Domain
             lock (_uncommittedChanges)
             {
                 Version++;
-                @event.Version = Version;
+                if (@event is DomainEvent domainEvent)
+                {
+                    domainEvent.Version = Version;
+                }
                 _uncommittedChanges.Add(@event);
             }
         }
