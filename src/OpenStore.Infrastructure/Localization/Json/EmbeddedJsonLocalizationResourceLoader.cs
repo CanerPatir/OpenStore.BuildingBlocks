@@ -8,15 +8,15 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace OpenStore.Infrastructure.Localization
+namespace OpenStore.Infrastructure.Localization.Json
 {
-    public class EmbeddedLocalizationResourceLoader : ILocalizationResourceLoader
+    public class EmbeddedJsonLocalizationResourceLoader : IJsonLocalizationResourceLoader
     {
-        private readonly ILogger<EmbeddedLocalizationResourceLoader> _logger;
-        private readonly OpenStoreRequestLocalizationOptions _options;
+        private readonly ILogger<EmbeddedJsonLocalizationResourceLoader> _logger;
+        private readonly OpenStoreJsonLocalizationOptions _options;
         private readonly Regex _regex;
 
-        public EmbeddedLocalizationResourceLoader(IOptions<OpenStoreRequestLocalizationOptions> options, ILogger<EmbeddedLocalizationResourceLoader> logger)
+        public EmbeddedJsonLocalizationResourceLoader(IOptions<OpenStoreJsonLocalizationOptions> options, ILogger<EmbeddedJsonLocalizationResourceLoader> logger)
         {
             _options = options.Value;
             

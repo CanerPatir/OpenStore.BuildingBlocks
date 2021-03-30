@@ -5,43 +5,87 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenStore.Infrastructure.Localization.Json;
+using OpenStore.Infrastructure.Localization.Resx;
 
 namespace OpenStore.Infrastructure.Localization
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddOpenStoreLocalization(this IServiceCollection services) => AddOpenStoreLocalization(services, _ => { });
+        public static IServiceCollection AddOpenStoreJsonLocalization(this IServiceCollection services) => AddOpenStoreJsonLocalization(services, null);
 
-        public static IServiceCollection AddOpenStoreLocalization(this IServiceCollection services, Action<OpenStoreRequestLocalizationOptions> optionsBuilder)
+        public static IServiceCollection AddOpenStoreJsonLocalization(this IServiceCollection services, IMvcBuilder mvcBuilder) =>
+            AddOpenStoreJsonLocalization(services, mvcBuilder, _ => { });
+
+        public static IServiceCollection AddOpenStoreJsonLocalization(this IServiceCollection services, IMvcBuilder mvcBuilder,
+            Action<OpenStoreJsonLocalizationOptions> optionsBuilder)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
             if (optionsBuilder == null) throw new ArgumentNullException(nameof(optionsBuilder));
-            
+
+            mvcBuilder?.AddViewLocalization().AddDataAnnotationsLocalization();
+
             services
+                .Configure(optionsBuilder)
                 .Configure<RequestLocalizationOptions>(opts =>
                 {
-                    opts.DefaultRequestCulture = new RequestCulture(AppLocalizationContext.DefaultUiCulture, AppLocalizationContext.DefaultUiCulture);
-                    opts.SupportedCultures = AppLocalizationContext.DefaultSupportedUiCultures;
-                    opts.SupportedUICultures = AppLocalizationContext.DefaultSupportedUiCultures;
+                    var openStoreLocalizationOptions = new OpenStoreJsonLocalizationOptions();
+                    optionsBuilder(openStoreLocalizationOptions);
+                    opts.DefaultRequestCulture = new RequestCulture(openStoreLocalizationOptions.DefaultUiCulture, openStoreLocalizationOptions.DefaultUiCulture);
+                    opts.SupportedCultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
+                    opts.SupportedUICultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
                 })
-                .Configure(optionsBuilder)
-                .AddSingleton<IReloadableStringLocalizerFactory, JsonStringLocalizerFactory>()
-                .AddSingleton<IStringLocalizerFactory>(c => c.GetRequiredService<IReloadableStringLocalizerFactory>())
+                .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>()
                 .AddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>))
-                .AddSingleton<ILocalizationResourceLoader>(sp =>
+                .AddSingleton<IJsonLocalizationResourceLoader>(sp =>
                 {
-                    var options = sp.GetRequiredService<IOptions<OpenStoreRequestLocalizationOptions>>();
+                    var options = sp.GetRequiredService<IOptions<OpenStoreJsonLocalizationOptions>>();
                     var source = options.Value.Source;
 
                     return source switch
                     {
-                        OpenStoreRequestLocalizationSource.Content => new ContentLocalizationResourceLoader(options, sp.GetRequiredService<ILogger<ContentLocalizationResourceLoader>>()),
-                        OpenStoreRequestLocalizationSource.EmbeddedSource => new EmbeddedLocalizationResourceLoader(options, sp.GetRequiredService<ILogger<EmbeddedLocalizationResourceLoader>>()),
+                        OpenStoreJsonLocalizationSource.Content => new ContentJsonLocalizationResourceLoader(options,
+                            sp.GetRequiredService<ILogger<ContentJsonLocalizationResourceLoader>>()),
+                        OpenStoreJsonLocalizationSource.EmbeddedSource => new EmbeddedJsonLocalizationResourceLoader(options,
+                            sp.GetRequiredService<ILogger<EmbeddedJsonLocalizationResourceLoader>>()),
                         _ => throw new Exception()
                     };
                 })
                 .AddSingleton<IOpenStoreLocalizer, OpenStoreLocalizer>()
-                // .AddHostedService<LocalizationResourceChangeWatcher>()
+                ;
+
+            return services;
+        }
+
+        // -- resx
+        
+        public static IServiceCollection AddOpenStoreResxLocalization(this IServiceCollection services) => AddOpenStoreResxLocalization(services, null);
+
+        public static IServiceCollection AddOpenStoreResxLocalization(this IServiceCollection services, IMvcBuilder mvcBuilder) =>
+            AddOpenStoreResxLocalization(services, mvcBuilder, _ => { });
+
+        public static IServiceCollection AddOpenStoreResxLocalization(this IServiceCollection services, IMvcBuilder mvcBuilder,
+            Action<OpenStoreResxLocalizationOptions> optionsBuilder)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (optionsBuilder == null) throw new ArgumentNullException(nameof(optionsBuilder));
+
+            var openStoreLocalizationOptions = new OpenStoreResxLocalizationOptions();
+            optionsBuilder(openStoreLocalizationOptions);
+
+            mvcBuilder?.AddViewLocalization().AddDataAnnotationsLocalization();
+
+            services.AddLocalization(opt => { opt.ResourcesPath = openStoreLocalizationOptions.ResourcesPath; });
+
+            services
+                .Configure(optionsBuilder)
+                .Configure<RequestLocalizationOptions>(opts =>
+                {
+                    opts.DefaultRequestCulture = new RequestCulture(openStoreLocalizationOptions.DefaultUiCulture, openStoreLocalizationOptions.DefaultUiCulture);
+                    opts.SupportedCultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
+                    opts.SupportedUICultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
+                })
+                .AddSingleton<IOpenStoreLocalizer, OpenStoreLocalizer>()
                 ;
 
             return services;

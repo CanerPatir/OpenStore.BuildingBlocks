@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace OpenStore.Infrastructure.Localization
+namespace OpenStore.Infrastructure.Localization.Json
 {
-    public interface ILocalizationResourceLoader
+    public interface IJsonLocalizationResourceLoader
     {
         Dictionary<CultureInfo, Dictionary<string, string>> ReadResources(CultureInfo cultureInfo);
     }

@@ -7,14 +7,14 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace OpenStore.Infrastructure.Localization
+namespace OpenStore.Infrastructure.Localization.Json
 {
-    public class ContentLocalizationResourceLoader : ILocalizationResourceLoader
+    public class ContentJsonLocalizationResourceLoader : IJsonLocalizationResourceLoader
     {
-        private readonly ILogger<ContentLocalizationResourceLoader> _logger;
-        private readonly OpenStoreRequestLocalizationOptions _options;
+        private readonly ILogger<ContentJsonLocalizationResourceLoader> _logger;
+        private readonly OpenStoreJsonLocalizationOptions _options;
 
-        public ContentLocalizationResourceLoader(IOptions<OpenStoreRequestLocalizationOptions> options, ILogger<ContentLocalizationResourceLoader> logger)
+        public ContentJsonLocalizationResourceLoader(IOptions<OpenStoreJsonLocalizationOptions> options, ILogger<ContentJsonLocalizationResourceLoader> logger)
         {
             _options = options.Value;
             _logger = logger;

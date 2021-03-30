@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace OpenStore.Infrastructure.Localization
+namespace OpenStore.Infrastructure.Localization.Json
 {
-    public class JsonStringLocalizer : IReloadableJsonLocalizer
+    public class JsonStringLocalizer : IStringLocalizer
     {
         private Lazy<Dictionary<CultureInfo, Dictionary<string, string>>> _resources;
         private readonly CultureInfo _cultureInfo;
-        private readonly ILocalizationResourceLoader _resourceLoader;
+        private readonly IJsonLocalizationResourceLoader _resourceLoader;
         private readonly ILogger<JsonStringLocalizer> _logger;
+        private readonly OpenStoreJsonLocalizationOptions _options;
 
-        public JsonStringLocalizer(CultureInfo cultureInfo, ILocalizationResourceLoader resourceLoader, ILogger<JsonStringLocalizer> logger)
+        public JsonStringLocalizer(CultureInfo cultureInfo, IJsonLocalizationResourceLoader resourceLoader, 
+            IOptions<OpenStoreJsonLocalizationOptions> optionsOptions,
+            ILogger<JsonStringLocalizer> logger)
         {
-            ReloadResource();
+            _resources = new Lazy<Dictionary<CultureInfo, Dictionary<string, string>>>(() => _resourceLoader.ReadResources(_cultureInfo));
             _cultureInfo = cultureInfo;
             _resourceLoader = resourceLoader;
             _logger = logger;
-        }
-
-        public void ReloadResource()
-        {
-            _resources = new Lazy<Dictionary<CultureInfo, Dictionary<string, string>>>(() => _resourceLoader.ReadResources(_cultureInfo));
+            _options = optionsOptions.Value;
         }
 
         public LocalizedString this[string name] => this[name, null];
@@ -46,7 +46,7 @@ namespace OpenStore.Infrastructure.Localization
         {
             return _resources.Value.ContainsKey(CultureInfo.CurrentCulture)
                 ? _resources.Value[CultureInfo.CurrentCulture].TryGetValue(name, out value)
-                : _resources.Value[AppLocalizationContext.DefaultUiCulture].TryGetValue(name, out value);
+                : _resources.Value[_options.DefaultUiCulture].TryGetValue(name, out value);
         }
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => new LocalizedString[0];

@@ -2,9 +2,9 @@ using System.Globalization;
 
 namespace OpenStore.Infrastructure.Localization
 {
-    public static class AppLocalizationContext
+    public abstract class OpenStoreLocalizationOptions
     {
-        static AppLocalizationContext()
+        protected OpenStoreLocalizationOptions()
         {
             DefaultSupportedUiCultures = new[]
             {
@@ -17,7 +17,8 @@ namespace OpenStore.Infrastructure.Localization
             DefaultUiCulture = new CultureInfo("en-US");
         }
 
-        public static CultureInfo[] DefaultSupportedUiCultures { get; }
-        public static CultureInfo DefaultUiCulture { get; }
+        public CultureInfo[] DefaultSupportedUiCultures { get; set; }
+
+        public CultureInfo DefaultUiCulture { get; set; }
     }
 }
