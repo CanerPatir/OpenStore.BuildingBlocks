@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,19 +24,21 @@ namespace OpenStore.Infrastructure.Localization
             if (services == null) throw new ArgumentNullException(nameof(services));
             if (optionsBuilder == null) throw new ArgumentNullException(nameof(optionsBuilder));
 
-            mvcBuilder?.AddViewLocalization().AddDataAnnotationsLocalization();
+            var openStoreLocalizationOptions = new OpenStoreJsonLocalizationOptions();
+            optionsBuilder(openStoreLocalizationOptions);
 
+            mvcBuilder?.AddViewLocalization().AddDataAnnotationsLocalization();
             services
                 .Configure(optionsBuilder)
                 .Configure<RequestLocalizationOptions>(opts =>
                 {
-                    var openStoreLocalizationOptions = new OpenStoreJsonLocalizationOptions();
-                    optionsBuilder(openStoreLocalizationOptions);
                     opts.DefaultRequestCulture = new RequestCulture(openStoreLocalizationOptions.DefaultUiCulture, openStoreLocalizationOptions.DefaultUiCulture);
                     opts.SupportedCultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
                     opts.SupportedUICultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
                 })
                 .AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>()
+                .AddSingleton(sp =>
+                    sp.GetRequiredService<IStringLocalizerFactory>().Create("SharedResource", openStoreLocalizationOptions.EmbeddedResourceAssembly.FullName))
                 .AddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>))
                 .AddSingleton<IJsonLocalizationResourceLoader>(sp =>
                 {
@@ -58,7 +61,7 @@ namespace OpenStore.Infrastructure.Localization
         }
 
         // -- resx
-        
+
         public static IServiceCollection AddOpenStoreResxLocalization(this IServiceCollection services) => AddOpenStoreResxLocalization(services, null);
 
         public static IServiceCollection AddOpenStoreResxLocalization(this IServiceCollection services, IMvcBuilder mvcBuilder) =>
@@ -75,7 +78,12 @@ namespace OpenStore.Infrastructure.Localization
 
             mvcBuilder?.AddViewLocalization().AddDataAnnotationsLocalization();
 
-            services.AddLocalization(opt => { opt.ResourcesPath = openStoreLocalizationOptions.ResourcesPath; });
+            services.AddLocalization(opt =>
+            {
+                opt.ResourcesPath = openStoreLocalizationOptions.ResourcesPath;
+            });
+            services.AddSingleton(sp =>
+                sp.GetRequiredService<IStringLocalizerFactory>().Create(openStoreLocalizationOptions.SharedResourceName, openStoreLocalizationOptions.SharedResourceAssemblyName));
 
             services
                 .Configure(optionsBuilder)
@@ -84,6 +92,11 @@ namespace OpenStore.Infrastructure.Localization
                     opts.DefaultRequestCulture = new RequestCulture(openStoreLocalizationOptions.DefaultUiCulture, openStoreLocalizationOptions.DefaultUiCulture);
                     opts.SupportedCultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
                     opts.SupportedUICultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
+                    var provider = opts.RequestCultureProviders.SingleOrDefault(x => x is CookieRequestCultureProvider);
+                    if (provider is CookieRequestCultureProvider cookieRequestCultureProvider)
+                    {
+                        cookieRequestCultureProvider.CookieName = LocalizationConstants.DefaultCookieName;
+                    }
                 })
                 .AddSingleton<IOpenStoreLocalizer, OpenStoreLocalizer>()
                 ;
