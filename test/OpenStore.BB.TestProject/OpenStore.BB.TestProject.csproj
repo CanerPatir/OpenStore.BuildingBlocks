@@ -11,58 +11,46 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Resources\Views\Index.tr-TR.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Index.tr-TR.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Views\Index.en-US.resx">
+      <EmbeddedResource Update="Resources\Views\Home\Index.en-US.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\SharedResource.tr-TR.resx">
+      <EmbeddedResource Update="Resources\Views\Home\Index.tr-TR.resx">
         <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>SharedResource.tr-TR.Designer.cs</LastGenOutput>
+        <LastGenOutput>Index.tr-TR.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\SharedResource.en-US.resx">
+      <EmbeddedResource Update="Resources\Views\Contact\Index.en-US.resx">
         <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>SharedResource.en-US.Designer.cs</LastGenOutput>
+        <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Controllers\HomeController.tr-TR.resx">
+      <EmbeddedResource Update="Resources\Views\Contact\Index.tr-TR.resx">
         <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>HomeController.tr-TR.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Controllers\HomeController.en-US.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>HomeController.en-US.Designer.cs</LastGenOutput>
+        <LastGenOutput>Index.tr-TR.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Resources\Views\Index.en-US.Designer.cs">
+      <Compile Update="Resources\Views\Home\Index.en-US.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
-        <DependentUpon>Index-en-US.rex.resx</DependentUpon>
+        <DependentUpon>Index.en.resx</DependentUpon>
       </Compile>
-      <Compile Update="Resources\SharedResource.tr-TR.Designer.cs">
+      <Compile Update="Resources\Views\Home\Index.tr-TR.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
-        <DependentUpon>SharedResource.tr-TR.resx</DependentUpon>
+        <DependentUpon>Index.tr.resx</DependentUpon>
       </Compile>
-      <Compile Update="Resources\SharedResource.en-US.Designer.cs">
+      <Compile Update="Resources\Views\Contact\Index.en-US.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
-        <DependentUpon>SharedResource.en-US.resx</DependentUpon>
+        <DependentUpon>Index.en-US.resx</DependentUpon>
       </Compile>
-      <Compile Update="Resources\Controllers\HomeController.tr-TR.Designer.cs">
+      <Compile Update="Resources\Views\Contact\Index.tr-TR.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
-        <DependentUpon>HomeController.tr-TR.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Resources\Controllers\HomeController.en-US.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>HomeController.en-US.resx</DependentUpon>
+        <DependentUpon>Index.tr-TR.resx</DependentUpon>
       </Compile>
     </ItemGroup>
+
 
 </Project>

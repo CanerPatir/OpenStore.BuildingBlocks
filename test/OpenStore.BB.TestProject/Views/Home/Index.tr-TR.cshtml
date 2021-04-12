@@ -1,9 +1,14 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page TR";
 }
-@Model
+
+Controller: @Model
 <br>
-tr tr
+Shared: @L["Shared"]
+<br>
+View: @VL["MyViewKey"]
 
-
-@L["Shared"]
+@* @foreach (var localizedString in VL.GetAllStrings()) *@
+@* { *@
+@*     <li>@localizedString</li> *@
+@* } *@

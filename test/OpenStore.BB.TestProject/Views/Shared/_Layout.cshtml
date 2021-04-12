@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Globalization
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8"/>
@@ -6,10 +7,12 @@
     <title>@ViewData["Title"] - OpenStore</title>
 </head>
 <body>
+CurrentCulture : @CultureInfo.CurrentCulture
+<br>
+CurrentUICulture : @CultureInfo.CurrentUICulture
+<br>
 @RenderBody()
 @await RenderSectionAsync("Scripts", required: false)
-
-                @await Html.PartialAsync("_SelectLanguagePartial")
-
+@await Html.PartialAsync("_SelectLanguagePartial")
 </body>
 </html>

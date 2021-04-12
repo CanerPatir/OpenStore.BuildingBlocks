@@ -1,6 +1,15 @@
 @model string
 
-
 @Model
 <br>
 default index
+<br>
+Controller: @Model
+<br>
+Shared: @L["Shared"]
+<br>
+View: @VL["MyViewKey"]
+@* @foreach (var localizedString in VL.GetAllStrings()) *@
+@* { *@
+@*     <li>@localizedString</li> *@
+@* } *@

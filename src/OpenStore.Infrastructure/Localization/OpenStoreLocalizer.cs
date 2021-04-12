@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using OpenStore.Infrastructure.Localization.Resx;
 
 namespace OpenStore.Infrastructure.Localization
 {
@@ -6,17 +9,14 @@ namespace OpenStore.Infrastructure.Localization
     {
         private readonly IStringLocalizer _localizer;
 
-        public OpenStoreLocalizer(IStringLocalizer localizer)
+        public OpenStoreLocalizer(IStringLocalizerFactory localizerFactory, IOptions<OpenStoreResxLocalizationOptions> openStoreLocalizationOptionsOptions)
         {
-            _localizer = localizer;
+            var openStoreLocalizationOptions = openStoreLocalizationOptionsOptions.Value;
+            _localizer = localizerFactory.Create(openStoreLocalizationOptions.SharedResourceName, openStoreLocalizationOptions.SharedResourceAssemblyName);
         }
-
-        public LocalizedString this[string name] => GetLocalizedHtmlString(name);
         
-        public LocalizedString this[string name, params object[] arguments] => GetLocalizedHtmlString(name, arguments);
+        public LocalizedString this[string name] => _localizer[name];
         
-        public LocalizedString GetLocalizedHtmlString(string key) => _localizer[key];
-
-        public LocalizedString GetLocalizedHtmlString(string key, params object[] arguments) => _localizer[key, arguments];
+        public LocalizedString this[string name, params object[] arguments] => _localizer[name, arguments];
     }
 }

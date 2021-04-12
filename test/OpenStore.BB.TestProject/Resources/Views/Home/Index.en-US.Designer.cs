@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OpenStore.BB.TestProject.Resources.Views {
+namespace OpenStore.BB.TestProject.Resources.Views.Home {
     using System;
     
     
@@ -28,7 +28,7 @@ namespace OpenStore.BB.TestProject.Resources.Views {
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("OpenStore.BB.TestProject.Resources.Views.Index_en_US", typeof(Index_en_US).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("OpenStore.BB.TestProject.Resources.Views.Home.Index_en_US", typeof(Index_en_US).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,9 +45,9 @@ namespace OpenStore.BB.TestProject.Resources.Views {
             }
         }
         
-        internal static string MyKey {
+        internal static string MyViewKey {
             get {
-                return ResourceManager.GetString("MyKey", resourceCulture);
+                return ResourceManager.GetString("MyViewKey", resourceCulture);
             }
         }
     }

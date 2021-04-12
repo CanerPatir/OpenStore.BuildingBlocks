@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,17 +74,22 @@ namespace OpenStore.Infrastructure.Localization
             if (services == null) throw new ArgumentNullException(nameof(services));
             if (optionsBuilder == null) throw new ArgumentNullException(nameof(optionsBuilder));
 
-            var openStoreLocalizationOptions = new OpenStoreResxLocalizationOptions();
+            var openStoreLocalizationOptions = new OpenStoreResxLocalizationOptions()
+            {
+                SharedResourceAssemblyName = Assembly.GetCallingAssembly().FullName
+            };
             optionsBuilder(openStoreLocalizationOptions);
 
-            mvcBuilder?.AddViewLocalization().AddDataAnnotationsLocalization();
+            mvcBuilder?
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization(options => {
+                    options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create("SharedResource", openStoreLocalizationOptions.SharedResourceAssemblyName);
+                });;
 
             services.AddLocalization(opt =>
             {
                 opt.ResourcesPath = openStoreLocalizationOptions.ResourcesPath;
             });
-            services.AddSingleton(sp =>
-                sp.GetRequiredService<IStringLocalizerFactory>().Create(openStoreLocalizationOptions.SharedResourceName, openStoreLocalizationOptions.SharedResourceAssemblyName));
 
             services
                 .Configure(optionsBuilder)
@@ -92,6 +98,7 @@ namespace OpenStore.Infrastructure.Localization
                     opts.DefaultRequestCulture = new RequestCulture(openStoreLocalizationOptions.DefaultUiCulture, openStoreLocalizationOptions.DefaultUiCulture);
                     opts.SupportedCultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
                     opts.SupportedUICultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
+                    
                     var provider = opts.RequestCultureProviders.SingleOrDefault(x => x is CookieRequestCultureProvider);
                     if (provider is CookieRequestCultureProvider cookieRequestCultureProvider)
                     {

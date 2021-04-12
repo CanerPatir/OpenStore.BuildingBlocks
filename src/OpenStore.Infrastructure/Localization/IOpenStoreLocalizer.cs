@@ -6,7 +6,5 @@ namespace OpenStore.Infrastructure.Localization
     {
         LocalizedString this[string name] { get; }
         LocalizedString this[string name, params object[] arguments] { get; }
-        LocalizedString GetLocalizedHtmlString(string key);
-        LocalizedString GetLocalizedHtmlString(string key, params object[] arguments);
     }
 }
