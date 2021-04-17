@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using OpenStore.Infrastructure.Localization.Resx;
@@ -12,7 +12,7 @@ namespace OpenStore.Infrastructure.Localization
         public OpenStoreLocalizer(IStringLocalizerFactory localizerFactory, IOptions<OpenStoreResxLocalizationOptions> openStoreLocalizationOptionsOptions)
         {
             var openStoreLocalizationOptions = openStoreLocalizationOptionsOptions.Value;
-            _localizer = localizerFactory.Create(openStoreLocalizationOptions.SharedResourceName, openStoreLocalizationOptions.SharedResourceAssemblyName);
+            _localizer = localizerFactory.Create(openStoreLocalizationOptions.SharedResourceName, openStoreLocalizationOptions.Assembly.FullName ?? throw new InvalidOperationException("openStoreLocalizationOptions.Assembly is null"));
         }
         
         public LocalizedString this[string name] => _localizer[name];

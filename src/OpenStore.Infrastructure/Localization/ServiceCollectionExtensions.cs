@@ -3,7 +3,9 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -74,30 +76,38 @@ namespace OpenStore.Infrastructure.Localization
             if (services == null) throw new ArgumentNullException(nameof(services));
             if (optionsBuilder == null) throw new ArgumentNullException(nameof(optionsBuilder));
 
-            var openStoreLocalizationOptions = new OpenStoreResxLocalizationOptions()
+            var openStoreResxLocalizationOptions = new OpenStoreResxLocalizationOptions()
             {
-                SharedResourceAssemblyName = Assembly.GetCallingAssembly().FullName
+                Assembly = Assembly.GetCallingAssembly()
             };
-            optionsBuilder(openStoreLocalizationOptions);
-
+            optionsBuilder(openStoreResxLocalizationOptions);
+            if (openStoreResxLocalizationOptions.Assembly == null)
+            {
+                throw new ArgumentNullException(nameof(openStoreResxLocalizationOptions.Assembly));
+            }
+            
             mvcBuilder?
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options => {
-                    options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create("SharedResource", openStoreLocalizationOptions.SharedResourceAssemblyName);
-                });;
+                    options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create("SharedResource", openStoreResxLocalizationOptions.Assembly.FullName);
+                });
+            if (mvcBuilder != null)
+            {
+                services.Replace(ServiceDescriptor.Transient<IViewLocalizer>(sp => new CustomViewLocalizer(sp.GetRequiredService<IHtmlLocalizerFactory>(), openStoreResxLocalizationOptions.Assembly.FullName)));
+            }
 
             services.AddLocalization(opt =>
             {
-                opt.ResourcesPath = openStoreLocalizationOptions.ResourcesPath;
+                opt.ResourcesPath = openStoreResxLocalizationOptions.ResourcesPath;
             });
 
             services
                 .Configure(optionsBuilder)
                 .Configure<RequestLocalizationOptions>(opts =>
                 {
-                    opts.DefaultRequestCulture = new RequestCulture(openStoreLocalizationOptions.DefaultUiCulture, openStoreLocalizationOptions.DefaultUiCulture);
-                    opts.SupportedCultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
-                    opts.SupportedUICultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
+                    opts.DefaultRequestCulture = new RequestCulture(openStoreResxLocalizationOptions.DefaultUiCulture, openStoreResxLocalizationOptions.DefaultUiCulture);
+                    opts.SupportedCultures = openStoreResxLocalizationOptions.DefaultSupportedUiCultures;
+                    opts.SupportedUICultures = openStoreResxLocalizationOptions.DefaultSupportedUiCultures;
                     
                     var provider = opts.RequestCultureProviders.SingleOrDefault(x => x is CookieRequestCultureProvider);
                     if (provider is CookieRequestCultureProvider cookieRequestCultureProvider)
@@ -107,6 +117,7 @@ namespace OpenStore.Infrastructure.Localization
                 })
                 .AddSingleton<IOpenStoreLocalizer, OpenStoreLocalizer>()
                 ;
+            
 
             return services;
         }
