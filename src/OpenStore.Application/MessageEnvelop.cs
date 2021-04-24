@@ -14,14 +14,14 @@ namespace OpenStore.Application
         [Required] public string Type { get; set; }
         [Required] public string Payload { get; set; }
         [Required] public DateTimeOffset Timestamp { get; set; }
-        [Required] public ulong Version { get; set; }
+        [Required] public long Version { get; set; }
         public string CorrelationId { get; set; }
 
         protected MessageEnvelop()
         {
         }
         
-        protected MessageEnvelop(object message, ulong version, string correlationId)
+        protected MessageEnvelop(object message, long version, string correlationId)
         {
             Id = KeyGenerator.GenerateGuid();
             Type = message.GetType().AssemblyQualifiedName;

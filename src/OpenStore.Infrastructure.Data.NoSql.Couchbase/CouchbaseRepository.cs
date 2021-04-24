@@ -32,7 +32,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.Couchbase
             var result = await _collection.GetAsync(id.ToString(), new GetOptions().CancellationToken(token));
 
             var entity = result.ContentAs<TAggregateRoot>();
-            entity.Version = result.Cas;
+            entity.Version = Convert.ToInt64(result.Cas);
 
             return entity;
         }
@@ -49,7 +49,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.Couchbase
             {
                 try
                 {
-                    await _collection.ReplaceAsync(aggregateRoot.Id, aggregateRoot, new ReplaceOptions().Cas(aggregateRoot.Version).CancellationToken(token));
+                    await _collection.ReplaceAsync(aggregateRoot.Id, aggregateRoot, new ReplaceOptions().Cas(Convert.ToUInt64(aggregateRoot.Version)).CancellationToken(token));
                 }
                 catch (CasMismatchException ex)
                 {
@@ -60,7 +60,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.Couchbase
 
         public override async Task Delete(TAggregateRoot aggregateRoot, CancellationToken token = default)
         {
-            await _collection.RemoveAsync(aggregateRoot.Id, new RemoveOptions().Cas(aggregateRoot.Version).CancellationToken(token));
+            await _collection.RemoveAsync(aggregateRoot.Id, new RemoveOptions().Cas(Convert.ToUInt64(aggregateRoot.Version)).CancellationToken(token));
         }
     }
 }

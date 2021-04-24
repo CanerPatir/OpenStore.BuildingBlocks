@@ -33,7 +33,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
             return (IDomainEvent)_serializer.Deserialize(returnedEvent.Event.Data, returnType); 
         }
 
-        protected EventData SerializeEvent(IDomainEvent @event, ulong commitNumber)
+        protected EventData SerializeEvent(IDomainEvent @event, long commitNumber)
         {
             var header = new EventStoreMetaDataHeader()
             {
@@ -53,7 +53,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
             return (TSnapshot) _serializer.Deserialize(returnedEvent.Event.Data, returnType);
         }
 
-        protected EventData SerializeSnapshotEvent<TSnapshot>(TSnapshot snapshot, ulong commitNumber)
+        protected EventData SerializeSnapshotEvent<TSnapshot>(TSnapshot snapshot, long commitNumber)
             where TSnapshot : ISnapshot
         {
             var header = new EventStoreMetaDataHeader()

@@ -25,9 +25,9 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
             // Arrange
 
             // Act
-            var repo = GetService<IRepository<TestEntity>>();
-            var qRepo = GetService<ICrudRepository<TestEntity>>();
-            var tRepo = GetService<ITransactionalRepository<TestEntity>>();
+            var repo = GetService<IRepository<TestAggregate>>();
+            var qRepo = GetService<ICrudRepository<TestAggregate>>();
+            var tRepo = GetService<ITransactionalRepository<TestAggregate>>();
 
             // Assert
             Assert.NotNull(repo);
@@ -40,15 +40,15 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         public async Task Create()
         {
             // Arrange
-            var repo = GetService<IEntityFrameworkRepository<TestEntity>>();
+            var repo = GetService<IEntityFrameworkRepository<TestAggregate>>();
 
-            var entity = new TestEntity("test");
+            var entity = new TestAggregate("test");
             await repo.SaveAsync(entity);
             // Act
 
             NewServiceScope();
 
-            var newRepo = GetService<ITransactionalRepository<TestEntity>>();
+            var newRepo = GetService<ITransactionalRepository<TestAggregate>>();
             var loadedEntity = await newRepo.GetAsync(entity.Id);
 
             // Assert
@@ -60,9 +60,9 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         public async Task Update()
         {
             // Arrange
-            var repo = GetService<ITransactionalRepository<TestEntity>>();
+            var repo = GetService<ITransactionalRepository<TestAggregate>>();
 
-            var entity = new TestEntity("test");
+            var entity = new TestAggregate("test");
             await repo.SaveAsync(entity);
 
             // Act
@@ -71,31 +71,55 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
 
             // Assert
             using var scope = NewServiceScope();
-            var newRepo = GetService<ITransactionalRepository<TestEntity>>();
+            var newRepo = GetService<ITransactionalRepository<TestAggregate>>();
 
             var lastState = await newRepo.GetAsync(entity.Id);
 
             Assert.True(lastState.InventoryCode == "mutated");
+        }
+        
+        [Fact(Skip = "should be fixed")]
+        public async Task UpdateEntityWithVersion()
+        {
+            // Arrange
+            var repo = GetService<ICrudRepository<TestEntity>>();
+
+            var entity = new TestEntity();
+            await repo.InsertAsync(entity);
+            await repo.SaveChangesAsync();
+
+            // Act
+            entity.Data = "mutated";
+            await repo.SaveChangesAsync();
+
+            // Assert
+            using var scope = NewServiceScope();
+            var newRepo = GetService<ICrudRepository<TestEntity>>();
+
+            var lastState = await newRepo.GetAsync(entity.Id);
+
+            Assert.True(lastState.Data == "mutated");
+            Assert.Equal(1L,  lastState.Version);
         }
 
         [Fact]
         public async Task Delete()
         {
             // Arrange
-            var repo = GetService<ITransactionalRepository<TestEntity>>();
-            var entity = new TestEntity("test");
+            var repo = GetService<ITransactionalRepository<TestAggregate>>();
+            var entity = new TestAggregate("test");
             await repo.SaveAsync(entity);
 
             // Act
             NewServiceScope();
-            repo = GetService<ITransactionalRepository<TestEntity>>();
+            repo = GetService<ITransactionalRepository<TestAggregate>>();
             entity = await repo.GetAsync(entity.Id);
             await repo.Delete(entity);
             await repo.SaveAsync(entity);
 
             // Assert
             NewServiceScope();
-            repo = GetService<ITransactionalRepository<TestEntity>>();
+            repo = GetService<ITransactionalRepository<TestAggregate>>();
 
             var lastState = await repo.GetAsync(entity.Id);
 
@@ -106,11 +130,11 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         public async Task Query_Test()
         {
             // Arrange
-            var repo = GetService<IRepository<TestEntity>>();
-            var repo2 = GetService<ICrudRepository<TestEntity>>();
+            var repo = GetService<IRepository<TestAggregate>>();
+            var repo2 = GetService<ICrudRepository<TestAggregate>>();
 
-            await repo.SaveAsync(new TestEntity("test"));
-            await repo.SaveAsync(new TestEntity("test2"));
+            await repo.SaveAsync(new TestAggregate("test"));
+            await repo.SaveAsync(new TestAggregate("test2"));
 
             // Act
             var items = await repo2.Query.ToListAsync();

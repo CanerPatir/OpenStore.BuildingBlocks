@@ -126,8 +126,8 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
                 //Every N events we save a snapshot
                 if (aggregate.Version >= _snapshotStorageProvider.SnapshotFrequency &&
                     (
-                        (ulong) changesToCommit.Count >= _snapshotStorageProvider.SnapshotFrequency ||
-                        aggregate.Version % _snapshotStorageProvider.SnapshotFrequency < (ulong) changesToCommit.Count ||
+                        changesToCommit.Count >= _snapshotStorageProvider.SnapshotFrequency ||
+                        aggregate.Version % _snapshotStorageProvider.SnapshotFrequency < changesToCommit.Count ||
                         aggregate.Version % _snapshotStorageProvider.SnapshotFrequency == 0
                     )
                 )

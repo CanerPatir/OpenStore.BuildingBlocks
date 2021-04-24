@@ -22,7 +22,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
 
         protected override string GetStreamNamePrefix() => _eventStoreStorageConnectionProvider.EventStreamPrefix;
 
-        public async Task<IEnumerable<IDomainEvent>> GetEventsAsync(object aggregateId, ulong start, int count)
+        public async Task<IEnumerable<IDomainEvent>> GetEventsAsync(object aggregateId, long start, int count)
         {
             var connection = await GetEventStoreConnectionAsync();
             var events = await ReadEvents(typeof(TAggregate), connection, aggregateId, start, count);
@@ -54,11 +54,11 @@ namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
                 var lstEventData = events.Select(@event => SerializeEvent(@event, aggregate.LastCommittedVersion + 1)).ToList();
 
                 await connection.AppendToStreamAsync($"{AggregateIdToStreamName(aggregate.GetType(), aggregate.Id)}",
-                    (lastVersion < (ulong)StreamState.HasStream ? (long)ExpectedVersion.NoStream : (long)lastVersion), lstEventData);
+                    (lastVersion < (long)StreamState.HasStream ? (long)ExpectedVersion.NoStream : (long)lastVersion), lstEventData);
             }
         }
 
-        private async Task<IEnumerable<IDomainEvent>> ReadEvents(Type aggregateType, IEventStoreConnection connection, object aggregateId, ulong start, int count)
+        private async Task<IEnumerable<IDomainEvent>> ReadEvents(Type aggregateType, IEventStoreConnection connection, object aggregateId, long start, int count)
         {
             var streamEvents = new List<ResolvedEvent>();
             StreamEventsSlice currentSlice;

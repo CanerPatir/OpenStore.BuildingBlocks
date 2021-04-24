@@ -14,13 +14,13 @@ namespace OpenStore.Domain.EventSourcing
         private readonly object _loadLock = new();
         private readonly Dictionary<Type, string> _eventHandlerCache;
 
-        public sealed override ulong Version { get; set; }
-        public ulong LastCommittedVersion { get; protected set; }
+        public sealed override long Version { get; set; }
+        public long LastCommittedVersion { get; protected set; }
 
         protected EventSourcedAggregateRoot()
         {
-            Version = (ulong) StreamState.NoStream;
-            LastCommittedVersion = (ulong) StreamState.NoStream;
+            Version = (long) StreamState.NoStream;
+            LastCommittedVersion = (long) StreamState.NoStream;
             _eventHandlerCache = ReflectionHelper.FindEventHandlerMethodsInAggregate(GetType());
         }
 

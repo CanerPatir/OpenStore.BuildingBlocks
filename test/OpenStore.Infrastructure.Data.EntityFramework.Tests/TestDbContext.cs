@@ -9,18 +9,19 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         {
         }
 
+        public DbSet<TestAggregate> TestAggregates { get; set; }
         public DbSet<TestEntity> TestEntities { get; set; }
     }
     
-    public class TestEntity : AggregateRoot<int>
+    public class TestAggregate : AggregateRoot<int>
     {
         public string InventoryCode { get; protected set; }
 
-        protected TestEntity()
+        protected TestAggregate()
         {
         }
 
-        public TestEntity(string inventoryCode)
+        public TestAggregate(string inventoryCode)
         {
             InventoryCode = inventoryCode;
         }
@@ -29,5 +30,11 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         {
             InventoryCode = inventoryCode;
         }
+    }
+    
+    public class TestEntity : Entity<int>
+    {
+        public string Data { get; set; }
+
     }
 }

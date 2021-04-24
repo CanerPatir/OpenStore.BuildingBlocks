@@ -12,7 +12,7 @@ namespace OpenStore.Domain
         }
 
         public string Id { get; }
-        public ulong Version { get; set; }
+        public long Version { get; set; }
         public DateTime CommittedTimestamp { get; set; }
         public string CorrelationId { get; set; }
     }

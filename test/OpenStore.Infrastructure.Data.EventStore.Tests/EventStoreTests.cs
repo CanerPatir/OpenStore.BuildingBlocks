@@ -49,7 +49,7 @@ namespace OpenStore.Infrastructure.Data.EventStore.Tests
         {
             public int Quantity { get; set; }
             public object AggregateId { get; }
-            public ulong Version { get; }
+            public long Version { get; }
         }
 
         public EventStoreTests()

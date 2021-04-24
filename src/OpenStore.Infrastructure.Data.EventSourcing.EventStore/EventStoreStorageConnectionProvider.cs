@@ -10,7 +10,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
         Task<IEventStoreConnection> GetConnectionAsync();
         string EventStreamPrefix { get; }
         string SnapshotStreamPrefix { get; }
-        ulong SnapshotFrequency { get; }
+        long SnapshotFrequency { get; }
         int PageSize { get; }
     }
 
@@ -44,7 +44,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
 
         public string EventStreamPrefix => "Event-";
         public string SnapshotStreamPrefix => "Snapshot-";
-        public ulong SnapshotFrequency => 2;
+        public long SnapshotFrequency => 2;
         public int PageSize => 200;
 
         private void CloseConnection()

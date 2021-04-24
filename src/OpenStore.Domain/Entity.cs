@@ -4,17 +4,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OpenStore.Domain
 {
-    public abstract class Entity<TKey> : IEntity
+    public abstract class Entity<TKey> : IEntity, ISavingChanges
     {
         [Key] public virtual TKey Id { get; protected set; }
 
         object IEntity.Id => Id;
 
-        [ConcurrencyCheck] public virtual ulong Version { get; set; }
+        [ConcurrencyCheck] public virtual long Version { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Entity<TKey> other))
+            if (obj is not Entity<TKey> other)
                 return false;
 
             if (ReferenceEquals(this, other))
@@ -43,5 +43,7 @@ namespace OpenStore.Domain
         public static bool operator !=(Entity<TKey> a, Entity<TKey> b) => !(a == b);
 
         public override int GetHashCode() => (GetType().ToString() + Id).GetHashCode();
+        
+        void ISavingChanges.OnSavingChanges() => Version++;
     }
 }

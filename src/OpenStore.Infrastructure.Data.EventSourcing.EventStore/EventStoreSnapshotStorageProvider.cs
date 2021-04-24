@@ -20,7 +20,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
 
         protected override string GetStreamNamePrefix() => _eventStoreStorageConnectionProvider.SnapshotStreamPrefix;
 
-        public ulong SnapshotFrequency => _eventStoreStorageConnectionProvider.SnapshotFrequency;
+        public long SnapshotFrequency => _eventStoreStorageConnectionProvider.SnapshotFrequency;
 
         public async Task<TSnapshot> GetSnapshotAsync(object aggregateId)
         {

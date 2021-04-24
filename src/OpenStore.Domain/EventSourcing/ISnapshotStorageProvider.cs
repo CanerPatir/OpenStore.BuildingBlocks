@@ -6,7 +6,7 @@ namespace OpenStore.Domain.EventSourcing
         where TAggregate : EventSourcedAggregateRoot
         where TSnapshot : ISnapshot
     {
-        ulong SnapshotFrequency { get; }
+        long SnapshotFrequency { get; }
         Task<TSnapshot> GetSnapshotAsync(object aggregateId);
         Task SaveSnapshotAsync(TSnapshot snapshot);
     }

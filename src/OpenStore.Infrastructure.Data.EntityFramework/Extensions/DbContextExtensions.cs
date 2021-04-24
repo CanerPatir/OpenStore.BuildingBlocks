@@ -52,6 +52,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
             if (!status.IsValid) return status;
 
             context.ApplyAuditableEntities();
+            context.ApplySavingChangesInterface();
 
             // var changedEntityNames = context.GetChangedEntityNames();
             var result = await context.SaveChangesWithExtrasAsync(config, true, token);
@@ -97,7 +98,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
         {
             // context.ChangeTracker.DetectChanges();
             var auditableEntityEntries = context.ChangeTracker.Entries()
-                .Where(x => x.State == EntityState.Added || x.State == EntityState.Modified)
+                .Where(x => x.State is EntityState.Added or EntityState.Modified)
                 .Where(x => x.Entity is IAuditableEntity)
                 .ToList();
 
@@ -115,7 +116,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
             catch (InvalidOperationException)
             {
             }
-            
+
             foreach (var item in auditableEntityEntries)
             {
                 if (item.State == EntityState.Added)
@@ -129,6 +130,21 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
                     item.CurrentValues[nameof(IAuditableEntity.UpdatedAt)] = DateTime.UtcNow;
                     item.CurrentValues[nameof(IAuditableEntity.UpdatedBy)] = userInfo;
                 }
+            }
+        }
+        
+        private static void ApplySavingChangesInterface(this DbContext context)
+        {
+            // context.ChangeTracker.DetectChanges();
+            var auditableEntityEntries = context.ChangeTracker.Entries()
+                .Where(x => x.State is EntityState.Modified)
+                .Where(x => x.Entity is ISavingChanges)
+                .ToList();
+
+            foreach (var item in auditableEntityEntries)
+            {
+                if (item.Entity is ISavingChanges saveEntity)
+                    saveEntity.OnSavingChanges();
             }
         }
 
