@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
+// ReSharper disable NonReadonlyMemberInGetHashCode
 // ReSharper disable once MemberCanBeProtected.Global
 
 namespace OpenStore.Domain
@@ -14,6 +15,8 @@ namespace OpenStore.Domain
         object IEntity.Id => Id;
 
         [ConcurrencyCheck] public virtual long Version { get; protected set; }
+
+        #region Equality members
 
         public override bool Equals(object obj)
         {
@@ -47,7 +50,9 @@ namespace OpenStore.Domain
 
         public override int GetHashCode() => (GetType().ToString() + Id).GetHashCode();
 
-        #region ISavingChanges memebers
+        #endregion
+
+        #region ISavingChanges members
 
         private readonly List<IDomainEvent> _uncommittedChanges = new();
 
