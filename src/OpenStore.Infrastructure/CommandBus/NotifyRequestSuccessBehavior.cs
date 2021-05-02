@@ -22,7 +22,7 @@ namespace OpenStore.Infrastructure.CommandBus
         {
             var response = await next();
 
-            if (request is INotifySuccessRequest || request is INotifySuccessRequest<TResponse>)
+            if (request is INotifySuccessRequest or INotifySuccessRequest<TResponse>)
             {
                 var httpContextAccessor = _serviceProvider.GetService<IHttpContextAccessor>();
                 var currentUrl = httpContextAccessor?.HttpContext?.GetCurrentUrl();

@@ -6,6 +6,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Infrastructure.CommandBus;
+using OpenStore.Infrastructure.Mapping.AutoMapper;
 using Xunit;
 
 namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
@@ -16,6 +17,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         {
             services.AddLogging();
             services.AddOpenStoreCommandBus<EntityFrameworkCoreTests>();
+            services.AddOpenStoreObjectMapper(configure => { });
             services.AddOpenStoreEfCore<TestDbContext, TestDbContext>("test conn str", EntityFrameworkDataSource.PostgreSql);
         }
 
@@ -28,14 +30,20 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
             var repo = GetService<IRepository<TestAggregate>>();
             var qRepo = GetService<ICrudRepository<TestAggregate>>();
             var tRepo = GetService<ITransactionalRepository<TestAggregate>>();
+            var outBoxService = GetService<IOutBoxService>();
+            var uow = GetService<IUnitOfWork>();
+            var crudService = GetService<ICrudService<TestAggregate, TestDto>>();
 
             // Assert
             Assert.NotNull(repo);
             Assert.NotNull(qRepo);
             Assert.NotNull(tRepo);
+            Assert.NotNull(outBoxService);
+            Assert.NotNull(uow);
+            Assert.NotNull(crudService);
         }
-        
-        
+
+
         [Fact]
         public async Task Create()
         {
@@ -77,7 +85,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
 
             Assert.True(lastState.InventoryCode == "mutated");
         }
-        
+
         [Fact(Skip = "should be fixed")]
         public async Task UpdateEntityWithVersion()
         {
@@ -99,7 +107,32 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
             var lastState = await newRepo.GetAsync(entity.Id);
 
             Assert.True(lastState.Data == "mutated");
-            Assert.Equal(1L,  lastState.Version);
+            Assert.Equal(1L, lastState.Version);
+        }
+
+        [Fact]
+        public async Task UpdateEntityWithOutboxMessages()
+        {
+            // Arrange
+            var repo = GetService<ITransactionalRepository<TestAggregate>>();
+
+            var entity = new TestAggregate("test");
+            await repo.SaveAsync(entity);
+            
+            // Act
+            entity.ChangeInventoryCodeAndRegisterEvent("mutated");
+            await repo.SaveAsync(entity);
+            
+            // Assert
+            using var scope = NewServiceScope();
+            var newRepo = GetService<ITransactionalRepository<TestAggregate>>();
+
+            var lastState = await newRepo.GetAsync(entity.Id);
+
+            var dbContext = GetService<TestDbContext>();
+
+            Assert.NotEmpty(await dbContext.OutBoxMessages.ToListAsync());
+            Assert.True(lastState.InventoryCode == "mutated");
         }
 
         [Fact]
@@ -143,6 +176,5 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
             Assert.NotNull(items);
             Assert.Equal(2, items.Count);
         }
-
     }
 }

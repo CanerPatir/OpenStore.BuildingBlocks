@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using OpenStore.Domain;
 
 namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
 {
-    public class TestDbContext : DbContext
+    public class TestDbContext : DbContext, IOutBoxDbContext
     {
         public TestDbContext(DbContextOptions<TestDbContext> options) : base(options)
         {
@@ -11,8 +12,11 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
 
         public DbSet<TestAggregate> TestAggregates { get; set; }
         public DbSet<TestEntity> TestEntities { get; set; }
+        public DbSet<OutBoxMessage> OutBoxMessages { get; set; }
+
+        public IOutBoxService OutBoxService => this.GetService<IOutBoxService>();
     }
-    
+
     public class TestAggregate : AggregateRoot<int>
     {
         public string InventoryCode { get; protected set; }
@@ -30,11 +34,23 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         {
             InventoryCode = inventoryCode;
         }
+
+        public void ChangeInventoryCodeAndRegisterEvent(string inventoryCode)
+        {
+            InventoryCode = inventoryCode;
+
+            ApplyChange(new InventoryCodeChanged(Id, inventoryCode));
+        }
     }
-    
+
+    public class TestDto
+    {
+    }
+
+    public record InventoryCodeChanged(int AggregateId, string Code) : DomainEvent(AggregateId.ToString());
+
     public class TestEntity : Entity<int>
     {
         public string Data { get; set; }
-
     }
 }
