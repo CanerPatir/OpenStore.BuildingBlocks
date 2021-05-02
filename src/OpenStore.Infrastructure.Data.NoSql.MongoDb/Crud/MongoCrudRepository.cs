@@ -9,7 +9,7 @@ using OpenStore.Domain;
 namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Crud
 {
     public class MongoCrudRepository<TEntity> : ICrudRepository<TEntity>
-        where TEntity : Entity<string>
+        where TEntity : Entity<string>, ISavingChanges
     {
         public MongoCrudRepository(IMongoUnitOfWork unitOfWork)
         {
@@ -36,7 +36,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Crud
         public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             var version = entity.Version;
-            entity.Version++;
+            entity.OnSavingChanges();
             await MongoCollection.ReplaceOneAsync(
                 UnitOfWork.Session,
                 x => x.Id == entity.Id && x.Version == version,

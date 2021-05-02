@@ -9,7 +9,7 @@ using OpenStore.Domain;
 namespace OpenStore.Infrastructure.Data.EntityFramework
 {
     public class EntityFrameworkRepository<TAggregateRoot> : Repository<TAggregateRoot>, IEntityFrameworkRepository<TAggregateRoot>
-        where TAggregateRoot : class, IAggregateRoot
+        where TAggregateRoot : class, IAggregateRoot, ISavingChanges
     {
         private readonly IOutBoxService _outBoxService;
 
@@ -24,32 +24,17 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
 
         public IQueryable<TAggregateRoot> Query => EfUow.Context.Set<TAggregateRoot>();
 
-        public override async Task<TAggregateRoot> GetAsync(object id, CancellationToken token = default)
-        {
-            return await EfUow.Context.Set<TAggregateRoot>().FindAsync(new[] {id}, token);
-        }
+        public override async Task<TAggregateRoot> GetAsync(object id, CancellationToken token = default) 
+            => await EfUow.Context.Set<TAggregateRoot>().FindAsync(new[] {id}, token);
 
         public override async Task SaveAsync(TAggregateRoot aggregateRoot, CancellationToken token = default)
         {
-            if (aggregateRoot.HasUncommittedChanges())
+            if (IsCreating(aggregateRoot))
             {
-                var events = aggregateRoot.GetUncommittedChanges();
-                await _outBoxService.StoreMessages(events, token);
+                await EfUow.Context.Set<TAggregateRoot>().AddAsync(aggregateRoot, token);
             }
-
-            if (IsCreating(aggregateRoot)) await EfUow.Context.Set<TAggregateRoot>().AddAsync(aggregateRoot, token);
-
-            try
-            {
-                aggregateRoot.Version++;
-                await Uow.SaveChangesAsync(token);
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                throw new ConcurrencyException(ex.Message, ex);
-            }
-
-            aggregateRoot.Commit();
+            
+            await Uow.SaveChangesAsync(token);
         }
 
         public override Task Delete(TAggregateRoot aggregateRoot, CancellationToken token = default)

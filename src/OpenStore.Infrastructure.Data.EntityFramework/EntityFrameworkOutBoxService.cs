@@ -7,13 +7,16 @@ using Microsoft.Extensions.Logging;
 using OpenStore.Application;
 using OpenStore.Domain;
 
+// ReSharper disable SuspiciousTypeConversion.Global
+
 namespace OpenStore.Infrastructure.Data.EntityFramework
 {
     public class EntityFrameworkOutBoxService : OutBoxService
     {
         private readonly DbContext _context;
 
-        public EntityFrameworkOutBoxService(IEntityFrameworkCoreUnitOfWork uow, IDomainEventNotifier domainEventNotifier, ILogger<EntityFrameworkOutBoxService> logger) : base(uow, domainEventNotifier, logger)
+        public EntityFrameworkOutBoxService(IEntityFrameworkCoreUnitOfWork uow, IDomainEventNotifier domainEventNotifier, ILogger<EntityFrameworkOutBoxService> logger) : base(uow,
+            domainEventNotifier, logger)
         {
             _context = uow.Context;
         }
@@ -28,8 +31,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
 
         protected override async Task<IReadOnlyCollection<OutBoxMessage>> GetPendingMessages(int take, CancellationToken cancellationToken = default)
         {
-            if (!(_context is IOutBoxDbContext eventStoreContext)) return new List<OutBoxMessage>();
-            
+            if (_context is not IOutBoxDbContext eventStoreContext) return new List<OutBoxMessage>();
+
             IQueryable<OutBoxMessage> q = eventStoreContext
                 .OutBoxMessages
                 .Where(x => !x.Committed)
@@ -42,7 +45,6 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
 
             return await q
                 .ToListAsync(cancellationToken);
-
         }
     }
 }

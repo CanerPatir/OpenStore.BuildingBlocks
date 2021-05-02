@@ -9,37 +9,6 @@ namespace OpenStore.Domain
     /// </summary>
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
     {
-        private readonly List<IDomainEvent> _uncommittedChanges = new();
-
-        public IReadOnlyCollection<IDomainEvent> GetUncommittedChanges() => _uncommittedChanges;
-
-        public bool HasUncommittedChanges() => _uncommittedChanges.Any();
-
-        protected virtual bool TrackChanges { get; } = true;
-
-        public void Commit() => _uncommittedChanges.Clear();
-
-        protected virtual void ApplyChange(IDomainEvent @event)
-        {
-            if (!TrackChanges) return;
-            if (@event == null) throw new ArgumentNullException(nameof(@event));
-
-            lock (_uncommittedChanges)
-            {
-                Version++;
-                @event.Version = Version;
-                _uncommittedChanges.Add(@event);
-            }
-        }
-
-        protected void Fail(string message)
-        {
-            throw new DomainException(message);
-        }
-
-        protected void Fail(string message, string errorCode)
-        {
-            throw new DomainException(message, errorCode);
-        }
+        
     }
 }

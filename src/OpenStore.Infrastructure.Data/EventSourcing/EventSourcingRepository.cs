@@ -12,7 +12,7 @@ using OpenStore.Domain.EventSourcing.Exception;
 namespace OpenStore.Infrastructure.Data.EventSourcing
 {
     public class EventSourcingRepository<TAggregate, TSnapshot> : IEventSourcingRepository<TAggregate, TSnapshot>
-        where TAggregate : EventSourcedAggregateRoot, new()
+        where TAggregate : EventSourcedAggregateRoot, ISavingChanges, new()
         where TSnapshot : ISnapshot
     {
         private readonly IEventStorageProvider<TAggregate> _eventStorageProvider;

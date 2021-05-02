@@ -23,10 +23,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Crud
 
         public IEntityFrameworkCoreUnitOfWork UnitOfWork { get; }
 
-        public virtual async Task<TEntity> GetAsync(object id, CancellationToken cancellationToken = default)
-        {
-            return await Set.FindAsync(new[] {id}, cancellationToken);
-        }
+        public virtual async Task<TEntity> GetAsync(object id, CancellationToken cancellationToken = default) 
+            => await Set.FindAsync(new[] {id}, cancellationToken);
 
         public virtual async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
@@ -40,15 +38,9 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Crud
             return Task.CompletedTask;
         }
 
-        public virtual async Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default)
-        {
-            Remove(await GetAsync(id, cancellationToken));
-        }
+        public virtual async Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default) => Remove(await GetAsync(id, cancellationToken));
 
-        public void Remove(TEntity entity)
-        {
-            Set.Remove(entity);
-        }
+        public void Remove(TEntity entity) => Set.Remove(entity);
 
         public virtual Task SaveChangesAsync(CancellationToken cancellationToken = default) => UnitOfWork.SaveChangesAsync(cancellationToken);
     }

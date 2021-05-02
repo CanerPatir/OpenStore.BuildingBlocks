@@ -52,10 +52,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
             if (!status.IsValid) return status;
 
             context.ApplyAuditableEntities();
-            context.ApplySavingChangesInterface();
-
             // var changedEntityNames = context.GetChangedEntityNames();
-            var result = await context.SaveChangesWithExtrasAsync(config, true, token);
+            var result = await context.ApplySavingChangesInterface(config, true, token);
             // context.InvalidateCache(changedEntityNames);
             // context.ClearCache();
             return result;
@@ -119,33 +117,57 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
 
             foreach (var item in auditableEntityEntries)
             {
-                if (item.State == EntityState.Added)
+                switch (item.State)
                 {
-                    item.CurrentValues[nameof(IAuditableEntity.CreatedAt)] = DateTime.UtcNow;
-                    item.CurrentValues[nameof(IAuditableEntity.CreatedBy)] = userInfo;
-                }
-
-                if (item.State == EntityState.Modified)
-                {
-                    item.CurrentValues[nameof(IAuditableEntity.UpdatedAt)] = DateTime.UtcNow;
-                    item.CurrentValues[nameof(IAuditableEntity.UpdatedBy)] = userInfo;
+                    case EntityState.Added:
+                        item.CurrentValues[nameof(IAuditableEntity.CreatedAt)] = DateTime.UtcNow;
+                        item.CurrentValues[nameof(IAuditableEntity.CreatedBy)] = userInfo;
+                        break;
+                    case EntityState.Modified:
+                        item.CurrentValues[nameof(IAuditableEntity.UpdatedAt)] = DateTime.UtcNow;
+                        item.CurrentValues[nameof(IAuditableEntity.UpdatedBy)] = userInfo;
+                        break;
                 }
             }
         }
-        
-        private static void ApplySavingChangesInterface(this DbContext context)
+
+        private static async Task<IStatusGeneric> ApplySavingChangesInterface(this DbContext context, IGenericServicesConfig config, bool turnOffChangeTracker, CancellationToken cancellationToken)
         {
             // context.ChangeTracker.DetectChanges();
-            var auditableEntityEntries = context.ChangeTracker.Entries()
-                .Where(x => x.State is EntityState.Modified)
+            var iSavingChangesEntries = context.ChangeTracker.Entries()
                 .Where(x => x.Entity is ISavingChanges)
                 .ToList();
 
-            foreach (var item in auditableEntityEntries)
+            foreach (var item in iSavingChangesEntries)
             {
-                if (item.Entity is ISavingChanges saveEntity)
-                    saveEntity.OnSavingChanges();
+                if (item.Entity is not ISavingChanges saveEntity) continue;
+
+                if (context is IOutBoxDbContext outBoxDbContext && saveEntity.HasUncommittedChanges())
+                {
+                    var events = saveEntity.GetUncommittedChanges();
+                    await outBoxDbContext.OutBoxService.StoreMessages(events, cancellationToken);
+                }
+                
+                saveEntity.OnSavingChanges();
             }
+
+            IStatusGeneric result;
+            try
+            {
+                result = await context.SaveChangesWithExtrasAsync(config, turnOffChangeTracker,cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new ConcurrencyException(ex.Message, ex);
+            }
+
+            foreach (var item in iSavingChangesEntries)
+            {
+                if (item.Entity is not ISavingChanges saveEntity) continue;
+                saveEntity.Commit();
+            }
+
+            return result;
         }
 
         private static IStatusGeneric ExecuteValidation(this DbContext context)

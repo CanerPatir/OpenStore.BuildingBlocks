@@ -15,7 +15,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.Couchbase
     /// </summary>
     /// <typeparam name="TAggregateRoot"></typeparam>
     public class CouchbaseRepository<TAggregateRoot> : Repository<TAggregateRoot>, ICouchbaseRepository<TAggregateRoot>
-        where TAggregateRoot : AggregateRoot<string>
+        where TAggregateRoot : AggregateRoot<string>, ISavingChanges
     {
         public IBucket Bucket { get; }
 
@@ -32,7 +32,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.Couchbase
             var result = await _collection.GetAsync(id.ToString(), new GetOptions().CancellationToken(token));
 
             var entity = result.ContentAs<TAggregateRoot>();
-            entity.Version = Convert.ToInt64(result.Cas);
+            entity.SetVersionExplicitly(Convert.ToInt64(result.Cas));
 
             return entity;
         }

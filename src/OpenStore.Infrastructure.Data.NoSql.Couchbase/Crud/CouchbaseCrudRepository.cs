@@ -12,7 +12,7 @@ using OpenStore.Domain;
 namespace OpenStore.Infrastructure.Data.NoSql.Couchbase.Crud
 {
     public class CouchbaseCrudRepository<TEntity> : ICrudRepository<TEntity>
-        where TEntity : Entity<string>
+        where TEntity : Entity<string>, ISavingChanges
     {
         private readonly ICouchbaseCollection _collection;
 
@@ -30,7 +30,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.Couchbase.Crud
             var result = await _collection.GetAsync(id.ToString(), new GetOptions().CancellationToken(cancellationToken));
 
             var entity = result.ContentAs<TEntity>();
-            entity.Version = Convert.ToInt64(result.Cas);
+            entity.SetVersionExplicitly(Convert.ToInt64(result.Cas));
 
             return entity;
         }
@@ -45,7 +45,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.Couchbase.Crud
         {
             try
             {
-                await _collection.ReplaceAsync(entity.Id.ToString(), entity, new ReplaceOptions().Cas(Convert.ToUInt64(entity.Version)).CancellationToken(cancellationToken));
+                await _collection.ReplaceAsync(entity.Id, entity, new ReplaceOptions().Cas(Convert.ToUInt64(entity.Version)).CancellationToken(cancellationToken));
             }
             catch (CasMismatchException ex)
             {

@@ -9,7 +9,7 @@ using OpenStore.Domain.EventSourcing;
 namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
 {
     public class EventStoreEventStorageProvider<TAggregate> : EventStoreStorageProviderBase, IEventStorageProvider<TAggregate>
-        where TAggregate : EventSourcedAggregateRoot
+        where TAggregate : EventSourcedAggregateRoot, ISavingChanges
     {
         private readonly IEventStoreStorageConnectionProvider _eventStoreStorageConnectionProvider;
 

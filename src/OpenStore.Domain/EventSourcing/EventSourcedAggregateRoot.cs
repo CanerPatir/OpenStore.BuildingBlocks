@@ -14,7 +14,7 @@ namespace OpenStore.Domain.EventSourcing
         private readonly object _loadLock = new();
         private readonly Dictionary<Type, string> _eventHandlerCache;
 
-        public sealed override long Version { get; set; }
+        public sealed override long Version { get; protected set; }
         public long LastCommittedVersion { get; protected set; }
 
         protected EventSourcedAggregateRoot()
@@ -75,7 +75,7 @@ namespace OpenStore.Domain.EventSourcing
         private void DoApply(IDomainEvent @event)
         {
             if (StreamState == StreamState.NoStream)
-                Id = @event.Id.ToString();
+                Id = @event.Id;
 
             if (_eventHandlerCache.ContainsKey(@event.GetType()))
                 ReflectionHelper.InvokeOnAggregate(this, _eventHandlerCache[@event.GetType()], @event);

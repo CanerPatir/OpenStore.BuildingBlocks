@@ -9,7 +9,7 @@ using Raven.Client.Documents.Session;
 namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
 {
     public class RavenRepository<TAggregateRoot> : Repository<TAggregateRoot>, IRavenRepository<TAggregateRoot>
-        where TAggregateRoot : AggregateRoot<string>
+        where TAggregateRoot : AggregateRoot<string>, ISavingChanges
     {
         private readonly IOutBoxService _outBoxService;
         public IRavenUnitOfWork RavenUow { get; }
@@ -17,14 +17,15 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
         public IAsyncDocumentSession RavenSession => RavenUow.Session;
 
         public IUnitOfWork Uow => RavenUow;
-        
+
         public RavenRepository(IRavenUnitOfWork uow, IOutBoxService outBoxService)
         {
             _outBoxService = outBoxService;
             RavenUow = uow;
         }
 
-        public IRavenQueryable<TAggregateRoot> RavenQuery(string indexName = null, string collectionName = null, bool isMapReduce = false) => RavenSession.Query<TAggregateRoot>(indexName, collectionName, isMapReduce);
+        public IRavenQueryable<TAggregateRoot> RavenQuery(string indexName = null, string collectionName = null, bool isMapReduce = false) =>
+            RavenSession.Query<TAggregateRoot>(indexName, collectionName, isMapReduce);
 
         public override async Task<TAggregateRoot> GetAsync(object id, CancellationToken token = default)
         {
@@ -41,7 +42,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
                 var events = aggregateRoot.GetUncommittedChanges();
                 await _outBoxService.StoreMessages(events, token);
             }
-            
+
             var documentId = GetDocumentId(aggregateRoot.Id);
 
             if (IsCreating(aggregateRoot, documentId))
@@ -51,13 +52,14 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
 
             try
             {
-                aggregateRoot.Version ++;
+                aggregateRoot.OnSavingChanges();
                 await Uow.SaveChangesAsync(token);
             }
             catch (Raven.Client.Exceptions.ConcurrencyException ex)
             {
                 throw new ConcurrencyException(ex.Message, ex);
             }
+
             aggregateRoot.Commit();
         }
 
@@ -92,6 +94,5 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
             RavenSession.Delete(aggregateRoot);
             return Task.CompletedTask;
         }
-
     }
 }

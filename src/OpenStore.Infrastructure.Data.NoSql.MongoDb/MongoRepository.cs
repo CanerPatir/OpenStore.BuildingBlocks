@@ -9,7 +9,7 @@ using OpenStore.Domain;
 namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
 {
     public class MongoRepository<TAggregateRoot> : Repository<TAggregateRoot>, IMongoRepository<TAggregateRoot>
-        where TAggregateRoot : AggregateRoot<string>
+        where TAggregateRoot : AggregateRoot<string>, ISavingChanges
     {
         private readonly IOutBoxService _outBoxService;
 
@@ -43,13 +43,13 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
 
             if (aggregateRoot.Version == default)
             {
-                aggregateRoot.Version++;
+                aggregateRoot.OnSavingChanges();
                 await MongoCollection.InsertOneAsync(MongoUow.Session, aggregateRoot, new InsertOneOptions(), token);
             }
             else
             {
                 var version = aggregateRoot.Version;
-                aggregateRoot.Version++;
+                aggregateRoot.OnSavingChanges();
                 var result = await MongoCollection.ReplaceOneAsync(MongoUow.Session, x => x.Id == aggregateRoot.Id && x.Version == version, aggregateRoot, new ReplaceOptions() {IsUpsert = false}, token);
                 if (!result.IsAcknowledged || result.ModifiedCount == 0)
                 {
