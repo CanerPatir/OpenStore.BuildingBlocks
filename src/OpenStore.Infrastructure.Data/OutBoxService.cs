@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -16,7 +15,6 @@ namespace OpenStore.Infrastructure.Data
     {
         protected IDomainEventNotifier DomainEventNotifier { get; }
         protected IUnitOfWork Uow { get; }
-
         protected ILogger Logger { get; }
 
         protected OutBoxService(IUnitOfWork uow, IDomainEventNotifier domainEventNotifier, ILogger logger)
@@ -25,10 +23,6 @@ namespace OpenStore.Infrastructure.Data
             Uow = uow;
             Logger = logger;
         }
-
-        protected static IEnumerable<OutBoxMessage> WrapEvents(IEnumerable<IDomainEvent> events) => events.Select(e => new OutBoxMessage(e));
-
-        public abstract Task StoreMessages(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default);
 
         protected abstract Task<IReadOnlyCollection<OutBoxMessage>> GetPendingMessages(int take, CancellationToken cancellationToken = default);
 
@@ -67,21 +61,20 @@ namespace OpenStore.Infrastructure.Data
                 }
             }
 
-            if (successCount == messagesToPush.Count) 
+            if (successCount == messagesToPush.Count)
                 return true;
-            
+
             Logger.LogWarning($"Some of outbox messages not committed success: {successCount}, total: {messagesToPush.Count}");
             return false;
-
         }
-        
+
         private async Task<bool> TryPush(OutBoxMessage message, CancellationToken token)
         {
             try
             {
                 await PublishMessage(message);
                 message.MarkAsCommitted();
-                
+
                 Logger.LogInformation($"Message published successfully {message}");
                 return true;
             }
@@ -102,7 +95,7 @@ namespace OpenStore.Infrastructure.Data
             }
             else
             {
-                Logger.LogError( "Message could not be parsed to IDomainEvent {}", message);
+                Logger.LogError("Message could not be parsed to IDomainEvent {}", message);
             }
         }
     }

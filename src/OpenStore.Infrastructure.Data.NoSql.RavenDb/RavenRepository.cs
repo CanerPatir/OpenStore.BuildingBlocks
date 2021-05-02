@@ -11,16 +11,16 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
     public class RavenRepository<TAggregateRoot> : Repository<TAggregateRoot>, IRavenRepository<TAggregateRoot>
         where TAggregateRoot : AggregateRoot<string>, ISavingChanges
     {
-        private readonly IOutBoxService _outBoxService;
+        private readonly IOutBoxStoreService _outBoxStoreService;
         public IRavenUnitOfWork RavenUow { get; }
         public IQueryable<TAggregateRoot> Query => RavenQuery();
         public IAsyncDocumentSession RavenSession => RavenUow.Session;
 
         public IUnitOfWork Uow => RavenUow;
 
-        public RavenRepository(IRavenUnitOfWork uow, IOutBoxService outBoxService)
+        public RavenRepository(IRavenUnitOfWork uow, IOutBoxStoreService outBoxStoreService)
         {
-            _outBoxService = outBoxService;
+            _outBoxStoreService = outBoxStoreService;
             RavenUow = uow;
         }
 
@@ -40,7 +40,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
             if (aggregateRoot.HasUncommittedChanges())
             {
                 var events = aggregateRoot.GetUncommittedChanges();
-                await _outBoxService.StoreMessages(events, token);
+                await _outBoxStoreService.StoreMessages(events, token);
             }
 
             var documentId = GetDocumentId(aggregateRoot.Id);

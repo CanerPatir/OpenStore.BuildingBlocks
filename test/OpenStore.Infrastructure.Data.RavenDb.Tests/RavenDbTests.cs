@@ -11,6 +11,7 @@ using Raven.Client.ServerWide.Operations;
 using Raven.Embedded;
 using Xunit;
 using OpenStore.Infrastructure.Data.NoSql.RavenDb;
+using OpenStore.Infrastructure.Mapping.AutoMapper;
 
 namespace OpenStore.Infrastructure.Data.RavenDb.Tests
 {
@@ -36,6 +37,11 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
             {
             }
         }
+        
+        public class TestDto
+        {
+            
+        }
 
         private const string TestStoreName = "Test";
 
@@ -44,14 +50,16 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
             EmbeddedServer.Instance.StartServer();
             var testStore = EmbeddedServer.Instance.GetDocumentStore(TestStoreName);
             services.AddLogging();
-            services.AddOpenStoreCommandBus<RavenDbTests>();
+            services.AddOpenStoreCore(typeof(RavenDbTests).Assembly);
             services.AddRavenDbDataInfrastructure(options => { });
+            services.AddOpenStoreObjectMapper(configure => { });
             services.AddSingleton<IDocumentStore>(testStore);
         }
 
         [Fact]
         public void DiResolve()
         {
+
             // Arrange
 
             // Act
@@ -59,12 +67,20 @@ namespace OpenStore.Infrastructure.Data.RavenDb.Tests
             var ravenRepo = GetService<IRavenRepository<Test>>();
             var qRepo = GetService<ICrudRepository<Test>>();
             var tRepo = GetService<ITransactionalRepository<Test>>();
+            var outBoxService = GetService<IOutBoxService>();
+            var outBoxStoreService = GetService<IOutBoxStoreService>();
+            var uow = GetService<IUnitOfWork>();
+            var crudService = GetService<ICrudService<Test, TestDto>>();
 
             // Assert
             Assert.NotNull(repo);
             Assert.NotNull(ravenRepo);
             Assert.NotNull(qRepo);
             Assert.NotNull(tRepo);
+            Assert.NotNull(outBoxService);
+            Assert.NotNull(outBoxStoreService);
+            Assert.NotNull(uow);
+            Assert.NotNull(crudService);
         }
 
         

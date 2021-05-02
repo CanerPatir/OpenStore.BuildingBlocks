@@ -13,9 +13,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         public DbSet<TestAggregate> TestAggregates { get; set; }
         public DbSet<TestEntity> TestEntities { get; set; }
         public DbSet<OutBoxMessage> OutBoxMessages { get; set; }
-
-        public IOutBoxService OutBoxService => this.GetService<IOutBoxService>();
-    }
+ }
 
     public class TestAggregate : AggregateRoot<int>
     {

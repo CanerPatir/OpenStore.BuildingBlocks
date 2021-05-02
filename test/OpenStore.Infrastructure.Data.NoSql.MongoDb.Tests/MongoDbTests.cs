@@ -8,6 +8,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Infrastructure.CommandBus;
+using OpenStore.Infrastructure.Mapping.AutoMapper;
 using Xunit;
 
 namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Tests
@@ -31,13 +32,18 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Tests
             }
         }
 
+        public class TestDto
+        {
+        }
+
         protected override void ConfigureServices(IServiceCollection services)
         {
             _runner = MongoDbRunner.Start();
 
             services.AddLogging();
-            services.AddOpenStoreCommandBus<MongoDbTests>();
+            services.AddOpenStoreCore(typeof(MongoDbTests).Assembly);
             services.AddMongoDbDataInfrastructure(options => { }, "IntegrationTest");
+            services.AddOpenStoreObjectMapper(configure => { });
             services.AddSingleton(sp => new MongoClient(_runner.ConnectionString));
         }
 
@@ -57,12 +63,20 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Tests
             var ravenRepo = GetService<IMongoRepository<Test>>();
             var qRepo = GetService<ICrudRepository<Test>>();
             var tRepo = GetService<ITransactionalRepository<Test>>();
+            var outBoxService = GetService<IOutBoxService>();
+            var outBoxStoreService = GetService<IOutBoxStoreService>();
+            var uow = GetService<IUnitOfWork>();
+            var crudService = GetService<ICrudService<Test, TestDto>>();
 
             // Assert
             Assert.NotNull(repo);
             Assert.NotNull(ravenRepo);
             Assert.NotNull(qRepo);
             Assert.NotNull(tRepo);
+            Assert.NotNull(outBoxService);
+            Assert.NotNull(outBoxStoreService);
+            Assert.NotNull(uow);
+            Assert.NotNull(crudService);
         }
 
         [Fact]

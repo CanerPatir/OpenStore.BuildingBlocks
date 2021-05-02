@@ -32,6 +32,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
             services.AddSingleton(sp => sp.GetRequiredService<MongoClient>().GetDatabase(databaseName));
 
             services.AddScoped<IOutBoxService, MongoOutBoxService>();
+            services.AddScoped<IOutBoxStoreService, MongoOutBoxStoreService>();
             services
                 .AddScoped<IMongoUnitOfWork>(sp => new MongoUnitOfWork(sp.GetRequiredService<IMongoDatabase>()))
                 .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IMongoUnitOfWork>());

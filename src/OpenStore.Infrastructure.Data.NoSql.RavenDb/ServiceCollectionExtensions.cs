@@ -48,6 +48,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
             services.AddScoped<IAsyncDocumentSession>(sp => sp.GetService<IDocumentStore>().OpenAsyncSession());
 
             services.AddScoped<IOutBoxService, RavenOutBoxService>();
+            services.AddScoped<IOutBoxStoreService, RavenOutBoxStoreService>();
             services
                 .AddScoped<IRavenUnitOfWork>(sp => new RavenUnitOfWork(sp.GetRequiredService<IAsyncDocumentSession>()))
                 .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IRavenUnitOfWork>());

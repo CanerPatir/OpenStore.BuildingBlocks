@@ -13,15 +13,17 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
     {
         private IDbContextTransaction _tx;
         public DbContext Context { get; }
+        public IOutBoxStoreService OutBoxStoreService { get; }
 
-        public EntityFrameworkUnitOfWork(TDbContext dbContext)
+        public EntityFrameworkUnitOfWork(TDbContext dbContext, IOutBoxStoreService outBoxStoreService)
         {
             Context = dbContext;
+            OutBoxStoreService = outBoxStoreService;
         }
 
         public async Task BeginTransactionAsync(CancellationToken token = default)
         {
-             _tx =  Context.Database.CurrentTransaction ?? await Context.Database.BeginTransactionAsync(token);
+            _tx = Context.Database.CurrentTransaction ?? await Context.Database.BeginTransactionAsync(token);
         }
 
         public async Task SaveChangesAsync(CancellationToken token = default)
@@ -30,8 +32,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
             {
                 await _tx.CommitAsync(token);
             }
-            
-            var result = await Context.SaveChangesWithValidationAsync(token: token);
+
+            var result = await Context.SaveChangesWithValidationAsync(OutBoxStoreService, token: token);
 
             if (!result.IsValid)
             {

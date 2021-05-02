@@ -16,7 +16,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
         protected override void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
-            services.AddOpenStoreCommandBus<EntityFrameworkCoreTests>();
+            services.AddOpenStoreCore(typeof(EntityFrameworkCoreTests).Assembly);
             services.AddOpenStoreObjectMapper(configure => { });
             services.AddOpenStoreEfCore<TestDbContext, TestDbContext>("test conn str", EntityFrameworkDataSource.PostgreSql);
         }
@@ -31,6 +31,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
             var qRepo = GetService<ICrudRepository<TestAggregate>>();
             var tRepo = GetService<ITransactionalRepository<TestAggregate>>();
             var outBoxService = GetService<IOutBoxService>();
+            var outBoxStoreService = GetService<IOutBoxStoreService>();
             var uow = GetService<IUnitOfWork>();
             var crudService = GetService<ICrudService<TestAggregate, TestDto>>();
 
@@ -39,6 +40,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
             Assert.NotNull(qRepo);
             Assert.NotNull(tRepo);
             Assert.NotNull(outBoxService);
+            Assert.NotNull(outBoxStoreService);
             Assert.NotNull(uow);
             Assert.NotNull(crudService);
         }
@@ -86,7 +88,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Tests
             Assert.True(lastState.InventoryCode == "mutated");
         }
 
-        [Fact(Skip = "should be fixed")]
+        [Fact]
         public async Task UpdateEntityWithVersion()
         {
             // Arrange

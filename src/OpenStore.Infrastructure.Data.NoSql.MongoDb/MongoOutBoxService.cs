@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using OpenStore.Application;
-using OpenStore.Domain;
 
 namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
 {
@@ -19,12 +18,6 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
         {
             _uow = uow;
             _collection = _uow.DatabaseBase.GetCollection<OutBoxMessage>(nameof(OutBoxMessage));
-        }
-
-        public override async Task StoreMessages(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)
-        {
-            var outBoxMessages = WrapEvents(events).ToList();
-            await _collection.InsertManyAsync(_uow.Session, outBoxMessages, new InsertManyOptions(), cancellationToken);
         }
 
         protected override async Task<IReadOnlyCollection<OutBoxMessage>> GetPendingMessages(int take, CancellationToken cancellationToken = default)

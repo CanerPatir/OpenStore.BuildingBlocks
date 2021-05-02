@@ -11,11 +11,11 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
     public class MongoRepository<TAggregateRoot> : Repository<TAggregateRoot>, IMongoRepository<TAggregateRoot>
         where TAggregateRoot : AggregateRoot<string>, ISavingChanges
     {
-        private readonly IOutBoxService _outBoxService;
+        private readonly IOutBoxStoreService _outBoxStoreService;
 
-        public MongoRepository(IMongoUnitOfWork uow, IOutBoxService outBoxService)
+        public MongoRepository(IMongoUnitOfWork uow, IOutBoxStoreService outBoxStoreService)
         {
-            _outBoxService = outBoxService;
+            _outBoxStoreService = outBoxStoreService;
             MongoUow = uow;
             MongoCollection = MongoUow.DatabaseBase.GetCollection<TAggregateRoot>(typeof(TAggregateRoot).Name);
         }
@@ -38,7 +38,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
             if (aggregateRoot.HasUncommittedChanges())
             {
                 var events = aggregateRoot.GetUncommittedChanges();
-                await _outBoxService.StoreMessages(events, token);
+                await _outBoxStoreService.StoreMessages(events, token);
             }
 
             if (aggregateRoot.Version == default)

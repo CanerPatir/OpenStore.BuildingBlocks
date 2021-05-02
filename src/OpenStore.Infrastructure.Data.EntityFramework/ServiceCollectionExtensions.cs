@@ -8,6 +8,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Infrastructure.Data.EntityFramework.Crud;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace OpenStore.Infrastructure.Data.EntityFramework
@@ -33,11 +34,11 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
             return configuration.GetConnectionString(dataSource.ToString());
         }
 
-        public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, 
-            IConfiguration configuration, 
+        public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services,
+            IConfiguration configuration,
             string migrationAssembly = null,
-            Action<DbContextOptionsBuilder> optionsBuilder = null, 
-             Assembly[] assemblies = null)
+            Action<DbContextOptionsBuilder> optionsBuilder = null,
+            Assembly[] assemblies = null)
             where TDbContext : DbContext
             where TDbContextImplementation : TDbContext
         {
@@ -46,15 +47,16 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
 
             return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(connStr, dataSource, migrationAssembly, optionsBuilder);
         }
-        
-        public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, string connStr, EntityFrameworkDataSource dataSource,
+
+        public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, string connStr,
+            EntityFrameworkDataSource dataSource,
             string migrationAssembly = null,
-            Action<DbContextOptionsBuilder> optionsBuilder = null, 
+            Action<DbContextOptionsBuilder> optionsBuilder = null,
             Assembly[] assemblies = null)
             where TDbContext : DbContext
             where TDbContextImplementation : TDbContext
         {
-            services.AddDbContextPool<TDbContext, TDbContextImplementation>(options =>
+            services.AddDbContextPool<TDbContext, TDbContextImplementation>((sp, options) =>
             {
                 switch (dataSource)
                 {
@@ -110,58 +112,59 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
             where TDbContext : DbContext
         {
             // add repositories automatically
-            
+
             assemblies ??= Array.Empty<Assembly>();
 
             var assemblyList = new List<Assembly>();
             assemblyList.AddRange(assemblies);
             assemblyList.Add(typeof(TDbContext).Assembly);
-            
+
             services.Scan(scan =>
             {
                 scan
-                    .FromAssemblies(assemblyList )
+                    .FromAssemblies(assemblyList)
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(IRepository<>)))
                     .AsImplementedInterfaces()
-                    .WithScopedLifetime()
+                    .WithSingletonLifetime()
                     ;
-                
+
                 scan
                     .FromAssemblies(assemblyList)
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(ICrudService<,>)))
                     .AsImplementedInterfaces()
-                    .WithScopedLifetime()
+                    .WithSingletonLifetime()
                     ;
-                
+
                 scan
                     .FromAssemblies(assemblyList)
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(ICrudRepository<>)))
                     .AsImplementedInterfaces()
-                    .WithScopedLifetime()
+                    .WithSingletonLifetime()
                     ;
-                
             });
 
             //
-            services.AddScoped<IOutBoxService, EntityFrameworkOutBoxService>();
+            services.AddSingleton<IOutBoxService, EntityFrameworkOutBoxService>();
+            services.AddSingleton<IOutBoxStoreService>(sp => new EntityFrameworkOutBoxStoreService(sp.GetRequiredService<TDbContext>()));
             services
-                .AddScoped<IEntityFrameworkCoreUnitOfWork>(sp => new EntityFrameworkUnitOfWork<TDbContext>(sp.GetRequiredService<TDbContext>()))
-                .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IEntityFrameworkCoreUnitOfWork>());
+                .AddSingleton<IEntityFrameworkCoreUnitOfWork>(sp =>
+                    new EntityFrameworkUnitOfWork<TDbContext>(sp.GetRequiredService<TDbContext>(), sp.GetRequiredService<IOutBoxStoreService>()))
+                .AddSingleton<IUnitOfWork>(sp => sp.GetRequiredService<IEntityFrameworkCoreUnitOfWork>());
 
             // for generic resolve
             services
-                .AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>))
-                .AddScoped(typeof(IEntityFrameworkRepository<>), typeof(EntityFrameworkRepository<>))
-                .AddScoped(typeof(ITransactionalRepository<>), typeof(EntityFrameworkRepository<>))
-                .AddScoped(typeof(ICrudRepository<>), typeof(EntityFrameworkCrudRepository<>))
+                .AddSingleton(typeof(IRepository<>), typeof(EntityFrameworkRepository<>))
+                .AddSingleton(typeof(IEntityFrameworkRepository<>), typeof(EntityFrameworkRepository<>))
+                .AddSingleton(typeof(ITransactionalRepository<>), typeof(EntityFrameworkRepository<>))
+                .AddSingleton(typeof(ICrudRepository<>), typeof(EntityFrameworkCrudRepository<>))
                 ;
 
             // Crud services
             services
-                .AddScoped(typeof(ICrudService<,>), typeof(EntityFrameworkCrudService<,>));
+                .AddSingleton(typeof(ICrudService<,>), typeof(EntityFrameworkCrudService<,>));
         }
     }
 }

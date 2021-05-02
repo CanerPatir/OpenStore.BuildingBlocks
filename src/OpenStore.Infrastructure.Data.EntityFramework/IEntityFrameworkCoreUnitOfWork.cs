@@ -6,5 +6,6 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
     public interface IEntityFrameworkCoreUnitOfWork : IUnitOfWork
     {
         DbContext Context { get; }
+        IOutBoxStoreService OutBoxStoreService { get; }
     }
 }

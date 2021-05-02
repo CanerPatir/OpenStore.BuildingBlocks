@@ -11,11 +11,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
     public class EntityFrameworkRepository<TAggregateRoot> : Repository<TAggregateRoot>, IEntityFrameworkRepository<TAggregateRoot>
         where TAggregateRoot : class, IAggregateRoot, ISavingChanges
     {
-        private readonly IOutBoxService _outBoxService;
-
-        public EntityFrameworkRepository(IEntityFrameworkCoreUnitOfWork uow, IOutBoxService outBoxService)
+        public EntityFrameworkRepository(IEntityFrameworkCoreUnitOfWork uow)
         {
-            _outBoxService = outBoxService;
             EfUow = uow;
         }
 

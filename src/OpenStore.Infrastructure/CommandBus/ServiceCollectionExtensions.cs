@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,16 +8,25 @@ namespace OpenStore.Infrastructure.CommandBus
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddOpenStoreCommandBus<TAnyHandler>(this IServiceCollection services)
-        {
-            return services.AddOpenStoreCommandBus(Assembly.GetAssembly(typeof(TAnyHandler)));
-        }
-
-        public static IServiceCollection AddOpenStoreCommandBus(this IServiceCollection services, params Assembly[] assemblies)
+        internal static IServiceCollection AddOpenStoreCommandBus(this IServiceCollection services, ServiceLifetime lifetime, params Assembly[] assemblies)
         {
             return services
                     .AddTransient<IDomainEventNotifier, MediatrDomainEventNotifier>()
-                    .AddMediatR(assemblies)
+                    .AddMediatR(assemblies, conf =>
+                    {
+                        switch (lifetime)
+                        {
+                            case ServiceLifetime.Singleton:
+                                conf.AsSingleton();
+                                break;
+                            case ServiceLifetime.Scoped:
+                                conf.AsScoped();
+                                break;
+                            case ServiceLifetime.Transient:
+                                conf.AsTransient();
+                                break;
+                        }
+                    })
                     .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                     .AddTransient(typeof(IPipelineBehavior<,>), typeof(NotifyRequestSuccessBehavior<,>))
                     .AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>))
