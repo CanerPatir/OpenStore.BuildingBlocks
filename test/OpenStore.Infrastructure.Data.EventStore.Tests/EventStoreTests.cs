@@ -74,7 +74,7 @@ namespace OpenStore.Infrastructure.Data.EventStore.Tests
             // }).Build();
         }
 
-        [Fact(Skip = "Waiting for embedded event store net core support")]
+        [Fact]
         public async Task Create()
         {
             // Arrange

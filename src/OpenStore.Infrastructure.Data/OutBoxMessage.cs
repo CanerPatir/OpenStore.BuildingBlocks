@@ -13,14 +13,14 @@ namespace OpenStore.Infrastructure.Data
         [Required] public bool Committed { get; set; }
         [Required] public string AggregateId { get; set; }
 
-        public OutBoxMessage()
+        protected OutBoxMessage()
         {
         }
 
         public OutBoxMessage(IDomainEvent message) : base(message, message.Version, message.CorrelationId)
         {
             Committed = false;
-            AggregateId = message.Id.ToString();
+            AggregateId = message.Id;
         }
 
         public void MarkAsCommitted()
