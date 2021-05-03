@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
-using OpenStore.Infrastructure.CommandBus;
 using OpenStore.Infrastructure.Mapping.AutoMapper;
 using Xunit;
 

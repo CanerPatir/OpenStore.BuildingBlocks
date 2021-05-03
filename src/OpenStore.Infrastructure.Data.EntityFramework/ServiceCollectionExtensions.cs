@@ -126,7 +126,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(IRepository<>)))
                     .AsImplementedInterfaces()
-                    .WithSingletonLifetime()
+                    .WithScopedLifetime()
                     ;
 
                 scan
@@ -134,7 +134,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(ICrudService<,>)))
                     .AsImplementedInterfaces()
-                    .WithSingletonLifetime()
+                    .WithScopedLifetime()
                     ;
 
                 scan
@@ -142,29 +142,28 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
                     //
                     .AddClasses(classes => classes.AssignableTo(typeof(ICrudRepository<>)))
                     .AsImplementedInterfaces()
-                    .WithSingletonLifetime()
+                    .WithScopedLifetime()
                     ;
             });
 
             //
-            services.AddSingleton<IOutBoxService, EntityFrameworkOutBoxService>();
-            services.AddSingleton<IOutBoxStoreService>(sp => new EntityFrameworkOutBoxStoreService(sp.GetRequiredService<TDbContext>()));
             services
-                .AddSingleton<IEntityFrameworkCoreUnitOfWork>(sp =>
-                    new EntityFrameworkUnitOfWork<TDbContext>(sp.GetRequiredService<TDbContext>(), sp.GetRequiredService<IOutBoxStoreService>()))
-                .AddSingleton<IUnitOfWork>(sp => sp.GetRequiredService<IEntityFrameworkCoreUnitOfWork>());
+                .AddScoped<IOutBoxService, EntityFrameworkOutBoxService>()
+                .AddScoped<IOutBoxStoreService, EntityFrameworkOutBoxStoreService<TDbContext>>()
+                .AddScoped<IEntityFrameworkCoreUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
+                .AddScoped<IUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
+                ;
 
             // for generic resolve
             services
-                .AddSingleton(typeof(IRepository<>), typeof(EntityFrameworkRepository<>))
-                .AddSingleton(typeof(IEntityFrameworkRepository<>), typeof(EntityFrameworkRepository<>))
-                .AddSingleton(typeof(ITransactionalRepository<>), typeof(EntityFrameworkRepository<>))
-                .AddSingleton(typeof(ICrudRepository<>), typeof(EntityFrameworkCrudRepository<>))
+                .AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>))
+                .AddScoped(typeof(IEntityFrameworkRepository<>), typeof(EntityFrameworkRepository<>))
+                .AddScoped(typeof(ITransactionalRepository<>), typeof(EntityFrameworkRepository<>))
+                .AddScoped(typeof(ICrudRepository<>), typeof(EntityFrameworkCrudRepository<>))
                 ;
 
             // Crud services
-            services
-                .AddSingleton(typeof(ICrudService<,>), typeof(EntityFrameworkCrudService<,>));
+            services.AddScoped(typeof(ICrudService<,>), typeof(EntityFrameworkCrudService<,>));
         }
     }
 }
