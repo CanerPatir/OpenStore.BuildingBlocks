@@ -12,7 +12,7 @@ namespace OpenStore.Infrastructure.Data.EventSourcing.EventStore
     {
         public static IServiceCollection AddEventStoreDataInfrastructure(this IServiceCollection services, Action<ConnectionSettings> eventStoreSettingsBuilder, params Assembly[] assemblies)
         {
-            services.Configure<ConnectionSettings>(eventStoreSettingsBuilder);
+            services.Configure(eventStoreSettingsBuilder);
             return AddDefaultServices(services, assemblies);
         }
 

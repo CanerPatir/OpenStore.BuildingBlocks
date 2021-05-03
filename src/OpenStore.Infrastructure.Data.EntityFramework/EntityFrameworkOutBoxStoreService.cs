@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using OpenStore.Application;
 using OpenStore.Domain;
 
 namespace OpenStore.Infrastructure.Data.EntityFramework
@@ -11,7 +12,7 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
     {
         private readonly DbContext _context;
 
-        public EntityFrameworkOutBoxStoreService(TDbContext context)
+        public EntityFrameworkOutBoxStoreService(TDbContext context, IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
         {
             _context = context;
         }

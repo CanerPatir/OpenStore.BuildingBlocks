@@ -5,6 +5,10 @@ using MediatR;
 using OpenStore.Domain;
 using OpenStore.Domain.EventSourcing;
 using CommonFixtures;
+using EventStore.ClientAPI;
+using EventStore.ClientAPI.Embedded;
+using Microsoft.Extensions.DependencyInjection;
+using OpenStore.Infrastructure.Data.EventSourcing.EventStore;
 using Xunit;
 
 namespace OpenStore.Infrastructure.Data.EventStore.Tests
@@ -54,7 +58,7 @@ namespace OpenStore.Infrastructure.Data.EventStore.Tests
 
         public EventStoreTests()
         {
-            // initializing embedded event store
+            // // initializing embedded event store
             // var nodeBuilder = EmbeddedVNodeBuilder.AsSingleNode()
             //     .OnDefaultEndpoints()
             //     .RunInMemory();
@@ -65,16 +69,41 @@ namespace OpenStore.Infrastructure.Data.EventStore.Tests
             //     embeddedConn.AppendToStreamAsync("testStream", ExpectedVersion.Any,
             //         new EventData(Guid.NewGuid(), "eventType", true, Encoding.UTF8.GetBytes("{\"Foo\":\"Bar\"}"), null)).Wait();
             // }
-            //
-            // ConfigureServices(services =>
-            // {
-            //     services.AddCommandBus<StockCreatedNotifHandler>();
-            //     services.AddEventStoreDataInfrastructure(settings => { });
-            //     services.AddSingleton<Func<IEventStoreConnection>>(sp => () => EmbeddedEventStoreConnection.Create(node));
-            // }).Build();
+       
+        }
+
+        protected override void ConfigureServices(IServiceCollection services)
+        {
+            var nodeBuilder = EmbeddedVNodeBuilder.AsSingleNode()
+                .OnDefaultEndpoints()
+                .RunInMemory();
+            var node = nodeBuilder.Build();
+            
+            services.AddOpenStoreCore(typeof(EventStoreTests).Assembly);
+            services.AddEventStoreDataInfrastructure(settings => { });
+            services.AddSingleton<Func<IEventStoreConnection>>(sp => () => EmbeddedEventStoreConnection.Create(node));
         }
 
         [Fact]
+        public void DiResolve()
+        {
+            // Arrange
+
+            // Act
+
+            var tRepo = GetService<IEventSourcingRepository<Stock, StockSnapshot>>();
+            var snapshotStorageProvider = GetService<ISnapshotStorageProvider<Stock, StockSnapshot>>();
+            var eventStorageProvider = GetService<IEventStorageProvider<Stock>>();
+            var session = GetService<ISession<Stock, StockSnapshot>>();
+
+            // Assert 
+            Assert.NotNull(tRepo);
+            Assert.NotNull(snapshotStorageProvider);
+            Assert.NotNull(eventStorageProvider);
+            Assert.NotNull(session);
+        }
+        
+        [Fact(Skip = "todo: ")]
         public async Task Create()
         {
             // Arrange

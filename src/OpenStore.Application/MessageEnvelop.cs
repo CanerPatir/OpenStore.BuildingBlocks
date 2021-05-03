@@ -16,12 +16,13 @@ namespace OpenStore.Application
         [Required] public DateTimeOffset Timestamp { get; protected set; }
         [ConcurrencyCheck] [Required] public long Version { get; protected set; }
         public string CorrelationId { get; protected set; }
+        public string CommittedBy { get; protected set; }
 
         protected MessageEnvelop()
         {
         }
         
-        protected MessageEnvelop(object message, long version, string correlationId)
+        protected MessageEnvelop(object message, long version, string correlationId, string committedBy)
         {
             Id = KeyGenerator.GenerateGuid();
             Type = message.GetType().AssemblyQualifiedName;
@@ -29,6 +30,7 @@ namespace OpenStore.Application
             Timestamp = DateTimeOffset.UtcNow;
             Version = version;
             CorrelationId = correlationId;
+            CommittedBy = committedBy;
         }
 
         public object RecreateMessage() =>

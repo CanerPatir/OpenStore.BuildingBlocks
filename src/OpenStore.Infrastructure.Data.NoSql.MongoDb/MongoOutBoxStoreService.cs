@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using OpenStore.Application;
 using OpenStore.Domain;
 
 namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
@@ -12,7 +13,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
         private readonly IMongoUnitOfWork _uow;
         private readonly IMongoCollection<OutBoxMessage> _collection;
 
-        public MongoOutBoxStoreService(IMongoUnitOfWork uow)
+        public MongoOutBoxStoreService(IMongoUnitOfWork uow, IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
         {
             _uow = uow;
             _collection = _uow.DatabaseBase.GetCollection<OutBoxMessage>(nameof(OutBoxMessage));

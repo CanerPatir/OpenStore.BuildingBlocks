@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenStore.Application;
 using OpenStore.Domain;
 
 namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
@@ -9,7 +10,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
     {
         private readonly IRavenUnitOfWork _uow;
 
-        public RavenOutBoxStoreService(IRavenUnitOfWork uow)
+        public RavenOutBoxStoreService(IRavenUnitOfWork uow, IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
         {
             _uow = uow;
         }

@@ -18,7 +18,7 @@ namespace OpenStore.Infrastructure.Data
         {
         }
 
-        public OutBoxMessage(IDomainEvent message, string correlationId) : base(message, message.Version, correlationId)
+        public OutBoxMessage(IDomainEvent message, string correlationId, string committedBy) : base(message, message.Version, correlationId, committedBy)
         {
             AggregateId = message.Id;
         }
