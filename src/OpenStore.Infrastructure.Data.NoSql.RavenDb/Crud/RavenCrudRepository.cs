@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Crud
             UnitOfWork = unitOfWork;
         }
 
-        protected IRavenUnitOfWork UnitOfWork { get; }
+        private IRavenUnitOfWork UnitOfWork { get; }
 
         public IQueryable<TEntity> Query => RavenQuery();
 
@@ -31,10 +32,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Crud
             return entity;
         }
 
-        public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
-        {
-            return UnitOfWork.Session.StoreAsync(entity, cancellationToken);
-        }
+        public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default) => UnitOfWork.Session.StoreAsync(entity, cancellationToken);
 
         public Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default)
         {
@@ -42,19 +40,13 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Crud
             return Task.CompletedTask;
         }
 
-        public void Remove(TEntity entity)
-        {
-            UnitOfWork.Session.Delete(entity);
-        }
+        public void Remove(TEntity entity) => UnitOfWork.Session.Delete(entity);
 
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            return UnitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        public void Attach(TEntity entity) => throw new NotSupportedException();
 
-        public IRavenQueryable<TEntity> RavenQuery(string indexName = null, string collectionName = null, bool isMapReduce = false)
-        {
-            return UnitOfWork.Session.Query<TEntity>(indexName, collectionName, isMapReduce);
-        }
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default) => UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        private IRavenQueryable<TEntity> RavenQuery(string indexName = null, string collectionName = null, bool isMapReduce = false)
+            => UnitOfWork.Session.Query<TEntity>(indexName, collectionName, isMapReduce);
     }
 }

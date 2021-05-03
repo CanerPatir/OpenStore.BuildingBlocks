@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,9 +18,9 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Crud
             MongoCollection = UnitOfWork.DatabaseBase.GetCollection<TEntity>(typeof(TEntity).Name);
         }
 
-        public IMongoUnitOfWork UnitOfWork { get; }
-        public IMongoCollection<TEntity> MongoCollection { get; }
-        public IMongoQueryable<TEntity> MongoQuery => MongoCollection.AsQueryable();
+        private IMongoUnitOfWork UnitOfWork { get; }
+        private IMongoCollection<TEntity> MongoCollection { get; }
+        private IMongoQueryable<TEntity> MongoQuery => MongoCollection.AsQueryable();
         public IQueryable<TEntity> Query => MongoQuery;
 
         public Task<TEntity> GetAsync(object id, CancellationToken cancellationToken = default)
@@ -53,6 +54,8 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb.Crud
         {
             MongoCollection.DeleteOne(UnitOfWork.Session, x => x.Id == entity.Id);
         }
+
+        public void Attach(TEntity entity) => throw new NotSupportedException();
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {

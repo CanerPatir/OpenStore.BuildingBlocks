@@ -41,6 +41,8 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Crud
         public virtual async Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default) => Remove(await GetAsync(id, cancellationToken));
 
         public void Remove(TEntity entity) => Set.Remove(entity);
+        
+        public void Attach(TEntity entity) => Set.Attach(entity);
 
         public virtual Task SaveChangesAsync(CancellationToken cancellationToken = default) => UnitOfWork.SaveChangesAsync(cancellationToken);
     }
