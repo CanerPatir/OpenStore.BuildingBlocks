@@ -20,6 +20,7 @@ namespace OpenStore.Infrastructure.Data
 
         public OutBoxMessage(IDomainEvent message, string correlationId) : base(message, message.Version, correlationId)
         {
+            AggregateId = message.Id;
         }
 
         public void MarkAsCommitted()
