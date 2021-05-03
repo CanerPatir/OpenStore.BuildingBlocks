@@ -90,11 +90,11 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
 
             if (item != null && expectedVersion == (int) StreamState.NoStream)
             {
-                throw new AggregateCreationException($"Aggregate {item.CorrelationId} can't be created as it already exists with version {item.Version + 1}");
+                throw new AggregateCreationException($"Aggregate {item.Id} can't be created as it already exists with version {item.Version + 1}");
             }
             else if (item != null && item.Version + 1 != expectedVersion)
             {
-                throw new ConcurrencyException($"Aggregate {item.CorrelationId} has been modified externally and has an updated state. Can't commit changes.");
+                throw new ConcurrencyException($"Aggregate {item.Id} has been modified externally and has an updated state. Can't commit changes.");
             }
 
             var changesToCommit = aggregate
@@ -102,10 +102,10 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
                 .ToList();
 
             //perform pre commit actions
-            foreach (var e in changesToCommit)
-            {
-                e.CommittedTimestamp = DateTime.UtcNow;
-            }
+            // foreach (var e in changesToCommit)
+            // {
+            //     e.CommittedTimestamp = DateTime.UtcNow;
+            // }
 
             //CommitAsync events to storage provider
             await _eventStorageProvider.SaveAsync(aggregate);

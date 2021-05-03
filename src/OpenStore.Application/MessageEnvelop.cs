@@ -14,7 +14,7 @@ namespace OpenStore.Application
         [Required] public string Type { get; protected set; }
         [Required] public string Payload { get; protected set; }
         [Required] public DateTimeOffset Timestamp { get; protected set; }
-        [Required] public long Version { get; protected set; }
+        [ConcurrencyCheck] [Required] public long Version { get; protected set; }
         public string CorrelationId { get; protected set; }
 
         protected MessageEnvelop()
@@ -31,6 +31,7 @@ namespace OpenStore.Application
             CorrelationId = correlationId;
         }
 
-        public object RecreateMessage() => JsonSerializer.Deserialize(Payload, System.Type.GetType(Type) ?? throw new InvalidOperationException("Message 'Type' should not be null"));
+        public object RecreateMessage() =>
+            JsonSerializer.Deserialize(Payload, System.Type.GetType(Type) ?? throw new InvalidOperationException("Message 'Type' should not be null"));
     }
 }

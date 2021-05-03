@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using OpenStore.Application;
 using OpenStore.Domain;
@@ -10,17 +11,15 @@ namespace OpenStore.Infrastructure.Data
 {
     public class OutBoxMessage : MessageEnvelop
     {
-        [Required] public bool Committed { get; set; }
-        [Required] public string AggregateId { get; set; }
+        [Required] public bool Committed { get; protected set; }
+        [Required] public string AggregateId { get; protected set; }
 
         protected OutBoxMessage()
         {
         }
 
-        public OutBoxMessage(IDomainEvent message) : base(message, message.Version, message.CorrelationId)
+        public OutBoxMessage(IDomainEvent message, string correlationId) : base(message, message.Version, correlationId)
         {
-            Committed = false;
-            AggregateId = message.Id;
         }
 
         public void MarkAsCommitted()

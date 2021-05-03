@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,7 +9,11 @@ namespace OpenStore.Infrastructure.Data
 {
     public abstract class OutBoxStoreService : IOutBoxStoreService
     {
-        protected static IEnumerable<OutBoxMessage> WrapEvents(IEnumerable<IDomainEvent> events) => events.Select(e => new OutBoxMessage(e));
+        protected static IEnumerable<OutBoxMessage> WrapEvents(IEnumerable<IDomainEvent> events)
+        {
+            var correlationId = Guid.NewGuid().ToString();
+            return events.Select(e => new OutBoxMessage(e, correlationId));
+        }
 
         public abstract Task StoreMessages(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default);
     }

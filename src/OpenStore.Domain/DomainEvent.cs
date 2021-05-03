@@ -7,13 +7,9 @@ namespace OpenStore.Domain
         protected DomainEvent(string id)
         {
             Id = id;
-            CommittedTimestamp = DateTime.UtcNow;
-            CorrelationId = Guid.NewGuid().ToString();
         }
 
         public string Id { get; }
-        public long Version { get; set; }
-        public DateTime CommittedTimestamp { get; set; }
-        public string CorrelationId { get; set; }
+        public long Version { get; set; } 
     }
 }
