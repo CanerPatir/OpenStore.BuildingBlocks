@@ -143,10 +143,11 @@ namespace OpenStore.Infrastructure.Data.EntityFramework.Extensions
             {
                 if (item.Entity is not ISavingChanges saveEntity) continue;
 
-                if (outBoxService is not null && saveEntity.HasUncommittedChanges())
+                if (context is IOutBoxDbContext 
+                    && outBoxService is not null 
+                    && saveEntity.HasUncommittedChanges())
                 {
                     var events = saveEntity.GetUncommittedChanges();
-
                     await outBoxService.StoreMessages(events, cancellationToken);;
                 }
                 
