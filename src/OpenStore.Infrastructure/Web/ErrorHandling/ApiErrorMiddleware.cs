@@ -22,7 +22,7 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, ILogger<ApiErrorMiddleware> logger, IOpenStoreLocalizer loc)
         {
             Exception ex = null;
             try
@@ -36,7 +36,6 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
 
             if (ex == null) return;
 
-            var logger = context.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("UseOpenStoreApiExceptionHandling");
             switch (ex)
             {
                 case ResourceNotFoundException:
@@ -54,7 +53,7 @@ namespace OpenStore.Infrastructure.Web.ErrorHandling
                     break;
             }
 
-            var loc = context.RequestServices.GetService<IOpenStoreLocalizer>() ?? new NullLocalizer();
+            loc ??= new NullLocalizer();
 
             var errorDto = ex switch
             {
