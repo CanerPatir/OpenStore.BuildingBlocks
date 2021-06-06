@@ -13,7 +13,7 @@ using Xunit;
 using OpenStore.Infrastructure.Data.NoSql.RavenDb;
 using OpenStore.Infrastructure.Mapping.AutoMapper;
 
-namespace OpenStore.Infrastructure.Data.RavenDb.Tests
+namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests
 {
     [CollectionDefinition("RavenEmbeddedCrudTest", DisableParallelization = true)]
     public class SequentialCollection

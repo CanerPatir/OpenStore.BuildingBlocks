@@ -21,7 +21,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="RavenDB.Embedded" Version="5.1.7" />
+        <PackageReference Include="RavenDB.Embedded" Version="5.1.8" />
         <PackageReference Include="CommonFixtures" Version="0.0.8" />
     </ItemGroup>
 
