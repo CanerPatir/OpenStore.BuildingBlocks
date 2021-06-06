@@ -17,11 +17,11 @@ namespace OpenStore.Infrastructure.Data.EventSourcing
     {
         private readonly IEventStorageProvider<TAggregate> _eventStorageProvider;
         private readonly ISnapshotStorageProvider<TAggregate, TSnapshot> _snapshotStorageProvider;
-        private readonly IDomainEventNotifier _domainEventNotifier;
+        private readonly IOpenStoreDomainEventNotifier _domainEventNotifier;
 
         public EventSourcingRepository(
             IEventStorageProvider<TAggregate> eventStorageProvider,
-            IDomainEventNotifier domainEventNotifier,
+            IOpenStoreDomainEventNotifier domainEventNotifier,
             ISnapshotStorageProvider<TAggregate, TSnapshot> snapshotStorageProvider)
         {
             _eventStorageProvider = eventStorageProvider;

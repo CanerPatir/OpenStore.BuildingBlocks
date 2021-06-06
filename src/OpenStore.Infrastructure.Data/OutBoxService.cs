@@ -13,11 +13,11 @@ namespace OpenStore.Infrastructure.Data
     /// </summary>
     public abstract class OutBoxService : IOutBoxService
     {
-        protected IDomainEventNotifier DomainEventNotifier { get; }
+        protected IOpenStoreDomainEventNotifier DomainEventNotifier { get; }
         protected IUnitOfWork Uow { get; }
         protected ILogger Logger { get; }
 
-        protected OutBoxService(IUnitOfWork uow, IDomainEventNotifier domainEventNotifier, ILogger logger)
+        protected OutBoxService(IUnitOfWork uow, IOpenStoreDomainEventNotifier domainEventNotifier, ILogger logger)
         {
             DomainEventNotifier = domainEventNotifier;
             Uow = uow;
