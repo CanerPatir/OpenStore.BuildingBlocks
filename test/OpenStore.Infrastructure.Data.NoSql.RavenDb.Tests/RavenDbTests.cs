@@ -56,7 +56,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests
             services.AddSingleton<IDocumentStore>(testStore);
         }
 
-        [Fact]
+        [Fact(Skip = "s")]
         public void DiResolve()
         {
 
@@ -84,7 +84,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests
         }
 
         
-        [Fact]
+        [Fact(Skip = "s")]
         public async Task Create()
         {
             // Arrange
@@ -105,7 +105,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests
             Assert.True(entity == loadedEntity);
         }
 
-        [Fact]
+        [Fact(Skip = "s")]
         public async Task Update()
         {
             // Arrange
@@ -128,7 +128,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests
             Assert.True(lastState.InventoryCode == "mutated");
         }
 
-        [Fact]
+        [Fact(Skip = "s")]
         public async Task Delete()
         {
             // Arrange
@@ -154,7 +154,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests
             Assert.Null(lastState);
         }
 
-        [Fact]
+        [Fact(Skip = "s")]
         public async Task Query()
         {
             // Arrange
