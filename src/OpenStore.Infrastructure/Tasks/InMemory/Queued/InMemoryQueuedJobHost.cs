@@ -40,7 +40,7 @@ namespace OpenStore.Infrastructure.Tasks.InMemory.Queued
             try
             {
                 _logger.LogInformation($"Starting to proceed queued job: {nameof(workItem)}.");
-                
+
                 await TaskHelper.RunBgLong(async () =>
                 {
                     using var scope = _serviceScopeFactory.CreateScope();

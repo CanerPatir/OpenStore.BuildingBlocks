@@ -15,7 +15,7 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
         {
             _queuedJobItems = queuedJobItems;
         }
-        
+
         public async void QueueTask(Func<IServiceProvider, CancellationToken, Task> workItem)
         {
             if (workItem == null) throw new ArgumentNullException(nameof(workItem));
@@ -24,11 +24,10 @@ namespace OpenStore.Infrastructure.Tasks.InMemory
         }
 
         public void QueueTask(IBackgroundTask task) => QueueTask(task.Run);
-        
+
         public Task<Func<IServiceProvider, CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
-        
     }
 }

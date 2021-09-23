@@ -10,7 +10,8 @@ namespace OpenStore.Infrastructure.Data
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private Timer _timer;
-        private static readonly object Locker = new object();
+        private readonly SemaphoreSlim _semaphore = new(1, 1);
+        private readonly TimeSpan _oneMinuteInterval = TimeSpan.FromMinutes(1);
 
         public OutBoxPollHost(IServiceScopeFactory serviceScopeFactory)
         {
@@ -24,7 +25,7 @@ namespace OpenStore.Infrastructure.Data
                 PushMessages,
                 null,
                 TimeSpan.Zero,
-                TimeSpan.FromMinutes(1)
+                _oneMinuteInterval
             );
             return Task.CompletedTask;
         }
@@ -34,30 +35,19 @@ namespace OpenStore.Infrastructure.Data
             _timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }
-        
+
         private async void PushMessages(object state)
         {
-            var hasLock = false;
-
+            await _semaphore.WaitAsync();
             try
             {
-                Monitor.TryEnter(Locker, ref hasLock);
-
-                if (!hasLock)
-                {
-                    return;
-                }
-
                 using var scope = _serviceScopeFactory.CreateScope();
                 var outBox = scope.ServiceProvider.GetRequiredService<IOutBoxService>();
                 await outBox.PushPendingMessages(int.MaxValue);
             }
             finally
             {
-                if (hasLock)
-                {
-                    Monitor.Exit(Locker);
-                }
+                _semaphore.Release();
             }
         }
     }
