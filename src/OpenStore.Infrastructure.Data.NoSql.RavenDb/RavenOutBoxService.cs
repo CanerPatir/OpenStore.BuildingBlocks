@@ -13,7 +13,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.RavenDb
     {
         private readonly IRavenUnitOfWork _uow;
 
-        public RavenOutBoxService(IRavenUnitOfWork uow, IOpenStoreDomainEventNotifier domainEventNotifier, ILogger<RavenOutBoxService> logger) : base(uow, domainEventNotifier, logger)
+        public RavenOutBoxService(IRavenUnitOfWork uow, IOpenStoreMessageNotifier messageNotifier, ILogger<RavenOutBoxService> logger) : base(uow, messageNotifier, logger)
         {
             _uow = uow;
         }

@@ -11,7 +11,7 @@ namespace OpenStore.Infrastructure.CommandBus
         internal static IServiceCollection AddOpenStoreCommandBus(this IServiceCollection services, ServiceLifetime lifetime, params Assembly[] assemblies)
         {
             return services
-                    .AddTransient<IOpenStoreDomainEventNotifier, MediatrDomainEventNotifier>()
+                    .AddTransient<IOpenStoreMessageNotifier, MediatrOpenStoreMessageNotifier>()
                     .AddMediatR(assemblies, conf =>
                     {
                         switch (lifetime)

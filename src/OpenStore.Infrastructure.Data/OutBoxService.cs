@@ -13,13 +13,13 @@ namespace OpenStore.Infrastructure.Data
     /// </summary>
     public abstract class OutBoxService : IOutBoxService
     {
-        protected IOpenStoreDomainEventNotifier DomainEventNotifier { get; }
+        protected IOpenStoreMessageNotifier MessageNotifier { get; }
         protected IUnitOfWork Uow { get; }
         protected ILogger Logger { get; }
 
-        protected OutBoxService(IUnitOfWork uow, IOpenStoreDomainEventNotifier domainEventNotifier, ILogger logger)
+        protected OutBoxService(IUnitOfWork uow, IOpenStoreMessageNotifier messageNotifier, ILogger logger)
         {
-            DomainEventNotifier = domainEventNotifier;
+            MessageNotifier = messageNotifier;
             Uow = uow;
             Logger = logger;
         }
@@ -85,18 +85,6 @@ namespace OpenStore.Infrastructure.Data
             }
         }
 
-        private async Task PublishMessage(OutBoxMessage message)
-        {
-            var recreate = message.RecreateMessage();
-
-            if (recreate is IDomainEvent domainEvent)
-            {
-                await DomainEventNotifier.Notify(domainEvent);
-            }
-            else
-            {
-                Logger.LogError("Message could not be parsed to IDomainEvent {}", message);
-            }
-        }
+        private async Task PublishMessage(OutBoxMessage message) => await MessageNotifier.Notify(message);
     }
 }

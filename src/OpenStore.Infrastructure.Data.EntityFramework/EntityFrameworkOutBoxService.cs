@@ -15,9 +15,9 @@ namespace OpenStore.Infrastructure.Data.EntityFramework
         private readonly DbContext _context;
 
         public EntityFrameworkOutBoxService(IEntityFrameworkCoreUnitOfWork uow,
-            IOpenStoreDomainEventNotifier domainEventNotifier, 
+            IOpenStoreMessageNotifier messageNotifier, 
             ILogger<EntityFrameworkOutBoxService> logger) : base(uow,
-            domainEventNotifier, logger)
+            messageNotifier, logger)
         {
             _context = uow.Context;
         }

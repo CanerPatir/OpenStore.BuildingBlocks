@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using MediatR;
 using OpenStore.Domain;
 
 namespace OpenStore.Application
@@ -8,7 +9,7 @@ namespace OpenStore.Application
     /// <summary>
     /// Stream message abstraction
     /// </summary>
-    public abstract class MessageEnvelop
+    public abstract class MessageEnvelop : INotification
     {
         [Key] public Guid Id { get; protected set; }
         [Required] public string Type { get; protected set; }
@@ -21,7 +22,7 @@ namespace OpenStore.Application
         protected MessageEnvelop()
         {
         }
-        
+
         protected MessageEnvelop(object message, long version, string correlationId, string committedBy)
         {
             Id = KeyGenerator.GenerateGuid();

@@ -14,7 +14,7 @@ namespace OpenStore.Infrastructure.Data.NoSql.MongoDb
         private readonly IMongoUnitOfWork _uow;
         private readonly IMongoCollection<OutBoxMessage> _collection;
 
-        public MongoOutBoxService(IMongoUnitOfWork uow, IOpenStoreDomainEventNotifier domainEventNotifier, ILogger<MongoOutBoxService> logger) : base(uow, domainEventNotifier, logger)
+        public MongoOutBoxService(IMongoUnitOfWork uow, IOpenStoreMessageNotifier messageNotifier, ILogger<MongoOutBoxService> logger) : base(uow, messageNotifier, logger)
         {
             _uow = uow;
             _collection = _uow.DatabaseBase.GetCollection<OutBoxMessage>(nameof(OutBoxMessage));
