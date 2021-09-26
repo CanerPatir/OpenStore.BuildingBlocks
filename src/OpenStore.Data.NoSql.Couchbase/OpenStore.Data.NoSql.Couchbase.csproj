@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <ProjectReference Include="..\OpenStore.Data\OpenStore.Data.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Couchbase.Extensions.DependencyInjection" Version="3.2.0" />
+        <PackageReference Include="CouchbaseNetClient" Version="3.2.2" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+    </ItemGroup>
+
+</Project>

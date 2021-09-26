@@ -10,29 +10,29 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Domain", "src\Ope
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure", "src\OpenStore.Infrastructure\OpenStore.Infrastructure.csproj", "{1D3ED486-7BBA-4DE2-86FF-2C5BDD082AE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data", "src\OpenStore.Infrastructure.Data\OpenStore.Infrastructure.Data.csproj", "{8A6A3B9A-0A95-4472-97A0-E03C3CD48F7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data", "src\OpenStore.Data\OpenStore.Data.csproj", "{8A6A3B9A-0A95-4472-97A0-E03C3CD48F7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.EntityFramework", "src\OpenStore.Infrastructure.Data.EntityFramework\OpenStore.Infrastructure.Data.EntityFramework.csproj", "{53BB859F-E493-4AA2-B942-C26E8AA71873}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.EntityFramework", "src\OpenStore.Data.EntityFramework\OpenStore.Data.EntityFramework.csproj", "{53BB859F-E493-4AA2-B942-C26E8AA71873}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.EventSourcing.EventStore", "src\OpenStore.Infrastructure.Data.EventSourcing.EventStore\OpenStore.Infrastructure.Data.EventSourcing.EventStore.csproj", "{1A974E59-9249-4437-99E9-499D1A69F6DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.EventSourcing.EventStore", "src\OpenStore.Data.EventSourcing.EventStore\OpenStore.Data.EventSourcing.EventStore.csproj", "{1A974E59-9249-4437-99E9-499D1A69F6DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.NoSql", "src\OpenStore.Infrastructure.Data.NoSql\OpenStore.Infrastructure.Data.NoSql.csproj", "{5F1C2E94-56B0-4B19-A183-1C24F8A22C45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.NoSql", "src\OpenStore.Data.NoSql\OpenStore.Data.NoSql.csproj", "{5F1C2E94-56B0-4B19-A183-1C24F8A22C45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.NoSql.Couchbase", "src\OpenStore.Infrastructure.Data.NoSql.Couchbase\OpenStore.Infrastructure.Data.NoSql.Couchbase.csproj", "{F5ED8993-50EE-4F56-AF7C-7E4062438ACF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.NoSql.Couchbase", "src\OpenStore.Data.NoSql.Couchbase\OpenStore.Data.NoSql.Couchbase.csproj", "{F5ED8993-50EE-4F56-AF7C-7E4062438ACF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.NoSql.MongoDb", "src\OpenStore.Infrastructure.Data.NoSql.MongoDb\OpenStore.Infrastructure.Data.NoSql.MongoDb.csproj", "{4E610872-F37C-406A-A860-B806D4412A2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.NoSql.MongoDb", "src\OpenStore.Data.NoSql.MongoDb\OpenStore.Data.NoSql.MongoDb.csproj", "{4E610872-F37C-406A-A860-B806D4412A2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.NoSql.RavenDb", "src\OpenStore.Infrastructure.Data.NoSql.RavenDb\OpenStore.Infrastructure.Data.NoSql.RavenDb.csproj", "{4B8A758F-DF93-401D-B315-A880FFA7EA61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.NoSql.RavenDb", "src\OpenStore.Data.NoSql.RavenDb\OpenStore.Data.NoSql.RavenDb.csproj", "{4B8A758F-DF93-401D-B315-A880FFA7EA61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Search.ElasticSearch", "src\OpenStore.Infrastructure.Search.ElasticSearch\OpenStore.Infrastructure.Search.ElasticSearch.csproj", "{8EF24A6A-6D8D-4C3F-B6D9-8D994297DCAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.Search.ElasticSearch", "src\OpenStore.Data.Search.ElasticSearch\OpenStore.Data.Search.ElasticSearch.csproj", "{8EF24A6A-6D8D-4C3F-B6D9-8D994297DCAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.EntityFramework.Tests", "test\OpenStore.Infrastructure.Data.EntityFramework.Tests\OpenStore.Infrastructure.Data.EntityFramework.Tests.csproj", "{3E24B702-0A6B-43AC-8E8A-6F9BCE09E468}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.EntityFramework.Tests", "test\OpenStore.Data.EntityFramework.Tests\OpenStore.Data.EntityFramework.Tests.csproj", "{3E24B702-0A6B-43AC-8E8A-6F9BCE09E468}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.EventStore.Tests", "test\OpenStore.Infrastructure.Data.EventStore.Tests\OpenStore.Infrastructure.Data.EventStore.Tests.csproj", "{C1C36775-1732-4573-A63B-6F8283907A8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.EventStore.Tests", "test\OpenStore.Data.EventStore.Tests\OpenStore.Data.EventStore.Tests.csproj", "{C1C36775-1732-4573-A63B-6F8283907A8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.NoSql.MongoDb.Tests", "test\OpenStore.Infrastructure.Data.NoSql.MongoDb.Tests\OpenStore.Infrastructure.Data.NoSql.MongoDb.Tests.csproj", "{6D6B7E95-D60C-44FD-B0F8-260D43288325}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.NoSql.MongoDb.Tests", "test\OpenStore.Data.NoSql.MongoDb.Tests\OpenStore.Data.NoSql.MongoDb.Tests.csproj", "{6D6B7E95-D60C-44FD-B0F8-260D43288325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests", "test\OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests\OpenStore.Infrastructure.Data.NoSql.RavenDb.Tests.csproj", "{6D358347-F486-41A7-96F3-5C50DB28B53B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Data.NoSql.RavenDb.Tests", "test\OpenStore.Data.NoSql.RavenDb.Tests\OpenStore.Data.NoSql.RavenDb.Tests.csproj", "{6D358347-F486-41A7-96F3-5C50DB28B53B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Tests", "test\OpenStore.Infrastructure.Tests\OpenStore.Infrastructure.Tests.csproj", "{AD4BDD51-50F0-4DEF-AA15-238FDFE81372}"
 EndProject
@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.BB.TestProject", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Web.Blazor", "src\OpenStore.Infrastructure.Web.Blazor\OpenStore.Infrastructure.Web.Blazor.csproj", "{9BA65E44-6AA9-4287-9AF8-D60970DA3B9E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{2224B591-DC45-4FA3-88CA-141CFA3EAC6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,14 +58,6 @@ Global
 		{8D8D9039-9BD1-45F1-A28E-610BB0A9EE43} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
 		{A17B9FFD-2166-43E9-9E87-9947F6E16803} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
 		{1D3ED486-7BBA-4DE2-86FF-2C5BDD082AE6} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
-		{8A6A3B9A-0A95-4472-97A0-E03C3CD48F7E} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
-		{53BB859F-E493-4AA2-B942-C26E8AA71873} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
-		{1A974E59-9249-4437-99E9-499D1A69F6DA} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
-		{5F1C2E94-56B0-4B19-A183-1C24F8A22C45} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
-		{F5ED8993-50EE-4F56-AF7C-7E4062438ACF} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
-		{4E610872-F37C-406A-A860-B806D4412A2A} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
-		{4B8A758F-DF93-401D-B315-A880FFA7EA61} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
-		{8EF24A6A-6D8D-4C3F-B6D9-8D994297DCAE} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
 		{3E24B702-0A6B-43AC-8E8A-6F9BCE09E468} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
 		{C1C36775-1732-4573-A63B-6F8283907A8A} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
 		{6D6B7E95-D60C-44FD-B0F8-260D43288325} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
@@ -71,6 +65,15 @@ Global
 		{AD4BDD51-50F0-4DEF-AA15-238FDFE81372} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
 		{FD89C3C5-BD45-435F-B2A6-68FFF1AB91CD} = {1795354D-B291-4FF7-8968-6ABA0B9EDD67}
 		{9BA65E44-6AA9-4287-9AF8-D60970DA3B9E} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
+		{2224B591-DC45-4FA3-88CA-141CFA3EAC6E} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
+		{8A6A3B9A-0A95-4472-97A0-E03C3CD48F7E} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
+		{53BB859F-E493-4AA2-B942-C26E8AA71873} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
+		{1A974E59-9249-4437-99E9-499D1A69F6DA} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
+		{5F1C2E94-56B0-4B19-A183-1C24F8A22C45} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
+		{F5ED8993-50EE-4F56-AF7C-7E4062438ACF} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
+		{4E610872-F37C-406A-A860-B806D4412A2A} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
+		{4B8A758F-DF93-401D-B315-A880FFA7EA61} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
+		{8EF24A6A-6D8D-4C3F-B6D9-8D994297DCAE} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8D8D9039-9BD1-45F1-A28E-610BB0A9EE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
