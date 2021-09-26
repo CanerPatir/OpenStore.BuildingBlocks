@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.We
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{2224B591-DC45-4FA3-88CA-141CFA3EAC6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenStore.Infrastructure.Messaging.Kafka", "src\OpenStore.Infrastructure.Messaging.Kafka\OpenStore.Infrastructure.Messaging.Kafka.csproj", "{22CE8050-1CD5-4093-9680-00358FF5D303}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,7 @@ Global
 		{4E610872-F37C-406A-A860-B806D4412A2A} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
 		{4B8A758F-DF93-401D-B315-A880FFA7EA61} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
 		{8EF24A6A-6D8D-4C3F-B6D9-8D994297DCAE} = {2224B591-DC45-4FA3-88CA-141CFA3EAC6E}
+		{22CE8050-1CD5-4093-9680-00358FF5D303} = {42BAF541-A117-4F08-BC8D-B35B5FBD2739}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8D8D9039-9BD1-45F1-A28E-610BB0A9EE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -148,5 +151,9 @@ Global
 		{9BA65E44-6AA9-4287-9AF8-D60970DA3B9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BA65E44-6AA9-4287-9AF8-D60970DA3B9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BA65E44-6AA9-4287-9AF8-D60970DA3B9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22CE8050-1CD5-4093-9680-00358FF5D303}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22CE8050-1CD5-4093-9680-00358FF5D303}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22CE8050-1CD5-4093-9680-00358FF5D303}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22CE8050-1CD5-4093-9680-00358FF5D303}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

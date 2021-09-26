@@ -9,9 +9,4 @@
       <ProjectReference Include="..\OpenStore.Domain\OpenStore.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="MediatR" Version="9.0.0" />
-      <PackageReference Include="System.Text.Json" Version="5.0.2" />
-    </ItemGroup>
-
 </Project>
