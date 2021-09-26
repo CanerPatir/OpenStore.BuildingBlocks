@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -17,7 +18,7 @@ namespace OpenStore.Data.OutBox
         protected ILogger Logger { get; }
 
         private readonly IMediator _mediator;
-        
+
         protected OutBoxService(IUnitOfWork uow, IMediator mediator, ILogger logger)
         {
             _mediator = mediator;
@@ -39,21 +40,13 @@ namespace OpenStore.Data.OutBox
             Logger.LogInformation("Messages pending to push. Count: {}", messagesToPush.Count);
 
             await Uow.BeginTransactionAsync(token);
-            var successCount = 0;
 
-            foreach (var msg in messagesToPush)
-            {
-                if (await TryNotify(msg, token))
-                {
-                    successCount++;
-                }
-            }
-
-            if (successCount > 0)
+            if (await TryNotify(messagesToPush, token))
             {
                 try
                 {
                     await Uow.SaveChangesAsync(token);
+                    return true;
                 }
                 catch (Exception e)
                 {
@@ -62,30 +55,28 @@ namespace OpenStore.Data.OutBox
                 }
             }
 
-            if (successCount == messagesToPush.Count)
-                return true;
-
-            Logger.LogWarning($"Some of outbox messages not committed success: {successCount}, total: {messagesToPush.Count}");
             return false;
         }
 
-        private async Task<bool> TryNotify(OutBoxMessage message, CancellationToken token)
+        private async Task<bool> TryNotify(IReadOnlyCollection<OutBoxMessage> messages, CancellationToken token)
         {
             try
             {
-                await NotifyMessage(message);
-                message.MarkAsCommitted();
+                await _mediator.Publish(new OutBoxMessageBatch(messages), token);
+                Logger.LogInformation($"Message batch published successfully Count: {messages.Count}");
 
-                Logger.LogInformation($"Message published successfully {message}");
+                foreach (var outBoxMessage in messages)
+                {
+                    outBoxMessage.MarkAsCommitted();
+                }
+
                 return true;
             }
             catch (Exception e)
             {
-                Logger.LogError(e, $"Message publish failed {message}");
+                Logger.LogError(e, $"Message batch could not be published Count: {messages.Count}");
                 return false;
             }
         }
-
-        private async Task NotifyMessage(OutBoxMessage message) => await _mediator.Publish(message);
     }
 }

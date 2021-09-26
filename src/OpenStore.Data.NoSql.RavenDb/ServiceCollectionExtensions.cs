@@ -18,6 +18,8 @@ namespace OpenStore.Data.NoSql.RavenDb
 {
     public static class ServiceCollectionExtensions
     {
+        private const int OutBoxFetchSize = 2000; // todo: make configurable
+
         public static IServiceCollection AddRavenDbDataInfrastructure(
             this IServiceCollection services
             , Action<RavenDatabaseSettings> ravenDbSettingsBuilder
@@ -65,7 +67,7 @@ namespace OpenStore.Data.NoSql.RavenDb
             {
                 var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
                 var ravenDatabaseSettings = sp.GetRequiredService<IOptions<RavenDatabaseSettings>>().Value;
-                return new OutBoxPollHost(ravenDatabaseSettings.OutBoxEnabled, serviceScopeFactory);
+                return new OutBoxPollHost(ravenDatabaseSettings.OutBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
             });
 
             if (assemblies != null && assemblies.Any())

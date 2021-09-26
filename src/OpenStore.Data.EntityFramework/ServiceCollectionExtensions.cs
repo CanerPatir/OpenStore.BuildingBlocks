@@ -24,6 +24,8 @@ namespace OpenStore.Data.EntityFramework
     /// </summary>
     public static class ServiceCollectionExtensions
     {
+        private const int OutBoxFetchSize = 2000; // todo: make configurable
+        
         public static EntityFrameworkDataSource GetActiveDataSource(this IConfiguration configuration)
         {
             var activeConnection = configuration["Data:ActiveConnection"];
@@ -166,7 +168,7 @@ namespace OpenStore.Data.EntityFramework
             services.AddHostedService(sp =>
             {
                 var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                return new OutBoxPollHost(outBoxEnabled, serviceScopeFactory);
+                return new OutBoxPollHost(outBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
             });
 
             // for generic resolve

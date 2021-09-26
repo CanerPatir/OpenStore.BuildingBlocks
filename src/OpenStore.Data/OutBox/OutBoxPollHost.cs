@@ -9,14 +9,16 @@ namespace OpenStore.Data.OutBox
     public class OutBoxPollHost : IHostedService, IDisposable
     {
         private readonly bool _enabled;
+        private readonly int _fetchSize;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private Timer _timer;
         private readonly SemaphoreSlim _semaphore = new(1, 1);
         private readonly TimeSpan _oneMinuteInterval = TimeSpan.FromMinutes(1);
 
-        public OutBoxPollHost(bool enabled, IServiceScopeFactory serviceScopeFactory)
+        public OutBoxPollHost(bool enabled, int fetchSize, IServiceScopeFactory serviceScopeFactory)
         {
             _enabled = enabled;
+            _fetchSize = fetchSize;
             _serviceScopeFactory = serviceScopeFactory;
         }
 
@@ -50,7 +52,7 @@ namespace OpenStore.Data.OutBox
             {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var outBox = scope.ServiceProvider.GetRequiredService<IOutBoxService>();
-                await outBox.NotifyPendingMessages(int.MaxValue);
+                await outBox.NotifyPendingMessages(_fetchSize);
             }
             finally
             {
