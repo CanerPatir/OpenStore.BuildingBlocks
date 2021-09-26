@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace OpenStore.Data
+namespace OpenStore.Data.OutBox
 {
     public class OutBoxPollHost : IHostedService
     {

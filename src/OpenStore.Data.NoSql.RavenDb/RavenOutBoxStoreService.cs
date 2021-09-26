@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenStore.Application;
+using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 
 namespace OpenStore.Data.NoSql.RavenDb

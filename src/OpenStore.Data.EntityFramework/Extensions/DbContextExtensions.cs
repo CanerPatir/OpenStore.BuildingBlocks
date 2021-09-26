@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 
 namespace OpenStore.Data.EntityFramework.Extensions

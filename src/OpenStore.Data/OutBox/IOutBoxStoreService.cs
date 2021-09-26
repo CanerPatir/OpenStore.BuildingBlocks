@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenStore.Domain;
 
-namespace OpenStore.Data
+namespace OpenStore.Data.OutBox
 {
     public interface IOutBoxStoreService
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using OpenStore.Application;
 using OpenStore.Domain;
 
-namespace OpenStore.Data
+namespace OpenStore.Data.OutBox
 {
     public abstract class OutBoxStoreService : IOutBoxStoreService
     {

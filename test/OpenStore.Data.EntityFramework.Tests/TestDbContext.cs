@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 
 namespace OpenStore.Data.EntityFramework.Tests

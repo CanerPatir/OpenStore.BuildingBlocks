@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 
 namespace OpenStore.Data.EntityFramework

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenStore.Application;
+using OpenStore.Data.OutBox;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -15,9 +16,9 @@ namespace OpenStore.Data.EntityFramework
         private readonly DbContext _context;
 
         public EntityFrameworkOutBoxService(IEntityFrameworkCoreUnitOfWork uow,
-            IOpenStoreMessageNotifier messageNotifier, 
+            IOpenStoreOutBoxMessageNotifier outBoxMessageNotifier, 
             ILogger<EntityFrameworkOutBoxService> logger) : base(uow,
-            messageNotifier, logger)
+            outBoxMessageNotifier, logger)
         {
             _context = uow.Context;
         }

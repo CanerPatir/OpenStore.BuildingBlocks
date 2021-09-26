@@ -9,6 +9,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.NoSql.MongoDb.Crud;
+using OpenStore.Data.OutBox;
 
 namespace OpenStore.Data.NoSql.MongoDb
 {

@@ -4,7 +4,7 @@ using System.Text.Json;
 using MediatR;
 using OpenStore.Domain;
 
-namespace OpenStore.Application
+namespace OpenStore.Data.OutBox
 {
     /// <summary>
     /// Stream message abstraction

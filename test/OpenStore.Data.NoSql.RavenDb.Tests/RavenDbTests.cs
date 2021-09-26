@@ -5,6 +5,7 @@ using OpenStore.Application;
 using OpenStore.Domain;
 using CommonFixtures;
 using OpenStore.Application.Crud;
+using OpenStore.Data.OutBox;
 using Raven.Client.Documents;
 using Raven.Client.ServerWide.Operations;
 using Raven.Embedded;

@@ -6,6 +6,7 @@ using Mongo2Go;
 using MongoDB.Driver;
 using OpenStore.Application;
 using OpenStore.Application.Crud;
+using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 using OpenStore.Infrastructure;
 using OpenStore.Infrastructure.CommandBus;

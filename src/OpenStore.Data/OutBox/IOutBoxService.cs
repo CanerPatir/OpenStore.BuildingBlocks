@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
-namespace OpenStore.Data
+namespace OpenStore.Data.OutBox
 {
     public interface IOutBoxService
     {

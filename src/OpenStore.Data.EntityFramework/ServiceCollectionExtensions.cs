@@ -8,6 +8,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.EntityFramework.Crud;
+using OpenStore.Data.OutBox;
 
 // ReSharper disable MemberCanBePrivate.Global
 

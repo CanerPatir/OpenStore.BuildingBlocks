@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OpenStore.Application;
 using OpenStore.Application.Crud;
+using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 using OpenStore.Infrastructure;
 using OpenStore.Infrastructure.Mapping.AutoMapper;

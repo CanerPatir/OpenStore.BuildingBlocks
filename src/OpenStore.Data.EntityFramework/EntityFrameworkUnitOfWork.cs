@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using OpenStore.Data.EntityFramework.Extensions;
+using OpenStore.Data.OutBox;
 
 namespace OpenStore.Data.EntityFramework
 {

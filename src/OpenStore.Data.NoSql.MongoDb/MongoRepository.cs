@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 
 namespace OpenStore.Data.NoSql.MongoDb

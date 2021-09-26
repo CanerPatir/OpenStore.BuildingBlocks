@@ -9,6 +9,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.NoSql.RavenDb.Crud;
+using OpenStore.Data.OutBox;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 

@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using OpenStore.Application;
 using OpenStore.Domain;
 
-namespace OpenStore.Data
+namespace OpenStore.Data.OutBox
 {
     /// <summary>
     /// OutBox service abstraction to hold common outbox logic
     /// </summary>
     public abstract class OutBoxService : IOutBoxService
     {
-        protected IOpenStoreMessageNotifier MessageNotifier { get; }
+        protected IOpenStoreOutBoxMessageNotifier OutBoxMessageNotifier { get; }
         protected IUnitOfWork Uow { get; }
         protected ILogger Logger { get; }
 
-        protected OutBoxService(IUnitOfWork uow, IOpenStoreMessageNotifier messageNotifier, ILogger logger)
+        protected OutBoxService(IUnitOfWork uow, IOpenStoreOutBoxMessageNotifier outBoxMessageNotifier, ILogger logger)
         {
-            MessageNotifier = messageNotifier;
+            OutBoxMessageNotifier = outBoxMessageNotifier;
             Uow = uow;
             Logger = logger;
         }
@@ -85,6 +84,6 @@ namespace OpenStore.Data
             }
         }
 
-        private async Task PublishMessage(OutBoxMessage message) => await MessageNotifier.Notify(message);
+        private async Task PublishMessage(OutBoxMessage message) => await OutBoxMessageNotifier.Notify(message);
     }
 }

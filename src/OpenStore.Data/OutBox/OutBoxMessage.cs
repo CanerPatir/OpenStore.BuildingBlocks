@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using OpenStore.Application;
 using OpenStore.Domain;
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable VirtualMemberCallInConstructor
 // ReSharper disable MemberCanBeProtected.Global
 
-namespace OpenStore.Data
+namespace OpenStore.Data.OutBox
 {
     public class OutBoxMessage : MessageEnvelop
     {

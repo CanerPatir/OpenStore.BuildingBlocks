@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OpenStore.Application;
+using OpenStore.Data.OutBox;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
 
@@ -13,7 +14,7 @@ namespace OpenStore.Data.NoSql.RavenDb
     {
         private readonly IRavenUnitOfWork _uow;
 
-        public RavenOutBoxService(IRavenUnitOfWork uow, IOpenStoreMessageNotifier messageNotifier, ILogger<RavenOutBoxService> logger) : base(uow, messageNotifier, logger)
+        public RavenOutBoxService(IRavenUnitOfWork uow, IOpenStoreOutBoxMessageNotifier outBoxMessageNotifier, ILogger<RavenOutBoxService> logger) : base(uow, outBoxMessageNotifier, logger)
         {
             _uow = uow;
         }

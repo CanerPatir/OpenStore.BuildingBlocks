@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using OpenStore.Application;
+using OpenStore.Data.OutBox;
 
 namespace OpenStore.Data.NoSql.MongoDb
 {
@@ -14,7 +15,7 @@ namespace OpenStore.Data.NoSql.MongoDb
         private readonly IMongoUnitOfWork _uow;
         private readonly IMongoCollection<OutBoxMessage> _collection;
 
-        public MongoOutBoxService(IMongoUnitOfWork uow, IOpenStoreMessageNotifier messageNotifier, ILogger<MongoOutBoxService> logger) : base(uow, messageNotifier, logger)
+        public MongoOutBoxService(IMongoUnitOfWork uow, IOpenStoreOutBoxMessageNotifier outBoxMessageNotifier, ILogger<MongoOutBoxService> logger) : base(uow, outBoxMessageNotifier, logger)
         {
             _uow = uow;
             _collection = _uow.DatabaseBase.GetCollection<OutBoxMessage>(nameof(OutBoxMessage));
