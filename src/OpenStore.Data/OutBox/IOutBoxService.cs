@@ -1,12 +1,15 @@
+// ReSharper disable SuspiciousTypeConversion.Global
+
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
-// ReSharper disable SuspiciousTypeConversion.Global
 
 namespace OpenStore.Data.OutBox
 {
     public interface IOutBoxService
     {
-        Task<bool> PushPendingMessages(int take, CancellationToken token = default);
+        Task<IReadOnlyCollection<OutBoxMessage>> FetchPendingMessages(int take, CancellationToken cancellationToken = default);
+
+        Task<bool> NotifyPendingMessages(int take, CancellationToken token = default);
     }
 }

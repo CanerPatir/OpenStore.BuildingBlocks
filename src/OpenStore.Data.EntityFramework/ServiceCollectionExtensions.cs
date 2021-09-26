@@ -37,6 +37,7 @@ namespace OpenStore.Data.EntityFramework
 
         public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services,
             IConfiguration configuration,
+            bool outboxPollEnabled = false,
             string migrationAssembly = null,
             Action<DbContextOptionsBuilder> optionsBuilder = null,
             Assembly[] assemblies = null)
@@ -46,11 +47,14 @@ namespace OpenStore.Data.EntityFramework
             var dataSource = configuration.GetActiveDataSource();
             var connStr = configuration.GetActiveConnectionString();
 
-            return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(connStr, dataSource, migrationAssembly, optionsBuilder);
+            return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(connStr, dataSource, outboxPollEnabled, migrationAssembly, optionsBuilder);
         }
 
-        public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services, string connStr,
+        public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(
+            this IServiceCollection services,
+            string connStr,
             EntityFrameworkDataSource dataSource,
+            bool outboxPollEnabled = false,
             string migrationAssembly = null,
             Action<DbContextOptionsBuilder> optionsBuilder = null,
             Assembly[] assemblies = null)
@@ -104,12 +108,12 @@ namespace OpenStore.Data.EntityFramework
                 optionsBuilder?.Invoke(options);
             });
 
-            AddOpenStoreEfCoreDefaults<TDbContext>(services, assemblies);
+            AddOpenStoreEfCoreDefaults<TDbContext>(services, assemblies, outboxPollEnabled);
 
             return services;
         }
 
-        private static void AddOpenStoreEfCoreDefaults<TDbContext>(IServiceCollection services, Assembly[] assemblies)
+        private static void AddOpenStoreEfCoreDefaults<TDbContext>(IServiceCollection services, Assembly[] assemblies, bool outboxPollEnabled)
             where TDbContext : DbContext
         {
             // add repositories automatically
@@ -154,6 +158,11 @@ namespace OpenStore.Data.EntityFramework
                 .AddScoped<IEntityFrameworkCoreUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
                 .AddScoped<IUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
                 ;
+
+            if (outboxPollEnabled)
+            {
+                services.AddHostedService<OutBoxPollHost>();
+            }
 
             // for generic resolve
             services

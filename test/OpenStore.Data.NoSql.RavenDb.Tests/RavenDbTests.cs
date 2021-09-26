@@ -51,7 +51,7 @@ namespace OpenStore.Data.NoSql.RavenDb.Tests
             var testStore = EmbeddedServer.Instance.GetDocumentStore(TestStoreName);
             services.AddLogging();
             services.AddOpenStoreCore(typeof(RavenDbTests).Assembly);
-            services.AddRavenDbDataInfrastructure(options => { });
+            services.AddRavenDbDataInfrastructure(options => { }, false);
             services.AddOpenStoreObjectMapper(configure => { });
             services.AddSingleton<IDocumentStore>(testStore);
         }

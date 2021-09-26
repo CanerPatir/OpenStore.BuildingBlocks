@@ -5,9 +5,9 @@ namespace OpenStore.Data
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddOpenStoreData(this IServiceCollection services)
+        public static IServiceCollection AddOpenStoreData(this IServiceCollection services, bool outboxPollEnabled)
         {
-            services.AddTransient<IOpenStoreOutBoxMessageNotifier, MediatrOpenStoreOutBoxMessageNotifier>();
+        
 
             return services;
         }

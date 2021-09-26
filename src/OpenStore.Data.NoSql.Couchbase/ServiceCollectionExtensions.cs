@@ -11,6 +11,7 @@ using OpenStore.Domain;
 
 namespace OpenStore.Data.NoSql.Couchbase
 {
+    // todo: support outbox
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddCouchbaseDataInfrastructure(this IServiceCollection services, Action<ClusterOptions> couchbaseSettingsBuilder, string bucketname, params Assembly[] assemblies)

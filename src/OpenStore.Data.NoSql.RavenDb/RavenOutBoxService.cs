@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using OpenStore.Application;
 using OpenStore.Data.OutBox;
@@ -14,12 +15,16 @@ namespace OpenStore.Data.NoSql.RavenDb
     {
         private readonly IRavenUnitOfWork _uow;
 
-        public RavenOutBoxService(IRavenUnitOfWork uow, IOpenStoreOutBoxMessageNotifier outBoxMessageNotifier, ILogger<RavenOutBoxService> logger) : base(uow, outBoxMessageNotifier, logger)
+        public RavenOutBoxService(
+            IRavenUnitOfWork uow,
+            IMediator mediator,
+            ILogger<RavenOutBoxService> logger
+        ) : base(uow, mediator, logger)
         {
             _uow = uow;
         }
 
-        protected override async Task<IReadOnlyCollection<OutBoxMessage>> GetPendingMessages(int take, CancellationToken cancellationToken = default)
+        public override async Task<IReadOnlyCollection<OutBoxMessage>> FetchPendingMessages(int take, CancellationToken cancellationToken = default)
         {
             var messages = await _uow.Session
                 .Query<OutBoxMessage, GetPendingOutBoxMessages>()

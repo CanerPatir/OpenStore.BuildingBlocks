@@ -17,19 +17,26 @@ namespace OpenStore.Data.NoSql.RavenDb
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddRavenDbDataInfrastructure(this IServiceCollection services, Action<RavenDatabaseSettings> ravenDbSettingsBuilder, params Assembly[] assemblies)
+        public static IServiceCollection AddRavenDbDataInfrastructure(
+            this IServiceCollection services
+            , Action<RavenDatabaseSettings> ravenDbSettingsBuilder
+            , bool outboxPollEnabled , params Assembly[] assemblies)
         {
             services.Configure(ravenDbSettingsBuilder);
-            return AddRavenServices(services, assemblies);
+            return AddRavenServices(services, outboxPollEnabled, assemblies);
         }
 
-        public static IServiceCollection AddRavenDbDataInfrastructure(this IServiceCollection services, IConfiguration configuration, params Assembly[] assemblies)
+        public static IServiceCollection AddRavenDbDataInfrastructure(
+            this IServiceCollection services
+            , IConfiguration configuration
+            , bool outboxPollEnabled
+            , params Assembly[] assemblies)
         {
             services.Configure<RavenDatabaseSettings>(configuration);
-            return AddRavenServices(services, assemblies);
+            return AddRavenServices(services, outboxPollEnabled, assemblies);
         }
 
-        private static IServiceCollection AddRavenServices(IServiceCollection services, params Assembly[] assemblies)
+        private static IServiceCollection AddRavenServices(IServiceCollection services, bool outboxPollEnabled, params Assembly[] assemblies)
         {
             services.AddSingleton<IDocumentStore>(sp =>
             {
@@ -48,11 +55,16 @@ namespace OpenStore.Data.NoSql.RavenDb
 
             services.AddScoped<IAsyncDocumentSession>(sp => sp.GetService<IDocumentStore>().OpenAsyncSession());
 
-            services.AddScoped<IOutBoxService, RavenOutBoxService>();
-            services.AddScoped<IOutBoxStoreService, RavenOutBoxStoreService>();
             services
+                .AddScoped<IOutBoxService, RavenOutBoxService>()
+                .AddScoped<IOutBoxStoreService, RavenOutBoxStoreService>()
                 .AddScoped<IRavenUnitOfWork>(sp => new RavenUnitOfWork(sp.GetRequiredService<IAsyncDocumentSession>()))
                 .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IRavenUnitOfWork>());
+
+            if (outboxPollEnabled)
+            {
+                services.AddHostedService<OutBoxPollHost>();
+            }
 
             if (assemblies != null && assemblies.Any())
             {

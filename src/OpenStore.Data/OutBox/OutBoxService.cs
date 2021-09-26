@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using OpenStore.Domain;
 
@@ -12,18 +13,19 @@ namespace OpenStore.Data.OutBox
     /// </summary>
     public abstract class OutBoxService : IOutBoxService
     {
-        protected IOpenStoreOutBoxMessageNotifier OutBoxMessageNotifier { get; }
         protected IUnitOfWork Uow { get; }
         protected ILogger Logger { get; }
 
-        protected OutBoxService(IUnitOfWork uow, IOpenStoreOutBoxMessageNotifier outBoxMessageNotifier, ILogger logger)
+        private readonly IMediator _mediator;
+        
+        protected OutBoxService(IUnitOfWork uow, IMediator mediator, ILogger logger)
         {
-            OutBoxMessageNotifier = outBoxMessageNotifier;
+            _mediator = mediator;
             Uow = uow;
             Logger = logger;
         }
 
-        protected abstract Task<IReadOnlyCollection<OutBoxMessage>> GetPendingMessages(int take, CancellationToken cancellationToken = default);
+        public abstract Task<IReadOnlyCollection<OutBoxMessage>> FetchPendingMessages(int take, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Return true if all pending messages published successfully otherwise return false in case of totally or partially fails
@@ -31,9 +33,9 @@ namespace OpenStore.Data.OutBox
         /// <param name="take"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<bool> PushPendingMessages(int take, CancellationToken token)
+        public async Task<bool> NotifyPendingMessages(int take, CancellationToken token)
         {
-            var messagesToPush = await GetPendingMessages(take, token);
+            var messagesToPush = await FetchPendingMessages(take, token);
             Logger.LogInformation("Messages pending to push. Count: {}", messagesToPush.Count);
 
             await Uow.BeginTransactionAsync(token);
@@ -41,7 +43,7 @@ namespace OpenStore.Data.OutBox
 
             foreach (var msg in messagesToPush)
             {
-                if (await TryPush(msg, token))
+                if (await TryNotify(msg, token))
                 {
                     successCount++;
                 }
@@ -67,11 +69,11 @@ namespace OpenStore.Data.OutBox
             return false;
         }
 
-        private async Task<bool> TryPush(OutBoxMessage message, CancellationToken token)
+        private async Task<bool> TryNotify(OutBoxMessage message, CancellationToken token)
         {
             try
             {
-                await PublishMessage(message);
+                await NotifyMessage(message);
                 message.MarkAsCommitted();
 
                 Logger.LogInformation($"Message published successfully {message}");
@@ -84,6 +86,6 @@ namespace OpenStore.Data.OutBox
             }
         }
 
-        private async Task PublishMessage(OutBoxMessage message) => await OutBoxMessageNotifier.Notify(message);
+        private async Task NotifyMessage(OutBoxMessage message) => await _mediator.Publish(message);
     }
 }

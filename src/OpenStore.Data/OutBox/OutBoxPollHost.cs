@@ -43,7 +43,7 @@ namespace OpenStore.Data.OutBox
             {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var outBox = scope.ServiceProvider.GetRequiredService<IOutBoxService>();
-                await outBox.PushPendingMessages(int.MaxValue);
+                await outBox.NotifyPendingMessages(int.MaxValue);
             }
             finally
             {

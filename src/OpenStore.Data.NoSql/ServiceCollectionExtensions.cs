@@ -17,27 +17,37 @@ namespace OpenStore.Data.NoSql
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
+        /// <param name="outboxPollEnabled"></param>
         /// <param name="assemblies"></param>
         /// <returns></returns>
-        public static IServiceCollection AddOpenStoreNoSql(this IServiceCollection services, IConfiguration configuration, params Assembly[] assemblies)
+        public static IServiceCollection AddOpenStoreNoSql(
+            this IServiceCollection services
+            , IConfiguration configuration
+            , bool outboxPollEnabled
+            , params Assembly[] assemblies)
         {
             var dataSource = NoSqlDataSource.FromString(configuration.GetValue<string>("DataSource"));
-            return services.AddOpenStoreNoSql(dataSource, configuration.GetSection("Settings"), assemblies);
+            return services.AddOpenStoreNoSql(dataSource, configuration.GetSection("Settings"), outboxPollEnabled, assemblies);
         }
-        
-        public static IServiceCollection AddOpenStoreNoSql(this IServiceCollection services, NoSqlDataSource noSqlDataSource, IConfiguration configuration, params Assembly[] assemblies)
+
+        public static IServiceCollection AddOpenStoreNoSql(
+            this IServiceCollection services
+            , NoSqlDataSource noSqlDataSource
+            , IConfiguration configuration
+            , bool outboxPollEnabled
+            , params Assembly[] assemblies)
         {
             // todo: try to remove assemblies parameter
             switch (noSqlDataSource)
             {
                 case RavenDbSource r:
-                    services.AddRavenDbDataInfrastructure(configuration, assemblies);
+                    services.AddRavenDbDataInfrastructure(configuration,outboxPollEnabled, assemblies);
                     break;
                 case CouchbaseSource c:
                     services.AddCouchbaseDataInfrastructure(configuration, assemblies);
                     break;
                 case MongoDbSource c:
-                    services.AddMongoDbDataInfrastructure(configuration, assemblies);
+                    services.AddMongoDbDataInfrastructure(configuration, outboxPollEnabled, assemblies);
                     break;
             }
 

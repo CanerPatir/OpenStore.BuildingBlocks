@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenStore.Application;
@@ -16,14 +17,14 @@ namespace OpenStore.Data.EntityFramework
         private readonly DbContext _context;
 
         public EntityFrameworkOutBoxService(IEntityFrameworkCoreUnitOfWork uow,
-            IOpenStoreOutBoxMessageNotifier outBoxMessageNotifier, 
+            IMediator mediator, 
             ILogger<EntityFrameworkOutBoxService> logger) : base(uow,
-            outBoxMessageNotifier, logger)
+            mediator, logger)
         {
             _context = uow.Context;
         }
 
-        protected override async Task<IReadOnlyCollection<OutBoxMessage>> GetPendingMessages(int take, CancellationToken cancellationToken = default)
+        public override async Task<IReadOnlyCollection<OutBoxMessage>> FetchPendingMessages(int take, CancellationToken cancellationToken = default)
         {
             if (_context is not IOutBoxDbContext eventStoreContext) return new List<OutBoxMessage>();
 

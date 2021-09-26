@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -15,13 +16,18 @@ namespace OpenStore.Data.NoSql.MongoDb
         private readonly IMongoUnitOfWork _uow;
         private readonly IMongoCollection<OutBoxMessage> _collection;
 
-        public MongoOutBoxService(IMongoUnitOfWork uow, IOpenStoreOutBoxMessageNotifier outBoxMessageNotifier, ILogger<MongoOutBoxService> logger) : base(uow, outBoxMessageNotifier, logger)
+        public MongoOutBoxService(
+            IMongoUnitOfWork uow,
+            IMediator mediator,
+            ILogger<MongoOutBoxService> logger
+        )
+            : base(uow, mediator, logger)
         {
             _uow = uow;
             _collection = _uow.DatabaseBase.GetCollection<OutBoxMessage>(nameof(OutBoxMessage));
         }
 
-        protected override async Task<IReadOnlyCollection<OutBoxMessage>> GetPendingMessages(int take, CancellationToken cancellationToken = default)
+        public override async Task<IReadOnlyCollection<OutBoxMessage>> FetchPendingMessages(int take, CancellationToken cancellationToken = default)
         {
             var messages = await _collection
                 .AsQueryable()
