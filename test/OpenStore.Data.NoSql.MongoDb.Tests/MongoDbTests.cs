@@ -44,7 +44,10 @@ namespace OpenStore.Data.NoSql.MongoDb.Tests
 
             services.AddLogging();
             services.AddOpenStoreCore(typeof(MongoDbTests).Assembly);
-            services.AddMongoDbDataInfrastructure(options => { }, "IntegrationTest", false);
+            services.AddMongoDbDataInfrastructure(options =>
+            {
+                options.OutBoxEnabled = false;
+            }, "IntegrationTest");
             services.AddOpenStoreObjectMapper(configure => { });
             services.AddSingleton(sp => new MongoClient(_runner.ConnectionString));
         }

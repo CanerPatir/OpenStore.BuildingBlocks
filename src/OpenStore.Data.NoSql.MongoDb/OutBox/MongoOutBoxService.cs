@@ -6,15 +6,13 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using OpenStore.Application;
 using OpenStore.Data.OutBox;
 
-namespace OpenStore.Data.NoSql.MongoDb
+namespace OpenStore.Data.NoSql.MongoDb.OutBox
 {
     public class MongoOutBoxService : OutBoxService
     {
-        private readonly IMongoUnitOfWork _uow;
-        private readonly IMongoCollection<OutBoxMessage> _collection;
+         private readonly IMongoCollection<OutBoxMessage> _collection;
 
         public MongoOutBoxService(
             IMongoUnitOfWork uow,
@@ -23,8 +21,7 @@ namespace OpenStore.Data.NoSql.MongoDb
         )
             : base(uow, mediator, logger)
         {
-            _uow = uow;
-            _collection = _uow.DatabaseBase.GetCollection<OutBoxMessage>(nameof(OutBoxMessage));
+            _collection = uow.DatabaseBase.GetCollection<OutBoxMessage>(nameof(OutBoxMessage));
         }
 
         public override async Task<IReadOnlyCollection<OutBoxMessage>> FetchPendingMessages(int take, CancellationToken cancellationToken = default)

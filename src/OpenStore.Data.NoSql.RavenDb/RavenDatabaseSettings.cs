@@ -6,5 +6,6 @@ namespace OpenStore.Data.NoSql.RavenDb
         public string DatabaseName { get; set; }
         public string CertPath { get;set; }
         public string CertPass { get;set; }
+        public bool OutBoxEnabled { get; set; }
     }
 }

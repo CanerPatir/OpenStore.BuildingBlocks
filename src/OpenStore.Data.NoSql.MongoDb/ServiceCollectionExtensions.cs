@@ -9,6 +9,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.NoSql.MongoDb.Crud;
+using OpenStore.Data.NoSql.MongoDb.OutBox;
 using OpenStore.Data.OutBox;
 
 namespace OpenStore.Data.NoSql.MongoDb
@@ -17,28 +18,26 @@ namespace OpenStore.Data.NoSql.MongoDb
     {
         public static IServiceCollection AddMongoDbDataInfrastructure(
             this IServiceCollection services
-            , Action<MongoClientSettings> ravenDbSettingsBuilder
+            , Action<MongoDbSettings> ravenDbSettingsBuilder
             , string databaseName
-            , bool outboxPollEnabled
             , params Assembly[] assemblies)
         {
             services.Configure(ravenDbSettingsBuilder);
-            return AddMongoServices(services, databaseName, outboxPollEnabled, assemblies);
+            return AddMongoServices(services, databaseName, assemblies);
         }
 
         public static IServiceCollection AddMongoDbDataInfrastructure(
             this IServiceCollection services,
             IConfiguration configuration,
-            bool outboxPollEnabled,
             params Assembly[] assemblies)
         {
-            services.Configure<MongoClientSettings>(configuration);
-            return AddMongoServices(services, configuration.GetValue<string>("DatabaseName"), outboxPollEnabled, assemblies);
+            services.Configure<MongoDbSettings>(configuration);
+            return AddMongoServices(services, configuration.GetValue<string>("DatabaseName"), assemblies);
         }
 
-        private static IServiceCollection AddMongoServices(IServiceCollection services, string databaseName, bool outboxPollEnabled, params Assembly[] assemblies)
+        private static IServiceCollection AddMongoServices(IServiceCollection services, string databaseName, params Assembly[] assemblies)
         {
-            services.AddSingleton(sp => new MongoClient(sp.GetRequiredService<IOptions<MongoClientSettings>>().Value));
+            services.AddSingleton(sp => new MongoClient(sp.GetRequiredService<IOptions<MongoDbSettings>>().Value.MongoClientSettings));
             services.AddSingleton(sp => sp.GetRequiredService<MongoClient>().GetDatabase(databaseName));
 
             services
@@ -46,11 +45,14 @@ namespace OpenStore.Data.NoSql.MongoDb
                 .AddScoped<IOutBoxStoreService, MongoOutBoxStoreService>()
                 .AddScoped<IMongoUnitOfWork>(sp => new MongoUnitOfWork(sp.GetRequiredService<IMongoDatabase>()))
                 .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IMongoUnitOfWork>());
-
-            if (outboxPollEnabled)
+            
+            services.AddHostedService(sp =>
             {
-                services.AddHostedService<OutBoxPollHost>();
-            }
+                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                var mongoDbSettings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+
+                return new OutBoxPollHost(mongoDbSettings.OutBoxEnabled, serviceScopeFactory);
+            });
 
             if (assemblies != null && assemblies.Any())
             {

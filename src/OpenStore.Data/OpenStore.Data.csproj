@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <Description>OpenStore.BuildingBlocks data store abstraction package</Description>
     </PropertyGroup>
 
     <ItemGroup>

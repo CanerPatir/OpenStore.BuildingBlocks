@@ -6,20 +6,27 @@ using Microsoft.Extensions.Hosting;
 
 namespace OpenStore.Data.OutBox
 {
-    public class OutBoxPollHost : IHostedService
+    public class OutBoxPollHost : IHostedService, IDisposable
     {
+        private readonly bool _enabled;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private Timer _timer;
         private readonly SemaphoreSlim _semaphore = new(1, 1);
         private readonly TimeSpan _oneMinuteInterval = TimeSpan.FromMinutes(1);
 
-        public OutBoxPollHost(IServiceScopeFactory serviceScopeFactory)
+        public OutBoxPollHost(bool enabled, IServiceScopeFactory serviceScopeFactory)
         {
+            _enabled = enabled;
             _serviceScopeFactory = serviceScopeFactory;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            if (_enabled is false)
+            {
+                return Task.CompletedTask;
+            }
+            
             _timer = new Timer
             (
                 PushMessages,
@@ -49,6 +56,12 @@ namespace OpenStore.Data.OutBox
             {
                 _semaphore.Release();
             }
+        }
+
+        public void Dispose()
+        {
+            _timer?.Dispose();
+            _semaphore?.Dispose();
         }
     }
 }

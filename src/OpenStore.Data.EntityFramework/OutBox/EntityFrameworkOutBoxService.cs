@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using OpenStore.Application;
 using OpenStore.Data.OutBox;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
-namespace OpenStore.Data.EntityFramework
+namespace OpenStore.Data.EntityFramework.OutBox
 {
     public class EntityFrameworkOutBoxService : OutBoxService
     {

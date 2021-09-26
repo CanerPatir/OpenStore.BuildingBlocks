@@ -4,12 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using OpenStore.Application;
 using OpenStore.Data.OutBox;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
 
-namespace OpenStore.Data.NoSql.RavenDb
+namespace OpenStore.Data.NoSql.RavenDb.OutBox
 {
     public class RavenOutBoxService : OutBoxService
     {

@@ -8,6 +8,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.EntityFramework.Crud;
+using OpenStore.Data.EntityFramework.OutBox;
 using OpenStore.Data.OutBox;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -25,19 +26,20 @@ namespace OpenStore.Data.EntityFramework
     {
         public static EntityFrameworkDataSource GetActiveDataSource(this IConfiguration configuration)
         {
-            var activeConnection = configuration["ActiveConnection"];
+            var activeConnection = configuration["Data:ActiveConnection"];
             return Enum.Parse<EntityFrameworkDataSource>(activeConnection);
         }
 
         public static string GetActiveConnectionString(this IConfiguration configuration)
         {
             var dataSource = configuration.GetActiveDataSource();
-            return configuration.GetConnectionString(dataSource.ToString());
+            return configuration.GetConnectionString($"Data:{dataSource}");
         }
+
+        internal static bool GetOutBoxEnabled(this IConfiguration configuration) => bool.Parse(configuration["Data:OutBoxEnabled"]);
 
         public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services,
             IConfiguration configuration,
-            bool outboxPollEnabled = false,
             string migrationAssembly = null,
             Action<DbContextOptionsBuilder> optionsBuilder = null,
             Assembly[] assemblies = null)
@@ -46,15 +48,16 @@ namespace OpenStore.Data.EntityFramework
         {
             var dataSource = configuration.GetActiveDataSource();
             var connStr = configuration.GetActiveConnectionString();
+            var outBoxEnabled = configuration.GetOutBoxEnabled();
 
-            return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(connStr, dataSource, outboxPollEnabled, migrationAssembly, optionsBuilder);
+            return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(connStr, dataSource, outBoxEnabled, migrationAssembly, optionsBuilder);
         }
 
         public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(
             this IServiceCollection services,
             string connStr,
             EntityFrameworkDataSource dataSource,
-            bool outboxPollEnabled = false,
+            bool outBoxEnabled,
             string migrationAssembly = null,
             Action<DbContextOptionsBuilder> optionsBuilder = null,
             Assembly[] assemblies = null)
@@ -108,12 +111,12 @@ namespace OpenStore.Data.EntityFramework
                 optionsBuilder?.Invoke(options);
             });
 
-            AddOpenStoreEfCoreDefaults<TDbContext>(services, assemblies, outboxPollEnabled);
+            AddOpenStoreEfCoreDefaults<TDbContext>(services, outBoxEnabled, assemblies);
 
             return services;
         }
 
-        private static void AddOpenStoreEfCoreDefaults<TDbContext>(IServiceCollection services, Assembly[] assemblies, bool outboxPollEnabled)
+        private static void AddOpenStoreEfCoreDefaults<TDbContext>(IServiceCollection services, bool outBoxEnabled, Assembly[] assemblies)
             where TDbContext : DbContext
         {
             // add repositories automatically
@@ -154,15 +157,17 @@ namespace OpenStore.Data.EntityFramework
             //
             services
                 .AddScoped<IOutBoxService, EntityFrameworkOutBoxService>()
-                .AddScoped<IOutBoxStoreService, EntityFrameworkOutBoxStoreService<TDbContext>>()
+                .AddScoped<IOutBoxStoreService, EntityFrameworkOutBoxStoreService<TDbContext>>(sp =>
+                    new EntityFrameworkOutBoxStoreService<TDbContext>(outBoxEnabled, sp.GetRequiredService<TDbContext>(), sp.GetRequiredService<IOpenStoreUserContextAccessor>()))
                 .AddScoped<IEntityFrameworkCoreUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
                 .AddScoped<IUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
                 ;
-
-            if (outboxPollEnabled)
+            
+            services.AddHostedService(sp =>
             {
-                services.AddHostedService<OutBoxPollHost>();
-            }
+                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                return new OutBoxPollHost(outBoxEnabled, serviceScopeFactory);
+            });
 
             // for generic resolve
             services

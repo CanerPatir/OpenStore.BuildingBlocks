@@ -9,6 +9,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.NoSql.RavenDb.Crud;
+using OpenStore.Data.NoSql.RavenDb.OutBox;
 using OpenStore.Data.OutBox;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
@@ -20,23 +21,22 @@ namespace OpenStore.Data.NoSql.RavenDb
         public static IServiceCollection AddRavenDbDataInfrastructure(
             this IServiceCollection services
             , Action<RavenDatabaseSettings> ravenDbSettingsBuilder
-            , bool outboxPollEnabled , params Assembly[] assemblies)
+            , params Assembly[] assemblies)
         {
             services.Configure(ravenDbSettingsBuilder);
-            return AddRavenServices(services, outboxPollEnabled, assemblies);
+            return AddRavenServices(services, assemblies);
         }
 
         public static IServiceCollection AddRavenDbDataInfrastructure(
             this IServiceCollection services
             , IConfiguration configuration
-            , bool outboxPollEnabled
             , params Assembly[] assemblies)
         {
             services.Configure<RavenDatabaseSettings>(configuration);
-            return AddRavenServices(services, outboxPollEnabled, assemblies);
+            return AddRavenServices(services, assemblies);
         }
 
-        private static IServiceCollection AddRavenServices(IServiceCollection services, bool outboxPollEnabled, params Assembly[] assemblies)
+        private static IServiceCollection AddRavenServices(IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddSingleton<IDocumentStore>(sp =>
             {
@@ -61,10 +61,12 @@ namespace OpenStore.Data.NoSql.RavenDb
                 .AddScoped<IRavenUnitOfWork>(sp => new RavenUnitOfWork(sp.GetRequiredService<IAsyncDocumentSession>()))
                 .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IRavenUnitOfWork>());
 
-            if (outboxPollEnabled)
+            services.AddHostedService<OutBoxPollHost>(sp =>
             {
-                services.AddHostedService<OutBoxPollHost>();
-            }
+                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                var ravenDatabaseSettings = sp.GetRequiredService<IOptions<RavenDatabaseSettings>>().Value;
+                return new OutBoxPollHost(ravenDatabaseSettings.OutBoxEnabled, serviceScopeFactory);
+            });
 
             if (assemblies != null && assemblies.Any())
             {
@@ -96,7 +98,6 @@ namespace OpenStore.Data.NoSql.RavenDb
                         ;
                 });
             }
-
 
             // for generic resolve
             services
