@@ -35,7 +35,7 @@ namespace OpenStore.Data.EntityFramework
         public static string GetActiveConnectionString(this IConfiguration configuration)
         {
             var dataSource = configuration.GetActiveDataSource();
-            return configuration.GetConnectionString($"Data:{dataSource}");
+            return configuration[$"Data:ConnectionStrings:{dataSource}"];
         }
 
         internal static bool GetOutBoxEnabled(this IConfiguration configuration) => bool.Parse(configuration["Data:OutBoxEnabled"]);

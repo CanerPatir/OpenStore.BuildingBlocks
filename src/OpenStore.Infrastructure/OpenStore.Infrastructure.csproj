@@ -22,7 +22,7 @@
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.10" />
         <PackageReference Include="ncrontab" Version="3.3.1" />
         <PackageReference Include="RazorLight" Version="2.0.0-rc.2" />
-        <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.0" />
+        <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
         <PackageReference Include="Serilog.Sinks.Graylog" Version="2.2.2" />
         <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
