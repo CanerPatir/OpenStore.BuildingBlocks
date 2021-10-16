@@ -11,14 +11,14 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Adds OpenStore module swagger services for only development purpose
     /// </summary>
-    public static IServiceCollection AddOpenStoreSwaggerForModule<TModuleStartup>(this IServiceCollection services, IWebHostEnvironment environment, string name, string version = "v1")
+    public static IServiceCollection AddOpenStoreSwaggerForModule<TModuleAnyClass>(this IServiceCollection services, IWebHostEnvironment environment, string name, string version = "v1")
     {
         if (!environment.IsDevelopment())
         {
             return services;
         }
             
-        var assembly = typeof(TModuleStartup).Assembly;
+        var assembly = typeof(TModuleAnyClass).Assembly;
         services.AddSwaggerGen(c =>
         {
             c.SwaggerGeneratorOptions.DocInclusionPredicate = (docName, apiDesc) => (apiDesc.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
