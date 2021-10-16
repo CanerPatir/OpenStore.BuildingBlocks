@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        
         <Description>Package contains some domain model abstractions thath serve to domain model layers</Description>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="MediatR" Version="9.0.0" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+        <PackageReference Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.21253.7" />
     </ItemGroup>
 </Project>

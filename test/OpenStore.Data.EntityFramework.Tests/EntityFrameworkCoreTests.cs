@@ -19,7 +19,7 @@ namespace OpenStore.Data.EntityFramework.Tests
             services.AddLogging();
             services.AddOpenStoreCore(typeof(EntityFrameworkCoreTests).Assembly);
             services.AddOpenStoreObjectMapper(configure => { });
-            services.AddOpenStoreEfCore<TestDbContext, TestDbContext>("test conn str", EntityFrameworkDataSource.PostgreSql, false);
+            services.AddOpenStoreEfCore<TestDbContext, TestDbContext>("test conn str", EntityFrameworkDataSource.PostgreSql, true);
         }
 
         [Fact]

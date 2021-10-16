@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>0.4.8</VersionPrefix>
+        <VersionPrefix>1.0.0-rc.2</VersionPrefix>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Authors>Caner Patir</Authors>
         <Company>Algorist</Company>
@@ -12,6 +12,10 @@
         <PackageLicenseUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks/blob/master/LICENCE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks</PackageProjectUrl>
         <LangVersion>latest</LangVersion>
-<!--        <Nullable>enable</Nullable>-->
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <NetPackageVersion>6.0.0-rc.2.21480.10</NetPackageVersion>
+        <NetExtensionsPackageVersion>6.0.0-rc.2.21480.5</NetExtensionsPackageVersion>
+        <!--<Nullable>enable</Nullable>-->
     </PropertyGroup>
 </Project>

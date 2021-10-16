@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        
         <Description>Contains application level abstractions and application wide special data structers</Description>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\OpenStore.Domain\OpenStore.Domain.csproj" />
+        <ProjectReference Include="..\OpenStore.Domain\OpenStore.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

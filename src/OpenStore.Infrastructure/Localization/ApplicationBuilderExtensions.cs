@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
@@ -12,15 +10,15 @@ namespace OpenStore.Infrastructure.Localization
         {
             app.Map(new PathString("/set-language"), _app =>
             {
-                _app.Use((httpContext, next) =>
+                _app.Use((HttpContext httpContext, Func<Task> next) =>
                 {
                     var culture = httpContext.Request.Form["culture"];
                     var returnUrl = httpContext.Request.Form["returnUrl"];
                     httpContext.Response.Cookies.Append(
                         LocalizationConstants.DefaultCookieName,
                         CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
-                        new CookieOptions {Expires = DateTimeOffset.UtcNow.AddYears(1)}
-                    );                  
+                        new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+                    );
 
                     if (!string.IsNullOrWhiteSpace(returnUrl))
                     {
@@ -32,7 +30,7 @@ namespace OpenStore.Infrastructure.Localization
                     }
 
                     // await next();
-                    
+
                     return Task.CompletedTask;
                 });
             });

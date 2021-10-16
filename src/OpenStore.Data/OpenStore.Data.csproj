@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        
         <Description>OpenStore.BuildingBlocks data store abstraction package</Description>
     </PropertyGroup>
 
@@ -11,8 +11,8 @@
 
     <ItemGroup>
         <PackageReference Include="Scrutor" Version="3.3.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(NetExtensionsPackageVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="$(NetExtensionsPackageVersion)" />
     </ItemGroup>
 
 </Project>

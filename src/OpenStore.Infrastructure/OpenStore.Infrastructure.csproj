@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        
         <Description>This package contains abstrctions for general infrastructure concerns. It should be get referance only from infrastructure layers of contexts</Description>
     </PropertyGroup>
 
@@ -14,25 +14,25 @@
         <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
         <PackageReference Include="MailKit" Version="2.15.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.10" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.10" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(NetPackageVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="$(NetExtensionsPackageVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(NetExtensionsPackageVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="$(NetPackageVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="$(NetExtensionsPackageVersion)" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="$(NetPackageVersion)" />
         <PackageReference Include="ncrontab" Version="3.3.1" />
-        <PackageReference Include="RazorLight" Version="2.0.0-rc.2" />
+        <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
         <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
         <PackageReference Include="Serilog.Sinks.Graylog" Version="2.2.2" />
         <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
         <PackageReference Include="Storage.Net" Version="9.3.0" />
         <PackageReference Include="Storage.Net.Amazon.Aws" Version="9.3.0" />
-        <PackageReference Include="Storage.Net.Microsoft.Azure.Storage" Version="8.1.17" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
+        <PackageReference Include="Storage.Net.Microsoft.Azure.Storage" Version="8.1.17" /> 
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
         <PackageReference Include="Polly" Version="7.2.2" />
         <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-        <PackageReference Include="Serilog.Settings.Configuration" Version="3.2.0" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
         <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
     </ItemGroup>
 

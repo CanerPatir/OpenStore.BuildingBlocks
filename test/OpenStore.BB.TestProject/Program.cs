@@ -1,22 +1,41 @@
-﻿using System;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+﻿using System.Reflection;
+using OpenStore.Infrastructure.Localization;
 
-namespace OpenStore.BB.TestProject
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
+builder.Services.AddControllersWithViews();
+
+var mvcBuilder = builder.Services.AddControllersWithViews();
+            
+builder.Services.AddOpenStoreResxLocalization(mvcBuilder, options =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+    options.Assembly = Assembly.GetEntryAssembly();
+});
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.ConfigureKestrel(options => options.AddServerHeader = false);
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+var app = builder.Build();
+
+app.UseDeveloperExceptionPage();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
 }
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseOpenStoreLocalization();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
