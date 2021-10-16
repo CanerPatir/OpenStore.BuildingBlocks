@@ -13,181 +13,180 @@ using Xunit;
 using OpenStore.Infrastructure;
 using OpenStore.Infrastructure.Mapping.AutoMapper;
 
-namespace OpenStore.Data.NoSql.RavenDb.Tests
+namespace OpenStore.Data.NoSql.RavenDb.Tests;
+
+[CollectionDefinition("RavenEmbeddedCrudTest", DisableParallelization = true)]
+public class SequentialCollection
 {
-    [CollectionDefinition("RavenEmbeddedCrudTest", DisableParallelization = true)]
-    public class SequentialCollection
+}
+
+[Collection("RavenEmbeddedCrudTest")]
+public class RavenDbTests : WithIoC
+{
+    public sealed class Test : AggregateRoot<string>
     {
+        public string InventoryCode { get; set; }
+
+        public Test(string id, string inventoryCode)
+        {
+            Id = id;
+            InventoryCode = inventoryCode;
+        }
+
+        public Test()
+        {
+        }
+    }
+        
+    public class TestDto
+    {
+            
     }
 
-    [Collection("RavenEmbeddedCrudTest")]
-    public class RavenDbTests : WithIoC
+    private const string TestStoreName = "Test";
+
+    protected override void ConfigureServices(IServiceCollection services)
     {
-        public sealed class Test : AggregateRoot<string>
+        EmbeddedServer.Instance.StartServer();
+        var testStore = EmbeddedServer.Instance.GetDocumentStore(TestStoreName);
+        services.AddLogging();
+        services.AddOpenStoreCore(typeof(RavenDbTests).Assembly);
+        services.AddRavenDbDataInfrastructure(options =>
         {
-            public string InventoryCode { get; set; }
+            options.OutBoxEnabled = false;
+        });
+        services.AddOpenStoreObjectMapper(configure => { });
+        services.AddSingleton<IDocumentStore>(testStore);
+    }
 
-            public Test(string id, string inventoryCode)
-            {
-                Id = id;
-                InventoryCode = inventoryCode;
-            }
+    [Fact(Skip = "s")]
+    public void DiResolve()
+    {
 
-            public Test()
-            {
-            }
-        }
-        
-        public class TestDto
-        {
-            
-        }
+        // Arrange
 
-        private const string TestStoreName = "Test";
+        // Act
+        var repo = GetService<IRepository<Test>>();
+        var ravenRepo = GetService<IRavenRepository<Test>>();
+        var qRepo = GetService<ICrudRepository<Test>>();
+        var tRepo = GetService<ITransactionalRepository<Test>>();
+        var outBoxService = GetService<IOutBoxService>();
+        var outBoxStoreService = GetService<IOutBoxStoreService>();
+        var uow = GetService<IUnitOfWork>();
+        var crudService = GetService<ICrudService<Test, TestDto>>();
 
-        protected override void ConfigureServices(IServiceCollection services)
-        {
-            EmbeddedServer.Instance.StartServer();
-            var testStore = EmbeddedServer.Instance.GetDocumentStore(TestStoreName);
-            services.AddLogging();
-            services.AddOpenStoreCore(typeof(RavenDbTests).Assembly);
-            services.AddRavenDbDataInfrastructure(options =>
-            {
-                options.OutBoxEnabled = false;
-            });
-            services.AddOpenStoreObjectMapper(configure => { });
-            services.AddSingleton<IDocumentStore>(testStore);
-        }
-
-        [Fact(Skip = "s")]
-        public void DiResolve()
-        {
-
-            // Arrange
-
-            // Act
-            var repo = GetService<IRepository<Test>>();
-            var ravenRepo = GetService<IRavenRepository<Test>>();
-            var qRepo = GetService<ICrudRepository<Test>>();
-            var tRepo = GetService<ITransactionalRepository<Test>>();
-            var outBoxService = GetService<IOutBoxService>();
-            var outBoxStoreService = GetService<IOutBoxStoreService>();
-            var uow = GetService<IUnitOfWork>();
-            var crudService = GetService<ICrudService<Test, TestDto>>();
-
-            // Assert
-            Assert.NotNull(repo);
-            Assert.NotNull(ravenRepo);
-            Assert.NotNull(qRepo);
-            Assert.NotNull(tRepo);
-            Assert.NotNull(outBoxService);
-            Assert.NotNull(outBoxStoreService);
-            Assert.NotNull(uow);
-            Assert.NotNull(crudService);
-        }
+        // Assert
+        Assert.NotNull(repo);
+        Assert.NotNull(ravenRepo);
+        Assert.NotNull(qRepo);
+        Assert.NotNull(tRepo);
+        Assert.NotNull(outBoxService);
+        Assert.NotNull(outBoxStoreService);
+        Assert.NotNull(uow);
+        Assert.NotNull(crudService);
+    }
 
         
-        [Fact(Skip = "s")]
-        public async Task Create()
-        {
-            // Arrange
-            var repo = GetService<IRavenRepository<Test>>();
+    [Fact(Skip = "s")]
+    public async Task Create()
+    {
+        // Arrange
+        var repo = GetService<IRavenRepository<Test>>();
 
-            var id = Guid.NewGuid();
-            var entity = new Test("myId", "test");
-            await repo.SaveAsync(entity);
-            // Act
+        var id = Guid.NewGuid();
+        var entity = new Test("myId", "test");
+        await repo.SaveAsync(entity);
+        // Act
 
-            NewServiceScope();
+        NewServiceScope();
 
-            var newRepo = GetService<IRavenRepository<Test>>();
-            var loadedEntity = await newRepo.GetAsync(entity.Id);
+        var newRepo = GetService<IRavenRepository<Test>>();
+        var loadedEntity = await newRepo.GetAsync(entity.Id);
 
-            // Assert
-            Assert.NotNull(loadedEntity);
-            Assert.True(entity == loadedEntity);
-        }
+        // Assert
+        Assert.NotNull(loadedEntity);
+        Assert.True(entity == loadedEntity);
+    }
 
-        [Fact(Skip = "s")]
-        public async Task Update()
-        {
-            // Arrange
-            var repo = GetService<IRavenRepository<Test>>();
+    [Fact(Skip = "s")]
+    public async Task Update()
+    {
+        // Arrange
+        var repo = GetService<IRavenRepository<Test>>();
 
-            var id = Guid.NewGuid();
-            var entity = new Test("myId", "test");
-            await repo.SaveAsync(entity);
+        var id = Guid.NewGuid();
+        var entity = new Test("myId", "test");
+        await repo.SaveAsync(entity);
 
-            // Act
-            entity.InventoryCode = "mutated";
-            await repo.SaveAsync(entity);
+        // Act
+        entity.InventoryCode = "mutated";
+        await repo.SaveAsync(entity);
 
-            // Assert
-            using var scope = NewServiceScope();
-            var newRepo = GetService<IRavenRepository<Test>>();
+        // Assert
+        using var scope = NewServiceScope();
+        var newRepo = GetService<IRavenRepository<Test>>();
 
-            var lastState = await newRepo.GetAsync(entity.Id);
+        var lastState = await newRepo.GetAsync(entity.Id);
 
-            Assert.True(lastState.InventoryCode == "mutated");
-        }
+        Assert.True(lastState.InventoryCode == "mutated");
+    }
 
-        [Fact(Skip = "s")]
-        public async Task Delete()
-        {
-            // Arrange
-            var repo = GetService<IRavenRepository<Test>>();
-            var entity = new Test("MyId", "test");
-            await repo.SaveAsync(entity);
+    [Fact(Skip = "s")]
+    public async Task Delete()
+    {
+        // Arrange
+        var repo = GetService<IRavenRepository<Test>>();
+        var entity = new Test("MyId", "test");
+        await repo.SaveAsync(entity);
 
-            // Act
-            NewServiceScope();
-            repo = GetService<IRavenRepository<Test>>();
-            var uow = GetService<IUnitOfWork>();
+        // Act
+        NewServiceScope();
+        repo = GetService<IRavenRepository<Test>>();
+        var uow = GetService<IUnitOfWork>();
             
-            entity = await repo.GetAsync(entity.Id);
-            await repo.Delete(entity);
-            await uow.SaveChangesAsync();
+        entity = await repo.GetAsync(entity.Id);
+        await repo.Delete(entity);
+        await uow.SaveChangesAsync();
 
-            // Assert
-            NewServiceScope();
-            repo = GetService<IRavenRepository<Test>>();
+        // Assert
+        NewServiceScope();
+        repo = GetService<IRavenRepository<Test>>();
 
-            var lastState = await repo.GetAsync(entity.Id);
+        var lastState = await repo.GetAsync(entity.Id);
 
-            Assert.Null(lastState);
-        }
+        Assert.Null(lastState);
+    }
 
-        [Fact(Skip = "s")]
-        public async Task Query()
+    [Fact(Skip = "s")]
+    public async Task Query()
+    {
+        // Arrange
+        var repo = GetService<IRavenRepository<Test>>();
+        var repo2 = GetService<ICrudRepository<Test>>();
+
+        var id = Guid.NewGuid();
+        await repo.SaveAsync(new Test("MyId1", "test"));
+        await repo.SaveAsync(new Test("MyId2", "test2"));
+
+        // Act
+        var items = await repo2.Query.ToListAsync();
+
+        // Assert
+
+        Assert.NotNull(items);
+        Assert.Equal(2, items.Count);
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        var parameters = new DeleteDatabasesOperation.Parameters
         {
-            // Arrange
-            var repo = GetService<IRavenRepository<Test>>();
-            var repo2 = GetService<ICrudRepository<Test>>();
-
-            var id = Guid.NewGuid();
-            await repo.SaveAsync(new Test("MyId1", "test"));
-            await repo.SaveAsync(new Test("MyId2", "test2"));
-
-            // Act
-            var items = await repo2.Query.ToListAsync();
-
-            // Assert
-
-            Assert.NotNull(items);
-            Assert.Equal(2, items.Count);
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-
-            var parameters = new DeleteDatabasesOperation.Parameters
-            {
-                DatabaseNames = new[] {TestStoreName},
-                HardDelete = true,
-            };
-            EmbeddedServer.Instance.GetDocumentStore(TestStoreName).Maintenance.Server.Send(new DeleteDatabasesOperation(parameters));
-            EmbeddedServer.Instance.Dispose();
-        }
+            DatabaseNames = new[] {TestStoreName},
+            HardDelete = true,
+        };
+        EmbeddedServer.Instance.GetDocumentStore(TestStoreName).Maintenance.Server.Send(new DeleteDatabasesOperation(parameters));
+        EmbeddedServer.Instance.Dispose();
     }
 }

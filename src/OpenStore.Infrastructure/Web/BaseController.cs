@@ -1,10 +1,8 @@
-using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 
-namespace OpenStore.Infrastructure.Web
+namespace OpenStore.Infrastructure.Web;
+
+public abstract class BaseController : ControllerBase
 {
-    public abstract class BaseController : ControllerBase
-    {
-        protected CancellationToken CancellationToken => HttpContext.RequestAborted;
-    }
+    protected CancellationToken CancellationToken => HttpContext.RequestAborted;
 }

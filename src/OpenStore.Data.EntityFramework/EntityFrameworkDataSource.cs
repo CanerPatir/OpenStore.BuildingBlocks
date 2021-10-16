@@ -1,10 +1,9 @@
-namespace OpenStore.Data.EntityFramework
+namespace OpenStore.Data.EntityFramework;
+
+public enum EntityFrameworkDataSource
 {
-    public enum EntityFrameworkDataSource
-    {
-        SqLite,
-        PostgreSql,
-        MySql,
-        MsSql
-    }
+    SqLite,
+    PostgreSql,
+    MySql,
+    MsSql
 }

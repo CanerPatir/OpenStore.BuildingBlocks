@@ -3,45 +3,44 @@ using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using OpenStore.Domain.EventSourcing;
 
-namespace OpenStore.Data.EventSourcing.EventStore
+namespace OpenStore.Data.EventSourcing.EventStore;
+
+public class EventStoreSnapshotStorageProvider<TAggregate, TSnapshot> : EventStoreStorageProviderBase, ISnapshotStorageProvider<TAggregate, TSnapshot>
+    where TAggregate : EventSourcedAggregateRoot 
+    where TSnapshot : ISnapshot
 {
-    public class EventStoreSnapshotStorageProvider<TAggregate, TSnapshot> : EventStoreStorageProviderBase, ISnapshotStorageProvider<TAggregate, TSnapshot>
-        where TAggregate : EventSourcedAggregateRoot 
-        where TSnapshot : ISnapshot
+    private readonly IEventStoreStorageConnectionProvider _eventStoreStorageConnectionProvider;
+
+    public EventStoreSnapshotStorageProvider(IEventStoreStorageConnectionProvider eventStoreStorageConnectionProvider, ISerializer serializer) : base(serializer)
     {
-        private readonly IEventStoreStorageConnectionProvider _eventStoreStorageConnectionProvider;
+        _eventStoreStorageConnectionProvider = eventStoreStorageConnectionProvider;
+    }
 
-        public EventStoreSnapshotStorageProvider(IEventStoreStorageConnectionProvider eventStoreStorageConnectionProvider, ISerializer serializer) : base(serializer)
-        {
-            _eventStoreStorageConnectionProvider = eventStoreStorageConnectionProvider;
-        }
+    private Task<IEventStoreConnection> GetEventStoreConnectionAsync() => _eventStoreStorageConnectionProvider.GetConnectionAsync();
 
-        private Task<IEventStoreConnection> GetEventStoreConnectionAsync() => _eventStoreStorageConnectionProvider.GetConnectionAsync();
+    protected override string GetStreamNamePrefix() => _eventStoreStorageConnectionProvider.SnapshotStreamPrefix;
 
-        protected override string GetStreamNamePrefix() => _eventStoreStorageConnectionProvider.SnapshotStreamPrefix;
+    public long SnapshotFrequency => _eventStoreStorageConnectionProvider.SnapshotFrequency;
 
-        public long SnapshotFrequency => _eventStoreStorageConnectionProvider.SnapshotFrequency;
+    public async Task<TSnapshot> GetSnapshotAsync(object aggregateId)
+    {
+        TSnapshot snapshot = default;
+        var connection = await GetEventStoreConnectionAsync();
 
-        public async Task<TSnapshot> GetSnapshotAsync(object aggregateId)
-        {
-            TSnapshot snapshot = default;
-            var connection = await GetEventStoreConnectionAsync();
+        var streamEvents = await connection.ReadStreamEventsBackwardAsync($"{AggregateIdToStreamName(typeof(TAggregate), aggregateId.ToString())}", StreamPosition.End, 1, false);
 
-            var streamEvents = await connection.ReadStreamEventsBackwardAsync($"{AggregateIdToStreamName(typeof(TAggregate), aggregateId.ToString())}", StreamPosition.End, 1, false);
+        if (!streamEvents.Events.Any()) return default(TSnapshot);
+        var result = streamEvents.Events.FirstOrDefault();
+        snapshot = DeserializeSnapshotEvent<TSnapshot>(result);
 
-            if (!streamEvents.Events.Any()) return default(TSnapshot);
-            var result = streamEvents.Events.FirstOrDefault();
-            snapshot = DeserializeSnapshotEvent<TSnapshot>(result);
+        return snapshot;
+    }
 
-            return snapshot;
-        }
+    public async Task SaveSnapshotAsync(TSnapshot snapshot)
+    {
+        var connection = await GetEventStoreConnectionAsync();
+        var snapshotEvent = SerializeSnapshotEvent(snapshot, snapshot.Version);
 
-        public async Task SaveSnapshotAsync(TSnapshot snapshot)
-        {
-            var connection = await GetEventStoreConnectionAsync();
-            var snapshotEvent = SerializeSnapshotEvent(snapshot, snapshot.Version);
-
-            await connection.AppendToStreamAsync($"{AggregateIdToStreamName(typeof(TAggregate), snapshot.AggregateId.ToString())}", ExpectedVersion.Any, snapshotEvent);
-        }
+        await connection.AppendToStreamAsync($"{AggregateIdToStreamName(typeof(TAggregate), snapshot.AggregateId.ToString())}", ExpectedVersion.Any, snapshotEvent);
     }
 }

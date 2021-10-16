@@ -1,12 +1,11 @@
 using MediatR;
 
-namespace OpenStore.Application
+namespace OpenStore.Application;
+
+public interface ITransactionalRequest : IRequest
 {
-    public interface ITransactionalRequest : IRequest
-    {
-    }
+}
     
-    public interface ITransactionalRequest<out TResult> : IRequest<TResult>
-    {
-    }
+public interface ITransactionalRequest<out TResult> : IRequest<TResult>
+{
 }

@@ -1,10 +1,9 @@
 using MongoDB.Driver;
 
-namespace OpenStore.Data.NoSql.MongoDb
+namespace OpenStore.Data.NoSql.MongoDb;
+
+public class MongoDbSettings
 {
-    public class MongoDbSettings
-    {
-        public MongoClientSettings MongoClientSettings { get; set; }
-        public bool OutBoxEnabled { get; set; }
-    }
+    public MongoClientSettings MongoClientSettings { get; set; }
+    public bool OutBoxEnabled { get; set; }
 }

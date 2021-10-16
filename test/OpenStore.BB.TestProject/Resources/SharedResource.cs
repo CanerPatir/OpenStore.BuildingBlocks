@@ -1,6 +1,5 @@
-namespace OpenStore.BB.TestProject.Resources
+namespace OpenStore.BB.TestProject.Resources;
+
+public class SharedResource
 {
-    public class SharedResource
-    {
-    }
 }

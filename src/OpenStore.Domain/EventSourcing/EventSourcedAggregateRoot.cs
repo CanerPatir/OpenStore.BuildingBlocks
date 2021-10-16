@@ -3,91 +3,90 @@ using System.Collections.Generic;
 using OpenStore.Domain.EventSourcing.Exception;
 using OpenStore.Domain.EventSourcing.Internal;
 
-namespace OpenStore.Domain.EventSourcing
+namespace OpenStore.Domain.EventSourcing;
+
+/// <summary>
+/// An abstraction for event sourced aggregate 
+/// </summary>
+public abstract class EventSourcedAggregateRoot : AggregateRoot<string>
 {
-    /// <summary>
-    /// An abstraction for event sourced aggregate 
-    /// </summary>
-    public abstract class EventSourcedAggregateRoot : AggregateRoot<string>
+    private readonly object _applyLock = new();
+    private readonly object _loadLock = new();
+    private readonly Dictionary<Type, string> _eventHandlerCache;
+
+    public sealed override long Version { get; protected set; }
+    public long LastCommittedVersion { get; protected set; }
+
+    protected EventSourcedAggregateRoot()
     {
-        private readonly object _applyLock = new();
-        private readonly object _loadLock = new();
-        private readonly Dictionary<Type, string> _eventHandlerCache;
+        Version = (long) StreamState.NoStream;
+        LastCommittedVersion = (long) StreamState.NoStream;
+        _eventHandlerCache = ReflectionHelper.FindEventHandlerMethodsInAggregate(GetType());
+    }
 
-        public sealed override long Version { get; protected set; }
-        public long LastCommittedVersion { get; protected set; }
+    protected StreamState StreamState => Version == 0 ? StreamState.NoStream : StreamState.HasStream;
 
-        protected EventSourcedAggregateRoot()
+    public void Load(IEnumerable<IDomainEvent> events)
+    {
+        lock (_loadLock)
         {
-            Version = (long) StreamState.NoStream;
-            LastCommittedVersion = (long) StreamState.NoStream;
-            _eventHandlerCache = ReflectionHelper.FindEventHandlerMethodsInAggregate(GetType());
+            foreach (var e in events)
+                ApplyChangeInternal(e, false);
+
+            LastCommittedVersion = Version;
         }
+    }
 
-        protected StreamState StreamState => Version == 0 ? StreamState.NoStream : StreamState.HasStream;
-
-        public void Load(IEnumerable<IDomainEvent> events)
+    protected override void ApplyChange(IDomainEvent @event)
+    {
+        lock (_applyLock)
         {
-            lock (_loadLock)
-            {
-                foreach (var e in events)
-                    ApplyChangeInternal(e, false);
-
-                LastCommittedVersion = Version;
-            }
+            ApplyChangeInternal(@event, true);
         }
+    }
 
-        protected override void ApplyChange(IDomainEvent @event)
+    private void ApplyChangeInternal(IDomainEvent @event, bool isNew)
+    {
+        if (CanApply(@event))
         {
-            lock (_applyLock)
-            {
-                ApplyChangeInternal(@event, true);
-            }
-        }
+            DoApply(@event);
 
-        private void ApplyChangeInternal(IDomainEvent @event, bool isNew)
-        {
-            if (CanApply(@event))
-            {
-                DoApply(@event);
-
-                if (isNew)
-                    base.ApplyChange(@event);
-                else
-                    Version++;
-            }
+            if (isNew)
+                base.ApplyChange(@event);
             else
-            {
-                throw new AggregateStateMismatchException(
-                    $"The event target version is {@event.Id}.(Version {@event.Version}) and " +
-                    $"AggregateRoot version is {Id}.(Version {Version})");
-            }
+                Version++;
         }
-
-        private bool CanApply(IDomainEvent @event)
+        else
         {
-            if (StreamState == StreamState.NoStream)
-                return true;
-
-            return Id.Equals(@event.Id) && Version == @event.Version;
+            throw new AggregateStateMismatchException(
+                $"The event target version is {@event.Id}.(Version {@event.Version}) and " +
+                $"AggregateRoot version is {Id}.(Version {Version})");
         }
+    }
 
-        private void DoApply(IDomainEvent @event)
-        {
-            if (StreamState == StreamState.NoStream)
-                Id = @event.Id;
+    private bool CanApply(IDomainEvent @event)
+    {
+        if (StreamState == StreamState.NoStream)
+            return true;
 
-            if (_eventHandlerCache.ContainsKey(@event.GetType()))
-                ReflectionHelper.InvokeOnAggregate(this, _eventHandlerCache[@event.GetType()], @event);
-            else
-                throw new AggregateEventOnApplyMethodMissingException($"No event handler specified for {@event.GetType()} on {GetType()}");
-        }
+        return Id.Equals(@event.Id) && Version == @event.Version;
+    }
 
-        public void HydrateFromSnapshot(ISnapshot snapshot)
-        {
-            Id = snapshot.AggregateId.ToString();
-            Version = snapshot.Version;
-            LastCommittedVersion = snapshot.Version;
-        }
+    private void DoApply(IDomainEvent @event)
+    {
+        if (StreamState == StreamState.NoStream)
+            Id = @event.Id;
+
+        if (_eventHandlerCache.ContainsKey(@event.GetType()))
+            ReflectionHelper.InvokeOnAggregate(this, _eventHandlerCache[@event.GetType()], @event);
+        else
+            throw new AggregateEventOnApplyMethodMissingException($"No event handler specified for {@event.GetType()} on {GetType()}");
+    }
+
+    public void HydrateFromSnapshot(ISnapshot snapshot)
+    {
+        Id = snapshot.AggregateId.ToString();
+        Version = snapshot.Version;
+        LastCommittedVersion = snapshot.Version;
     }
 }

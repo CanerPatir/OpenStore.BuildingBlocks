@@ -1,9 +1,8 @@
-namespace OpenStore.Domain.EventSourcing.Exception
+namespace OpenStore.Domain.EventSourcing.Exception;
+
+public class AggregateStateMismatchException : System.Exception
 {
-    public class AggregateStateMismatchException : System.Exception
+    public AggregateStateMismatchException(string message) : base(message)
     {
-        public AggregateStateMismatchException(string message) : base(message)
-        {
-        }
     }
 }

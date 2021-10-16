@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace OpenStore.Infrastructure.Web.Theming
+namespace OpenStore.Infrastructure.Web.Theming;
+
+public interface IThemeResolver
 {
-    public interface IThemeResolver
-    {
-        Task<ThemeContext> ResolveAsync(HttpContext context);
-    }
+    Task<ThemeContext> ResolveAsync(HttpContext context);
 }

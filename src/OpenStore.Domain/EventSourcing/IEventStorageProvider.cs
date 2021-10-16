@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace OpenStore.Domain.EventSourcing
+namespace OpenStore.Domain.EventSourcing;
+
+public interface IEventStorageProvider<in TAggregate> 
+    where TAggregate: EventSourcedAggregateRoot
 {
-    public interface IEventStorageProvider<in TAggregate> 
-        where TAggregate: EventSourcedAggregateRoot
-    {
-        Task<IEnumerable<IDomainEvent>> GetEventsAsync(object aggregateId, long start, int count);
-        Task<IDomainEvent> GetLastEventAsync(object aggregateId);
-        Task SaveAsync(TAggregate aggregate);
-    }
+    Task<IEnumerable<IDomainEvent>> GetEventsAsync(object aggregateId, long start, int count);
+    Task<IDomainEvent> GetLastEventAsync(object aggregateId);
+    Task SaveAsync(TAggregate aggregate);
 }

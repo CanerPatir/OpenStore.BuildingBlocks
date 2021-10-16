@@ -1,8 +1,7 @@
 
-namespace OpenStore.Infrastructure
+namespace OpenStore.Infrastructure;
+
+public static class OpenStoreConstants
 {
-    public static class OpenStoreConstants
-    {
-        public const string CorrelationIdKey = "CorrelationId";
-    }
+    public const string CorrelationIdKey = "CorrelationId";
 }

@@ -8,54 +8,53 @@ using OpenStore.Infrastructure.CommandBus;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace OpenStore.Infrastructure.Tests.CommandBus
+namespace OpenStore.Infrastructure.Tests.CommandBus;
+
+public class CommandBusTests : CommonFixtures.WithIoC
 {
-    public class CommandBusTests : CommonFixtures.WithIoC
+    public static int Counter = 0;
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public CommandBusTests(ITestOutputHelper testOutputHelper)
     {
-        public static int Counter = 0;
-        private readonly ITestOutputHelper _testOutputHelper;
+        _testOutputHelper = testOutputHelper;
+    }
 
-        public CommandBusTests(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
+    protected override void ConfigureServices(IServiceCollection services)
+    {
+        services.AddLogging();
+        services.AddOpenStoreCore(typeof(CommandBusTests).Assembly);
+    }
 
-        protected override void ConfigureServices(IServiceCollection services)
-        {
-            services.AddLogging();
-            services.AddOpenStoreCore(typeof(CommandBusTests).Assembly);
-        }
+    [Fact]
+    public async Task NotifySuccessRequestTest()
+    {
+        var mediator = GetService<IMediator>();
 
-        [Fact]
-        public async Task NotifySuccessRequestTest()
-        {
-            var mediator = GetService<IMediator>();
+        await mediator.Send(new NotifyingTestRequest());
 
-            await mediator.Send(new NotifyingTestRequest());
-
-            await Task.Delay(1000);
+        await Task.Delay(1000);
             
-            Assert.Equal(1, Counter);
-        }
+        Assert.Equal(1, Counter);
     }
+}
 
-    public record NotifyingTestRequest : INotifySuccessRequest;
+public record NotifyingTestRequest : INotifySuccessRequest;
 
-    public class NotifyingTestRequestHandler : IRequestHandler<NotifyingTestRequest>
+public class NotifyingTestRequestHandler : IRequestHandler<NotifyingTestRequest>
+{
+    public async Task<Unit> Handle(NotifyingTestRequest request, CancellationToken cancellationToken)
     {
-        public async Task<Unit> Handle(NotifyingTestRequest request, CancellationToken cancellationToken)
-        {
-            await Task.Delay(400, cancellationToken);
-            return Unit.Value;
-        }
+        await Task.Delay(400, cancellationToken);
+        return Unit.Value;
     }
+}
     
-    public class RequestSuccessNotificationHandler : INotificationHandler<RequestSuccessNotification>
+public class RequestSuccessNotificationHandler : INotificationHandler<RequestSuccessNotification>
+{
+    public Task Handle(RequestSuccessNotification notification, CancellationToken cancellationToken)
     {
-        public Task Handle(RequestSuccessNotification notification, CancellationToken cancellationToken)
-        {
-            Interlocked.Increment(ref CommandBusTests.Counter);
-            return Task.CompletedTask;
-        }
+        Interlocked.Increment(ref CommandBusTests.Counter);
+        return Task.CompletedTask;
     }
 }

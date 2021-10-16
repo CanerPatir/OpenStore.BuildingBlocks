@@ -1,7 +1,6 @@
-namespace OpenStore.Infrastructure.Web.Theming
+namespace OpenStore.Infrastructure.Web.Theming;
+
+public class ThemeOptions
 {
-    public class ThemeOptions
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

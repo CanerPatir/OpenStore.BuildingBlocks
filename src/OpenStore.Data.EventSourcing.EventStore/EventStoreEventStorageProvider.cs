@@ -6,85 +6,84 @@ using EventStore.ClientAPI;
 using OpenStore.Domain;
 using OpenStore.Domain.EventSourcing;
 
-namespace OpenStore.Data.EventSourcing.EventStore
+namespace OpenStore.Data.EventSourcing.EventStore;
+
+public class EventStoreEventStorageProvider<TAggregate> : EventStoreStorageProviderBase, IEventStorageProvider<TAggregate>
+    where TAggregate : EventSourcedAggregateRoot, ISavingChanges
 {
-    public class EventStoreEventStorageProvider<TAggregate> : EventStoreStorageProviderBase, IEventStorageProvider<TAggregate>
-        where TAggregate : EventSourcedAggregateRoot, ISavingChanges
+    private readonly IEventStoreStorageConnectionProvider _eventStoreStorageConnectionProvider;
+
+    public EventStoreEventStorageProvider(IEventStoreStorageConnectionProvider eventStoreStorageConnectionProvider, ISerializer serializer) : base(serializer)
     {
-        private readonly IEventStoreStorageConnectionProvider _eventStoreStorageConnectionProvider;
+        _eventStoreStorageConnectionProvider = eventStoreStorageConnectionProvider;
+    }
 
-        public EventStoreEventStorageProvider(IEventStoreStorageConnectionProvider eventStoreStorageConnectionProvider, ISerializer serializer) : base(serializer)
+    private Task<IEventStoreConnection> GetEventStoreConnectionAsync() => _eventStoreStorageConnectionProvider.GetConnectionAsync();
+
+    protected override string GetStreamNamePrefix() => _eventStoreStorageConnectionProvider.EventStreamPrefix;
+
+    public async Task<IEnumerable<IDomainEvent>> GetEventsAsync(object aggregateId, long start, int count)
+    {
+        var connection = await GetEventStoreConnectionAsync();
+        var events = await ReadEvents(typeof(TAggregate), connection, aggregateId, start, count);
+
+        return events;
+    }
+
+    public async Task<IDomainEvent> GetLastEventAsync(object aggregateId)
+    {
+        var connection = await GetEventStoreConnectionAsync();
+        var results = await connection.ReadStreamEventsBackwardAsync($"{AggregateIdToStreamName(typeof(TAggregate), aggregateId.ToString())}", StreamPosition.End, 1, false);
+
+        if (results.Status == SliceReadStatus.Success && results.Events.Any())
         {
-            _eventStoreStorageConnectionProvider = eventStoreStorageConnectionProvider;
+            return DeserializeEvent(results.Events.First());
         }
 
-        private Task<IEventStoreConnection> GetEventStoreConnectionAsync() => _eventStoreStorageConnectionProvider.GetConnectionAsync();
+        return null;
+    }
 
-        protected override string GetStreamNamePrefix() => _eventStoreStorageConnectionProvider.EventStreamPrefix;
+    public async Task SaveAsync(TAggregate aggregate)
+    {
+        var connection = await GetEventStoreConnectionAsync();
+        var events = aggregate.GetUncommittedChanges();
 
-        public async Task<IEnumerable<IDomainEvent>> GetEventsAsync(object aggregateId, long start, int count)
+        if (events.Any())
         {
-            var connection = await GetEventStoreConnectionAsync();
-            var events = await ReadEvents(typeof(TAggregate), connection, aggregateId, start, count);
+            var lastVersion = aggregate.LastCommittedVersion;
+            var lstEventData = events.Select(@event => SerializeEvent(@event, aggregate.LastCommittedVersion + 1)).ToList();
 
-            return events;
+            await connection.AppendToStreamAsync($"{AggregateIdToStreamName(aggregate.GetType(), aggregate.Id)}",
+                (lastVersion < (long)StreamState.HasStream ? (long)ExpectedVersion.NoStream : (long)lastVersion), lstEventData);
         }
+    }
 
-        public async Task<IDomainEvent> GetLastEventAsync(object aggregateId)
+    private async Task<IEnumerable<IDomainEvent>> ReadEvents(Type aggregateType, IEventStoreConnection connection, object aggregateId, long start, int count)
+    {
+        var streamEvents = new List<ResolvedEvent>();
+        StreamEventsSlice currentSlice;
+        long nextSliceStart = start == 0 ? StreamPosition.Start : (long)start;
+
+        //Read the stream using pagesize which was set before.
+        //We only need to read the full page ahead if expected results are larger than the page size
+        do
         {
-            var connection = await GetEventStoreConnectionAsync();
-            var results = await connection.ReadStreamEventsBackwardAsync($"{AggregateIdToStreamName(typeof(TAggregate), aggregateId.ToString())}", StreamPosition.End, 1, false);
+            var nextReadCount = count - streamEvents.Count;
 
-            if (results.Status == SliceReadStatus.Success && results.Events.Any())
+            if (nextReadCount > _eventStoreStorageConnectionProvider.PageSize)
             {
-                return DeserializeEvent(results.Events.First());
+                nextReadCount = _eventStoreStorageConnectionProvider.PageSize;
             }
 
-            return null;
-        }
+            currentSlice = await connection.ReadStreamEventsForwardAsync($"{AggregateIdToStreamName(aggregateType, aggregateId.ToString())}", nextSliceStart, nextReadCount, false);
 
-        public async Task SaveAsync(TAggregate aggregate)
-        {
-            var connection = await GetEventStoreConnectionAsync();
-            var events = aggregate.GetUncommittedChanges();
+            nextSliceStart = currentSlice.NextEventNumber;
 
-            if (events.Any())
-            {
-                var lastVersion = aggregate.LastCommittedVersion;
-                var lstEventData = events.Select(@event => SerializeEvent(@event, aggregate.LastCommittedVersion + 1)).ToList();
+            streamEvents.AddRange(currentSlice.Events);
+        } while (!currentSlice.IsEndOfStream);
 
-                await connection.AppendToStreamAsync($"{AggregateIdToStreamName(aggregate.GetType(), aggregate.Id)}",
-                    (lastVersion < (long)StreamState.HasStream ? (long)ExpectedVersion.NoStream : (long)lastVersion), lstEventData);
-            }
-        }
+        //Deserialize and add to events list
 
-        private async Task<IEnumerable<IDomainEvent>> ReadEvents(Type aggregateType, IEventStoreConnection connection, object aggregateId, long start, int count)
-        {
-            var streamEvents = new List<ResolvedEvent>();
-            StreamEventsSlice currentSlice;
-            long nextSliceStart = start == 0 ? StreamPosition.Start : (long)start;
-
-            //Read the stream using pagesize which was set before.
-            //We only need to read the full page ahead if expected results are larger than the page size
-            do
-            {
-                var nextReadCount = count - streamEvents.Count;
-
-                if (nextReadCount > _eventStoreStorageConnectionProvider.PageSize)
-                {
-                    nextReadCount = _eventStoreStorageConnectionProvider.PageSize;
-                }
-
-                currentSlice = await connection.ReadStreamEventsForwardAsync($"{AggregateIdToStreamName(aggregateType, aggregateId.ToString())}", nextSliceStart, nextReadCount, false);
-
-                nextSliceStart = currentSlice.NextEventNumber;
-
-                streamEvents.AddRange(currentSlice.Events);
-            } while (!currentSlice.IsEndOfStream);
-
-            //Deserialize and add to events list
-
-            return streamEvents.Select(DeserializeEvent).ToList();
-        }
+        return streamEvents.Select(DeserializeEvent).ToList();
     }
 }

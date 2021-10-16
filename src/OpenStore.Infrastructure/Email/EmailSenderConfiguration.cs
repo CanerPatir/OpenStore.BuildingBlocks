@@ -1,9 +1,8 @@
-namespace OpenStore.Infrastructure.Email
-{
-    public abstract class EmailSenderConfiguration
-    {
-        public virtual string DefaultFromAddress { get; set; }
+namespace OpenStore.Infrastructure.Email;
 
-        public virtual string DefaultFromDisplayName { get; set; }
-    }
+public abstract class EmailSenderConfiguration
+{
+    public virtual string DefaultFromAddress { get; set; }
+
+    public virtual string DefaultFromDisplayName { get; set; }
 }

@@ -1,44 +1,42 @@
-using System;
 using Microsoft.AspNetCore.Http;
 
-namespace OpenStore.Infrastructure.Web.Theming
+namespace OpenStore.Infrastructure.Web.Theming;
+
+public static class HttpContextExtensions
 {
-    public static class HttpContextExtensions
+    private const string ThemeContextKey = "ThemeContext";
+
+    public static void SetThemeContext(this HttpContext context, ThemeContext themeContext)
     {
-        private const string ThemeContextKey = "ThemeContext";
+        if (context == null)
+            throw new ArgumentNullException(nameof(context));
 
-        public static void SetThemeContext(this HttpContext context, ThemeContext themeContext)
+        if (themeContext == null)
+            throw new ArgumentNullException(nameof(themeContext));
+
+        context.Items[ThemeContextKey] = themeContext;
+    }
+
+    public static ThemeContext GetThemeContext(this HttpContext context)
+    {
+        if (context == null)
+            throw new ArgumentNullException(nameof(context));
+
+        if (context.Items.TryGetValue(ThemeContextKey, out var themeContext))
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
-            if (themeContext == null)
-                throw new ArgumentNullException(nameof(themeContext));
-
-            context.Items[ThemeContextKey] = themeContext;
+            return themeContext as ThemeContext;
         }
 
-        public static ThemeContext GetThemeContext(this HttpContext context)
-        {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+        return null;
+    }
 
-            if (context.Items.TryGetValue(ThemeContextKey, out var themeContext))
-            {
-                return themeContext as ThemeContext;
-            }
+    public static Theme GetTheme(this HttpContext context)
+    {
+        if (context == null)
+            throw new ArgumentNullException(nameof(context));
 
-            return null;
-        }
+        var themeContext = GetThemeContext(context);
 
-        public static Theme GetTheme(this HttpContext context)
-        {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
-            var themeContext = GetThemeContext(context);
-
-            return themeContext?.Theme;
-        }
+        return themeContext?.Theme;
     }
 }

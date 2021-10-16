@@ -1,11 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenStore.Domain
+namespace OpenStore.Domain;
+
+public interface IUnitOfWork
 {
-    public interface IUnitOfWork
-    {
-        Task SaveChangesAsync(CancellationToken token = default);
-        Task BeginTransactionAsync(CancellationToken token = default);
-    }
+    Task SaveChangesAsync(CancellationToken token = default);
+    Task BeginTransactionAsync(CancellationToken token = default);
 }

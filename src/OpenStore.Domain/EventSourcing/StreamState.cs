@@ -1,8 +1,7 @@
-namespace OpenStore.Domain.EventSourcing
+namespace OpenStore.Domain.EventSourcing;
+
+public enum StreamState
 {
-    public enum StreamState
-    {
-        NoStream = 0,
-        HasStream = 1
-    }
+    NoStream = 0,
+    HasStream = 1
 }

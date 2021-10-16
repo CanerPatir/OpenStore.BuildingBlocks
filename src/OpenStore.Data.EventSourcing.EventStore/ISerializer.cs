@@ -1,12 +1,11 @@
 using System;
 
-namespace OpenStore.Data.EventSourcing.EventStore
+namespace OpenStore.Data.EventSourcing.EventStore;
+
+public interface ISerializer
 {
-    public interface ISerializer
-    {
-        byte[] Serialize(object data);
-        T Deserialize<T>(byte[] data);
+    byte[] Serialize(object data);
+    T Deserialize<T>(byte[] data);
         
-        object Deserialize(byte[] data, Type returnType);
-    }
+    object Deserialize(byte[] data, Type returnType);
 }

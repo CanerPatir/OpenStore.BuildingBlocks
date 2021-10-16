@@ -1,8 +1,7 @@
-namespace OpenStore.Infrastructure.Localization.Json
+namespace OpenStore.Infrastructure.Localization.Json;
+
+public enum OpenStoreJsonLocalizationSource
 {
-    public enum OpenStoreJsonLocalizationSource
-    {
-        Content, 
-        EmbeddedSource
-    }
+    Content, 
+    EmbeddedSource
 }

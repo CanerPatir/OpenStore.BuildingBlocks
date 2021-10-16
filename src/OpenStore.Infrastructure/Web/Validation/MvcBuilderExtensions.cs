@@ -1,14 +1,12 @@
-using System;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace OpenStore.Infrastructure.Web.Validation
+namespace OpenStore.Infrastructure.Web.Validation;
+
+public static class MvcBuilderExtensions
 {
-    public static class MvcBuilderExtensions
+    public static IMvcBuilder AddOpenStoreValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null)
     {
-        public static IMvcBuilder AddOpenStoreValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null)
-        {
-            return mvcBuilder.AddFluentValidation(configurationExpression);
-        }
+        return mvcBuilder.AddFluentValidation(configurationExpression);
     }
 }

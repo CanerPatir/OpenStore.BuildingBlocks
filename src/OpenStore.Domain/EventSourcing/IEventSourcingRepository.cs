@@ -1,8 +1,7 @@
-namespace OpenStore.Domain.EventSourcing
+namespace OpenStore.Domain.EventSourcing;
+
+public interface IEventSourcingRepository<TAggregate, TSnapshot> : IRepository<TAggregate>
+    where TAggregate : EventSourcedAggregateRoot
+    where TSnapshot : ISnapshot
 {
-    public interface IEventSourcingRepository<TAggregate, TSnapshot> : IRepository<TAggregate>
-        where TAggregate : EventSourcedAggregateRoot
-        where TSnapshot : ISnapshot
-    {
-    }
 }

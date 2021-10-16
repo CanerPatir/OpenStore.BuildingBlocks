@@ -1,7 +1,6 @@
-namespace OpenStore.Domain
+namespace OpenStore.Domain;
+
+public interface IAggregateRoot : IEntity
 {
-    public interface IAggregateRoot : IEntity
-    {
    
-    }
 }

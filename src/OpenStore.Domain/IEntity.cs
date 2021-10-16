@@ -1,8 +1,7 @@
-namespace OpenStore.Domain
+namespace OpenStore.Domain;
+
+public interface IEntity
 {
-    public interface IEntity
-    {
-        object Id { get; }
-        long Version { get; }
-    }
+    object Id { get; }
+    long Version { get; }
 }

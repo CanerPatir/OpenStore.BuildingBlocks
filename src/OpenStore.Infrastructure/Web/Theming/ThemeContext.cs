@@ -1,57 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace OpenStore.Infrastructure.Web.Theming;
 
-namespace OpenStore.Infrastructure.Web.Theming
+public class ThemeContext : IDisposable
 {
-    public class ThemeContext : IDisposable
+    private bool _disposed;
+
+    public string Id { get; } = Guid.NewGuid().ToString();
+    public Theme Theme { get; }
+    public IDictionary<string, object> Properties { get; }
+
+    public ThemeContext(Theme theme)
     {
-        private bool _disposed;
+        Theme = theme ?? throw new ArgumentNullException(nameof(theme));
+        Properties = new Dictionary<string, object>();
+    }
 
-        public string Id { get; } = Guid.NewGuid().ToString();
-        public Theme Theme { get; }
-        public IDictionary<string, object> Properties { get; }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        public ThemeContext(Theme theme)
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
         {
-            Theme = theme ?? throw new ArgumentNullException(nameof(theme));
-            Properties = new Dictionary<string, object>();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
-
-            if (disposing)
+            foreach (var prop in Properties)
             {
-                foreach (var prop in Properties)
-                {
-                    TryDisposeProperty(prop.Value as IDisposable);
-                }
-                TryDisposeProperty(Theme as IDisposable);
+                TryDisposeProperty(prop.Value as IDisposable);
             }
-
-            _disposed = true;
+            TryDisposeProperty(Theme as IDisposable);
         }
+
+        _disposed = true;
+    }
         
-        private void TryDisposeProperty(IDisposable obj)
-        {
-            if (obj == null)
-                return;
+    private void TryDisposeProperty(IDisposable obj)
+    {
+        if (obj == null)
+            return;
 
-            try
-            {
-                obj.Dispose();
-            }
-            catch (ObjectDisposedException)
-            {
-            }
+        try
+        {
+            obj.Dispose();
+        }
+        catch (ObjectDisposedException)
+        {
         }
     }
 }

@@ -1,20 +1,19 @@
 using System;
 using OpenStore.Domain;
 
-namespace OpenStore.Application.Exceptions
+namespace OpenStore.Application.Exceptions;
+
+public class ApplicationException : DomainException
 {
-    public class ApplicationException : DomainException
+    public ApplicationException()
     {
-        public ApplicationException()
-        {
-        }
+    }
 
-        public ApplicationException(string message) : base(message)
-        {
-        }
+    public ApplicationException(string message) : base(message)
+    {
+    }
 
-        public ApplicationException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public ApplicationException(string message, Exception innerException) : base(message, innerException)
+    {
     }
 }

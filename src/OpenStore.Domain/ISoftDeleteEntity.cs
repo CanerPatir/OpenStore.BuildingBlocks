@@ -1,7 +1,6 @@
-namespace OpenStore.Domain
+namespace OpenStore.Domain;
+
+public interface ISoftDeleteEntity : IEntity
 {
-    public interface ISoftDeleteEntity : IEntity
-    {
-        bool SoftDeleted { get; set; }
-    }
+    bool SoftDeleted { get; set; }
 }

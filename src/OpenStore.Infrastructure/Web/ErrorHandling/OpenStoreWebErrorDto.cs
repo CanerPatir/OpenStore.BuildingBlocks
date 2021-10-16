@@ -1,6 +1,3 @@
-using System.Collections.Generic;
+namespace OpenStore.Infrastructure.Web.ErrorHandling;
 
-namespace OpenStore.Infrastructure.Web.ErrorHandling
-{
-    internal record OpenStoreWebErrorDto(string Message, IEnumerable<string> Errors);
-}
+internal record OpenStoreWebErrorDto(string Message, IEnumerable<string> Errors);

@@ -1,8 +1,7 @@
-namespace OpenStore.Data.Search.ElasticSearch
+namespace OpenStore.Data.Search.ElasticSearch;
+
+public enum IndexCreateStrategy
 {
-    public enum IndexCreateStrategy
-    {
-        Recreate,
-        CreateIfNotExists
-    }
+    Recreate,
+    CreateIfNotExists
 }

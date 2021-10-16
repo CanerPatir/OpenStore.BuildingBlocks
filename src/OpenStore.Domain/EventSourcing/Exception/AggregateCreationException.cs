@@ -1,9 +1,8 @@
-namespace OpenStore.Domain.EventSourcing.Exception
+namespace OpenStore.Domain.EventSourcing.Exception;
+
+public class AggregateCreationException : System.Exception
 {
-    public class AggregateCreationException : System.Exception
+    public AggregateCreationException(string message) : base(message)
     {
-        public AggregateCreationException(string message) : base(message)
-        {
-        }
     }
 }

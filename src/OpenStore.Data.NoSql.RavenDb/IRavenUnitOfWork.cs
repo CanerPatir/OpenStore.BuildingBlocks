@@ -1,10 +1,9 @@
 using OpenStore.Domain;
 using Raven.Client.Documents.Session;
 
-namespace OpenStore.Data.NoSql.RavenDb
+namespace OpenStore.Data.NoSql.RavenDb;
+
+public interface IRavenUnitOfWork : IUnitOfWork
 {
-    public interface IRavenUnitOfWork : IUnitOfWork
-    {
-        IAsyncDocumentSession Session { get; }
-    }
+    IAsyncDocumentSession Session { get; }
 }

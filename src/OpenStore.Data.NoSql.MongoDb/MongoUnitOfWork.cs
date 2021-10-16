@@ -3,40 +3,39 @@ using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
-namespace OpenStore.Data.NoSql.MongoDb
+namespace OpenStore.Data.NoSql.MongoDb;
+
+public class MongoUnitOfWork : IMongoUnitOfWork
 {
-    public class MongoUnitOfWork : IMongoUnitOfWork
+    private readonly bool _transactionSupported;
+
+    public MongoUnitOfWork(IMongoDatabase databaseBase)
     {
-        private readonly bool _transactionSupported;
-
-        public MongoUnitOfWork(IMongoDatabase databaseBase)
+        DatabaseBase = databaseBase;
+        Session = databaseBase.Client.StartSession();
+        try
         {
-            DatabaseBase = databaseBase;
-            Session = databaseBase.Client.StartSession();
-            try
-            {
-                Session.StartTransaction();
-                _transactionSupported = true;
-            }
-            catch (NotSupportedException)
-            {
-            }
+            Session.StartTransaction();
+            _transactionSupported = true;
         }
-
-        public IMongoDatabase DatabaseBase { get; }
-
-        public IClientSessionHandle Session { get; }
-
-        public async Task SaveChangesAsync(CancellationToken token = default)
+        catch (NotSupportedException)
         {
-            if (!_transactionSupported) return;
-            await Session.CommitTransactionAsync(token);
         }
+    }
 
-        public Task BeginTransactionAsync(CancellationToken token = default)
-        {
-            // Session.StartTransaction();
-            return Task.CompletedTask;
-        }
+    public IMongoDatabase DatabaseBase { get; }
+
+    public IClientSessionHandle Session { get; }
+
+    public async Task SaveChangesAsync(CancellationToken token = default)
+    {
+        if (!_transactionSupported) return;
+        await Session.CommitTransactionAsync(token);
+    }
+
+    public Task BeginTransactionAsync(CancellationToken token = default)
+    {
+        // Session.StartTransaction();
+        return Task.CompletedTask;
     }
 }

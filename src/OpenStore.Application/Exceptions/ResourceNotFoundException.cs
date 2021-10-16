@@ -1,19 +1,18 @@
 using System;
 
-namespace OpenStore.Application.Exceptions
+namespace OpenStore.Application.Exceptions;
+
+public class ResourceNotFoundException : ApplicationException
 {
-    public class ResourceNotFoundException : ApplicationException
+    public ResourceNotFoundException()
     {
-        public ResourceNotFoundException()
-        {
-        }
+    }
 
-        public ResourceNotFoundException(string message) : base(message)
-        {
-        }
+    public ResourceNotFoundException(string message) : base(message)
+    {
+    }
 
-        public ResourceNotFoundException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public ResourceNotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
     }
 }

@@ -1,14 +1,13 @@
 using OpenStore.Domain;
 
-namespace OpenStore.Application
+namespace OpenStore.Application;
+
+/// <summary>
+/// Abstraction for repository that supports transactional stores
+/// </summary>
+/// <typeparam name="TAggregateRoot"></typeparam>
+public interface ITransactionalRepository<TAggregateRoot> : IRepository<TAggregateRoot>
+    where TAggregateRoot : IAggregateRoot
 {
-    /// <summary>
-    /// Abstraction for repository that supports transactional stores
-    /// </summary>
-    /// <typeparam name="TAggregateRoot"></typeparam>
-    public interface ITransactionalRepository<TAggregateRoot> : IRepository<TAggregateRoot>
-        where TAggregateRoot : IAggregateRoot
-    {
-        IUnitOfWork Uow { get; }
-    }
+    IUnitOfWork Uow { get; }
 }

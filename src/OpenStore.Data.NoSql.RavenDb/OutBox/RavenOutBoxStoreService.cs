@@ -6,31 +6,30 @@ using OpenStore.Application;
 using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 
-namespace OpenStore.Data.NoSql.RavenDb.OutBox
+namespace OpenStore.Data.NoSql.RavenDb.OutBox;
+
+public class RavenOutBoxStoreService : OutBoxStoreService
 {
-    public class RavenOutBoxStoreService : OutBoxStoreService
+    private readonly IRavenUnitOfWork _uow;
+    private readonly RavenDatabaseSettings _ravenDatabaseSettings;
+
+    public RavenOutBoxStoreService(IRavenUnitOfWork uow, IOptions<RavenDatabaseSettings> ravenDatabaseSettingsOptions, IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
     {
-        private readonly IRavenUnitOfWork _uow;
-        private readonly RavenDatabaseSettings _ravenDatabaseSettings;
+        _uow = uow;
+        _ravenDatabaseSettings = ravenDatabaseSettingsOptions.Value;
+    }
 
-        public RavenOutBoxStoreService(IRavenUnitOfWork uow, IOptions<RavenDatabaseSettings> ravenDatabaseSettingsOptions, IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
+    public override async Task StoreMessages(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)
+    {
+        if (_ravenDatabaseSettings.OutBoxEnabled is false)
         {
-            _uow = uow;
-            _ravenDatabaseSettings = ravenDatabaseSettingsOptions.Value;
+            return;
         }
+        var outBoxMessages = WrapEvents(events);
 
-        public override async Task StoreMessages(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)
+        foreach (var outBoxMessage in outBoxMessages)
         {
-            if (_ravenDatabaseSettings.OutBoxEnabled is false)
-            {
-                return;
-            }
-            var outBoxMessages = WrapEvents(events);
-
-            foreach (var outBoxMessage in outBoxMessages)
-            {
-                await _uow.Session.StoreAsync(outBoxMessage, cancellationToken);
-            }
+            await _uow.Session.StoreAsync(outBoxMessage, cancellationToken);
         }
     }
 }

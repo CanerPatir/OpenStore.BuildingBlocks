@@ -16,6 +16,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <NetPackageVersion>6.0.0-rc.2.21480.10</NetPackageVersion>
         <NetExtensionsPackageVersion>6.0.0-rc.2.21480.5</NetExtensionsPackageVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
         <!--<Nullable>enable</Nullable>-->
     </PropertyGroup>
 </Project>

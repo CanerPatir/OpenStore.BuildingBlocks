@@ -1,10 +1,9 @@
 using MediatR;
 
-namespace OpenStore.Domain
+namespace OpenStore.Domain;
+
+public interface IDomainEvent : INotification
 {
-    public interface IDomainEvent : INotification
-    {
-        string Id { get; }
-        long Version { get; set; }
-    }
+    string Id { get; }
+    long Version { get; set; }
 }

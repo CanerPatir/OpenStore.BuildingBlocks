@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Globalization;
 
-namespace OpenStore.Infrastructure.Localization.Json
+namespace OpenStore.Infrastructure.Localization.Json;
+
+public interface IJsonLocalizationResourceLoader
 {
-    public interface IJsonLocalizationResourceLoader
-    {
-        Dictionary<CultureInfo, Dictionary<string, string>> ReadResources(CultureInfo cultureInfo);
-    }
+    Dictionary<CultureInfo, Dictionary<string, string>> ReadResources(CultureInfo cultureInfo);
 }

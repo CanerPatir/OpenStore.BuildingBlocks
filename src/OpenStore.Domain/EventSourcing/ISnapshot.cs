@@ -1,8 +1,7 @@
-namespace OpenStore.Domain.EventSourcing
+namespace OpenStore.Domain.EventSourcing;
+
+public interface ISnapshot
 {
-    public interface ISnapshot
-    {
-        object AggregateId { get; }
-        long Version { get; }
-    }
+    object AggregateId { get; }
+    long Version { get; }
 }

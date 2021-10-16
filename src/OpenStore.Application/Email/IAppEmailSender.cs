@@ -1,10 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenStore.Application.Email
+namespace OpenStore.Application.Email;
+
+public interface IAppEmailSender
 {
-    public interface IAppEmailSender
-    {
-        Task SendEmailAsync(MailBuilder mailBuilder, CancellationToken cancellationToken = default);
-    }
+    Task SendEmailAsync(MailBuilder mailBuilder, CancellationToken cancellationToken = default);
 }

@@ -1,52 +1,50 @@
-using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenStore.Application.Email;
 using SendGrid.Extensions.DependencyInjection;
 
-namespace OpenStore.Infrastructure.Email.SendGrid
+namespace OpenStore.Infrastructure.Email.SendGrid;
+
+public static class OpenStoreMailConfigurationBuilderExtensions
 {
-    public static class OpenStoreMailConfigurationBuilderExtensions
+    public static IOpenStoreMailConfigurationBuilder UseSendGrid(this IOpenStoreMailConfigurationBuilder builder,
+        IConfiguration configuration,
+        string configSection = "Mail")
     {
-        public static IOpenStoreMailConfigurationBuilder UseSendGrid(this IOpenStoreMailConfigurationBuilder builder,
-            IConfiguration configuration,
-            string configSection = "Mail")
+        var services = builder.Services;
+            
+        services.AddSendGrid((sp, options) =>
         {
-            var services = builder.Services;
+            options.ApiKey = sp.GetRequiredService<IOptions<SendGridSenderConfiguration>>().Value.ApiKey;
+        });
             
-            services.AddSendGrid((sp, options) =>
-            {
-                options.ApiKey = sp.GetRequiredService<IOptions<SendGridSenderConfiguration>>().Value.ApiKey;
-            });
-            
-            services
-                .Configure<SendGridSenderConfiguration>(configuration.GetSection(configSection))
-                .AddTransient<IAppEmailSender, SendGridEmailSender>();
+        services
+            .Configure<SendGridSenderConfiguration>(configuration.GetSection(configSection))
+            .AddTransient<IAppEmailSender, SendGridEmailSender>();
 
-            return builder;
-        }
+        return builder;
+    }
 
-        public static IOpenStoreMailConfigurationBuilder UseSendGrid(this IOpenStoreMailConfigurationBuilder builder,
-            SendGridSenderConfiguration sendGridSenderConfiguration)
+    public static IOpenStoreMailConfigurationBuilder UseSendGrid(this IOpenStoreMailConfigurationBuilder builder,
+        SendGridSenderConfiguration sendGridSenderConfiguration)
+    {
+        var services = builder.Services;
+
+        services.AddSendGrid((sp, options) =>
         {
-            var services = builder.Services;
-
-            services.AddSendGrid((sp, options) =>
-            {
-                options.ApiKey = sp.GetRequiredService<IOptions<SendGridSenderConfiguration>>().Value.ApiKey;
-            });
+            options.ApiKey = sp.GetRequiredService<IOptions<SendGridSenderConfiguration>>().Value.ApiKey;
+        });
             
-            services
-                .Configure<SendGridSenderConfiguration>(opts =>
-                {
-                    opts.ApiKey = sendGridSenderConfiguration.ApiKey;
-                    opts.DefaultFromAddress = sendGridSenderConfiguration.DefaultFromAddress;
-                    opts.DefaultFromDisplayName = sendGridSenderConfiguration.DefaultFromDisplayName;
-                })
-                .AddTransient<IAppEmailSender, SendGridEmailSender>();
+        services
+            .Configure<SendGridSenderConfiguration>(opts =>
+            {
+                opts.ApiKey = sendGridSenderConfiguration.ApiKey;
+                opts.DefaultFromAddress = sendGridSenderConfiguration.DefaultFromAddress;
+                opts.DefaultFromDisplayName = sendGridSenderConfiguration.DefaultFromDisplayName;
+            })
+            .AddTransient<IAppEmailSender, SendGridEmailSender>();
 
-            return builder;
-        }
+        return builder;
     }
 }

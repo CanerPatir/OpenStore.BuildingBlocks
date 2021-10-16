@@ -1,9 +1,7 @@
-namespace OpenStore.Domain.EventSourcing
+namespace OpenStore.Domain.EventSourcing;
+
+public interface ISnapshottable<TSnapshot> 
 {
-    public interface ISnapshottable<TSnapshot> 
-    {
-        TSnapshot TakeSnapshot();
-        void ApplySnapshot(TSnapshot snapshot);
-    }
-    
+    TSnapshot TakeSnapshot();
+    void ApplySnapshot(TSnapshot snapshot);
 }

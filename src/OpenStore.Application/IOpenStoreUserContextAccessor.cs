@@ -1,8 +1,6 @@
-namespace OpenStore.Application
-{
-    public interface IOpenStoreUserContextAccessor
-    {
-        string GetUserEmail();
-    }
+namespace OpenStore.Application;
 
+public interface IOpenStoreUserContextAccessor
+{
+    string GetUserEmail();
 }

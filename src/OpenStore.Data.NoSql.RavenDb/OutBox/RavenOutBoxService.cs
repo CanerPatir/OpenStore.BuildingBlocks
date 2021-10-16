@@ -8,46 +8,45 @@ using OpenStore.Data.OutBox;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
 
-namespace OpenStore.Data.NoSql.RavenDb.OutBox
+namespace OpenStore.Data.NoSql.RavenDb.OutBox;
+
+public class RavenOutBoxService : OutBoxService
 {
-    public class RavenOutBoxService : OutBoxService
+    private readonly IRavenUnitOfWork _uow;
+
+    public RavenOutBoxService(
+        IRavenUnitOfWork uow,
+        IMediator mediator,
+        ILogger<RavenOutBoxService> logger
+    ) : base(uow, mediator, logger)
     {
-        private readonly IRavenUnitOfWork _uow;
+        _uow = uow;
+    }
 
-        public RavenOutBoxService(
-            IRavenUnitOfWork uow,
-            IMediator mediator,
-            ILogger<RavenOutBoxService> logger
-        ) : base(uow, mediator, logger)
+    public override async Task<IReadOnlyCollection<OutBoxMessage>> FetchPendingMessages(int take, CancellationToken cancellationToken = default)
+    {
+        var messages = await _uow.Session
+            .Query<OutBoxMessage, GetPendingOutBoxMessages>()
+            .ToListAsync(cancellationToken);
+
+        return messages;
+    }
+
+    public class GetPendingOutBoxMessages : AbstractIndexCreationTask<OutBoxMessage>
+    {
+        public override string IndexName => "OutBoxMessages/GetPendingOutBoxMessages";
+
+        public GetPendingOutBoxMessages()
         {
-            _uow = uow;
-        }
+            Map = events =>
+                from e in events
+                where e.Committed == false
+                select e;
 
-        public override async Task<IReadOnlyCollection<OutBoxMessage>> FetchPendingMessages(int take, CancellationToken cancellationToken = default)
-        {
-            var messages = await _uow.Session
-                .Query<OutBoxMessage, GetPendingOutBoxMessages>()
-                .ToListAsync(cancellationToken);
-
-            return messages;
-        }
-
-        public class GetPendingOutBoxMessages : AbstractIndexCreationTask<OutBoxMessage>
-        {
-            public override string IndexName => "OutBoxMessages/GetPendingOutBoxMessages";
-
-            public GetPendingOutBoxMessages()
-            {
-                Map = events =>
-                    from e in events
-                    where e.Committed == false
-                    select e;
-
-                Reduce = inputs =>
-                    from input in inputs
-                    orderby input.Version
-                    select input;
-            }
+            Reduce = inputs =>
+                from input in inputs
+                orderby input.Version
+                select input;
         }
     }
 }

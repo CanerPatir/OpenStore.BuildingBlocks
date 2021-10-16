@@ -3,69 +3,68 @@ using System.Threading;
 using System.Threading.Tasks;
 using EventStore.ClientAPI;
 
-namespace OpenStore.Data.EventSourcing.EventStore
+namespace OpenStore.Data.EventSourcing.EventStore;
+
+public interface IEventStoreStorageConnectionProvider
 {
-    public interface IEventStoreStorageConnectionProvider
+    Task<IEventStoreConnection> GetConnectionAsync();
+    string EventStreamPrefix { get; }
+    string SnapshotStreamPrefix { get; }
+    long SnapshotFrequency { get; }
+    int PageSize { get; }
+}
+
+public class EventStoreStorageConnectionProvider : IEventStoreStorageConnectionProvider, IDisposable
+{
+    private IEventStoreConnection _connection;
+    private readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
+    private readonly Func<IEventStoreConnection> _eventStoreConnectionFactoryMethod;
+        
+    public EventStoreStorageConnectionProvider(Func<IEventStoreConnection> eventStoreConnectionFactory)
     {
-        Task<IEventStoreConnection> GetConnectionAsync();
-        string EventStreamPrefix { get; }
-        string SnapshotStreamPrefix { get; }
-        long SnapshotFrequency { get; }
-        int PageSize { get; }
+        _eventStoreConnectionFactoryMethod = eventStoreConnectionFactory;
     }
 
-    public class EventStoreStorageConnectionProvider : IEventStoreStorageConnectionProvider, IDisposable
+    public async Task<IEventStoreConnection> GetConnectionAsync()
     {
-        private IEventStoreConnection _connection;
-        private readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
-        private readonly Func<IEventStoreConnection> _eventStoreConnectionFactoryMethod;
-        
-        public EventStoreStorageConnectionProvider(Func<IEventStoreConnection> eventStoreConnectionFactory)
+        await _lock.WaitAsync();
+        try
         {
-            _eventStoreConnectionFactoryMethod = eventStoreConnectionFactory;
-        }
+            if (_connection != null) return _connection;
+            _connection = _eventStoreConnectionFactoryMethod.Invoke();
+            await _connection.ConnectAsync();
 
-        public async Task<IEventStoreConnection> GetConnectionAsync()
+            return _connection;
+        }
+        finally
         {
-            await _lock.WaitAsync();
-            try
-            {
-                if (_connection != null) return _connection;
-                _connection = _eventStoreConnectionFactoryMethod.Invoke();
-                await _connection.ConnectAsync();
-
-                return _connection;
-            }
-            finally
-            {
-                _lock.Release();
-            }
+            _lock.Release();
         }
+    }
 
-        public string EventStreamPrefix => "Event-";
-        public string SnapshotStreamPrefix => "Snapshot-";
-        public long SnapshotFrequency => 2;
-        public int PageSize => 200;
+    public string EventStreamPrefix => "Event-";
+    public string SnapshotStreamPrefix => "Snapshot-";
+    public long SnapshotFrequency => 2;
+    public int PageSize => 200;
 
-        private void CloseConnection()
+    private void CloseConnection()
+    {
+        _lock.Wait();
+        try
         {
-            _lock.Wait();
-            try
-            {
-                if (_connection == null) return;
-                _connection.Close();
-                _connection.Dispose();
-                _connection = null;
-            }
-            finally
-            {
-                _lock.Release();
-            }
+            if (_connection == null) return;
+            _connection.Close();
+            _connection.Dispose();
+            _connection = null;
         }
-
-        public void Dispose()
+        finally
         {
-            CloseConnection();
+            _lock.Release();
         }
+    }
+
+    public void Dispose()
+    {
+        CloseConnection();
     }
 }

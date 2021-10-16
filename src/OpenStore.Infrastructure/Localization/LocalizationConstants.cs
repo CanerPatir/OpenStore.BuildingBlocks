@@ -1,7 +1,6 @@
-namespace OpenStore.Infrastructure.Localization
+namespace OpenStore.Infrastructure.Localization;
+
+internal class LocalizationConstants
 {
-    internal class LocalizationConstants
-    {
-        public const string DefaultCookieName = ".OpenStore.Culture";
-    }
+    public const string DefaultCookieName = ".OpenStore.Culture";
 }

@@ -1,52 +1,47 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using OpenStore.Application.Exceptions;
 
-namespace OpenStore.Infrastructure.CommandBus
+namespace OpenStore.Infrastructure.CommandBus;
+
+public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
-    public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    private readonly ILoggerFactory _loggerFactory;
+
+    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger, ILoggerFactory loggerFactory)
     {
-         private readonly ILoggerFactory _loggerFactory;
+        _loggerFactory = loggerFactory;
+    }
 
-        public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger, ILoggerFactory loggerFactory)
+    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    {
+        var requestType = typeof(TRequest);
+        var logger = _loggerFactory.CreateLogger(requestType);
+        var scopeVariables = new Dictionary<string, object>
         {
-             _loggerFactory = loggerFactory;
+            {OpenStoreConstants.CorrelationIdKey, Guid.NewGuid()},
+            {"IRequest", requestType.Name}
+        };
+        var scope = logger.BeginScope(scopeVariables);
+        logger.LogDebug("Handling");
+        try
+        {
+            var response = await next();
+            logger.LogDebug("Handled successfully");
+            return response;
         }
-
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        catch (Exception e)
         {
-            var requestType = typeof(TRequest);
-            var logger = _loggerFactory.CreateLogger(requestType);
-            var scopeVariables = new Dictionary<string, object>
+            if (e is not ResourceNotFoundException)
             {
-                {OpenStoreConstants.CorrelationIdKey, Guid.NewGuid()},
-                {"IRequest", requestType.Name}
-            };
-            var scope = logger.BeginScope(scopeVariables);
-            logger.LogDebug("Handling");
-            try
-            {
-                var response = await next();
-                logger.LogDebug("Handled successfully");
-                return response;
+                logger.LogError(e.Demystify(), "Handling error");
             }
-            catch (Exception e)
-            {
-                if (e is not ResourceNotFoundException)
-                {
-                    logger.LogError(e.Demystify(), "Handling error");
-                }
-                throw;
-            }
-            finally
-            {
-                scope.Dispose();
-            }
+            throw;
+        }
+        finally
+        {
+            scope.Dispose();
         }
     }
 }

@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using OpenStore.Data.OutBox;
 
-namespace OpenStore.Data.EntityFramework
+namespace OpenStore.Data.EntityFramework;
+
+public interface IOutBoxDbContext
 {
-    public interface IOutBoxDbContext
-    {
-        DbSet<OutBoxMessage> OutBoxMessages { get; set; }
-    }
+    DbSet<OutBoxMessage> OutBoxMessages { get; set; }
 }

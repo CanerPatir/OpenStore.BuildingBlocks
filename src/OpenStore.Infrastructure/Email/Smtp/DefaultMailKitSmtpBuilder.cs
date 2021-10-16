@@ -1,73 +1,71 @@
-using System;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 
-namespace OpenStore.Infrastructure.Email.Smtp
+namespace OpenStore.Infrastructure.Email.Smtp;
+
+public class DefaultMailKitSmtpBuilder : IMailKitSmtpBuilder
 {
-    public class DefaultMailKitSmtpBuilder : IMailKitSmtpBuilder
+    public SmtpEmailSenderConfiguration SmtpEmailSenderConfiguration { get; }
+
+    public DefaultMailKitSmtpBuilder(IOptions<SmtpEmailSenderConfiguration> smtpEmailSenderConfiguration)
     {
-        public SmtpEmailSenderConfiguration SmtpEmailSenderConfiguration { get; }
+        SmtpEmailSenderConfiguration = smtpEmailSenderConfiguration.Value;
+    }
 
-        public DefaultMailKitSmtpBuilder(IOptions<SmtpEmailSenderConfiguration> smtpEmailSenderConfiguration)
+    public virtual SmtpClient Build()
+    {
+        var client = new SmtpClient();
+
+        try
         {
-            SmtpEmailSenderConfiguration = smtpEmailSenderConfiguration.Value;
+            ConfigureClient(client);
+            return client;
+        }
+        catch
+        {
+            client.Dispose();
+            throw;
+        }
+    }
+
+    protected virtual void ConfigureClient(SmtpClient client)
+    {
+        if (string.IsNullOrWhiteSpace(SmtpEmailSenderConfiguration.Host))
+        {
+            throw new Exception("Smtp host can not be empty.");
         }
 
-        public virtual SmtpClient Build()
-        {
-            var client = new SmtpClient();
+        client.Connect(
+            SmtpEmailSenderConfiguration.Host,
+            SmtpEmailSenderConfiguration.Port,
+            SmtpEmailSenderConfiguration.EnableSsl
+        );
 
-            try
-            {
-                ConfigureClient(client);
-                return client;
-            }
-            catch
-            {
-                client.Dispose();
-                throw;
-            }
+        if (SmtpEmailSenderConfiguration.UseDefaultCredentials)
+        {
+            return;
         }
 
-        protected virtual void ConfigureClient(SmtpClient client)
+        if (string.IsNullOrWhiteSpace(SmtpEmailSenderConfiguration.UserName))
         {
-            if (string.IsNullOrWhiteSpace(SmtpEmailSenderConfiguration.Host))
-            {
-                throw new Exception("Smtp host can not be empty.");
-            }
-
-            client.Connect(
-                SmtpEmailSenderConfiguration.Host,
-                SmtpEmailSenderConfiguration.Port,
-                SmtpEmailSenderConfiguration.EnableSsl
-            );
-
-            if (SmtpEmailSenderConfiguration.UseDefaultCredentials)
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(SmtpEmailSenderConfiguration.UserName))
-            {
-                throw new Exception("Smtp user name can not be empty.");
-            }
+            throw new Exception("Smtp user name can not be empty.");
+        }
             
-            if (string.IsNullOrWhiteSpace(SmtpEmailSenderConfiguration.Password))
-            {
-                throw new Exception("Smtp password can not be empty.");
-            }
-
-            client.Authenticate(
-                SmtpEmailSenderConfiguration.UserName,
-                SmtpEmailSenderConfiguration.Password
-            );
+        if (string.IsNullOrWhiteSpace(SmtpEmailSenderConfiguration.Password))
+        {
+            throw new Exception("Smtp password can not be empty.");
         }
-    }
 
-    public interface IMailKitSmtpBuilder
-    {
-        SmtpEmailSenderConfiguration SmtpEmailSenderConfiguration { get; }
-
-        SmtpClient Build();
+        client.Authenticate(
+            SmtpEmailSenderConfiguration.UserName,
+            SmtpEmailSenderConfiguration.Password
+        );
     }
+}
+
+public interface IMailKitSmtpBuilder
+{
+    SmtpEmailSenderConfiguration SmtpEmailSenderConfiguration { get; }
+
+    SmtpClient Build();
 }

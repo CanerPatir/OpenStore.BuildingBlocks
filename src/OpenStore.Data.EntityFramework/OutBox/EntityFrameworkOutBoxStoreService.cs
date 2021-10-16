@@ -6,33 +6,32 @@ using OpenStore.Application;
 using OpenStore.Data.OutBox;
 using OpenStore.Domain;
 
-namespace OpenStore.Data.EntityFramework.OutBox
+namespace OpenStore.Data.EntityFramework.OutBox;
+
+public class EntityFrameworkOutBoxStoreService<TDbContext> : OutBoxStoreService
+    where TDbContext : DbContext
 {
-    public class EntityFrameworkOutBoxStoreService<TDbContext> : OutBoxStoreService
-        where TDbContext : DbContext
+    private readonly bool _outBoxEnabled;
+    private readonly DbContext _context;
+
+    public EntityFrameworkOutBoxStoreService(
+        bool outBoxEnabled,
+        TDbContext context, 
+        IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
     {
-        private readonly bool _outBoxEnabled;
-        private readonly DbContext _context;
+        _outBoxEnabled = outBoxEnabled;
+        _context = context;
+    }
 
-        public EntityFrameworkOutBoxStoreService(
-            bool outBoxEnabled,
-            TDbContext context, 
-            IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
+    public override async Task StoreMessages(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)
+    {
+        if (_outBoxEnabled is false)
         {
-            _outBoxEnabled = outBoxEnabled;
-            _context = context;
+            return;
         }
-
-        public override async Task StoreMessages(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)
+        if (_context is IOutBoxDbContext eventStoreContext)
         {
-            if (_outBoxEnabled is false)
-            {
-                return;
-            }
-            if (_context is IOutBoxDbContext eventStoreContext)
-            {
-                await eventStoreContext.OutBoxMessages.AddRangeAsync(WrapEvents(events), cancellationToken);
-            }
+            await eventStoreContext.OutBoxMessages.AddRangeAsync(WrapEvents(events), cancellationToken);
         }
     }
 }
