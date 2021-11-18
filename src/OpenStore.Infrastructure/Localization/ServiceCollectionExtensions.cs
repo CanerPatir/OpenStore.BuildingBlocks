@@ -34,6 +34,7 @@ public static class ServiceCollectionExtensions
             .Configure<RequestLocalizationOptions>(opts =>
             {
                 opts.DefaultRequestCulture = new RequestCulture(openStoreLocalizationOptions.DefaultUiCulture, openStoreLocalizationOptions.DefaultUiCulture);
+                opts.SetDefaultCulture(openStoreLocalizationOptions.DefaultUiCulture.Name);
                 opts.SupportedCultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
                 opts.SupportedUICultures = openStoreLocalizationOptions.DefaultSupportedUiCultures;
             })
