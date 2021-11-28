@@ -107,7 +107,7 @@ public static class ServiceCollectionExtensions
                 opts.DefaultRequestCulture = new RequestCulture(openStoreResxLocalizationOptions.DefaultUiCulture, openStoreResxLocalizationOptions.DefaultUiCulture);
                 opts.SupportedCultures = openStoreResxLocalizationOptions.DefaultSupportedUiCultures;
                 opts.SupportedUICultures = openStoreResxLocalizationOptions.DefaultSupportedUiCultures;
-                    
+
                 var provider = opts.RequestCultureProviders.SingleOrDefault(x => x is CookieRequestCultureProvider);
                 if (provider is CookieRequestCultureProvider cookieRequestCultureProvider)
                 {

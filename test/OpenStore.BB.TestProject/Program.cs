@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using OpenStore.Infrastructure.Localization;
 
 
@@ -12,6 +13,7 @@ var mvcBuilder = builder.Services.AddControllersWithViews();
 builder.Services.AddOpenStoreResxLocalization(mvcBuilder, options =>
 {
     options.Assembly = Assembly.GetEntryAssembly();
+    options.DefaultUiCulture = new CultureInfo("tr-TR");
 });
 
 var app = builder.Build();
