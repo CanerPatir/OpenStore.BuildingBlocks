@@ -6,6 +6,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.Crud;
+using OpenStore.Shared;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeProtected.Global

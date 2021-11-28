@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-
-namespace OpenStore.Application;
+namespace OpenStore.Shared;
 
 public class PagedList<T>
 {

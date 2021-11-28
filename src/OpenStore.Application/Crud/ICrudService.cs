@@ -1,6 +1,5 @@
-using System.Threading;
-using System.Threading.Tasks;
 using OpenStore.Domain;
+using OpenStore.Shared;
 
 namespace OpenStore.Application.Crud;
 

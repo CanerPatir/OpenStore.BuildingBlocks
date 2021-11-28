@@ -1,5 +1,3 @@
-using System;
-
 namespace OpenStore.Domain;
 
 public interface IAuditableEntity : IEntity

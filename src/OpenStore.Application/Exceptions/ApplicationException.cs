@@ -1,4 +1,3 @@
-using System;
 using OpenStore.Domain;
 
 namespace OpenStore.Application.Exceptions;

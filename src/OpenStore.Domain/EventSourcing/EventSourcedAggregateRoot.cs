@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using OpenStore.Domain.EventSourcing.Exception;
 using OpenStore.Domain.EventSourcing.Internal;
 

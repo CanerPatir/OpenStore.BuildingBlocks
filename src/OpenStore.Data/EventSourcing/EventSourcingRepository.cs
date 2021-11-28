@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using OpenStore.Application;
 using OpenStore.Domain;
 using OpenStore.Domain.EventSourcing;
 using OpenStore.Domain.EventSourcing.Exception;

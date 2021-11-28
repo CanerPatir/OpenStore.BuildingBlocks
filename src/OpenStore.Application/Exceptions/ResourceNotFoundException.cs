@@ -1,5 +1,3 @@
-using System;
-
 namespace OpenStore.Application.Exceptions;
 
 public class ResourceNotFoundException : ApplicationException

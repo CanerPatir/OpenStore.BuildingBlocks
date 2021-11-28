@@ -5,6 +5,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.Crud;
+using OpenStore.Shared;
 using Raven.Client.Documents;
 
 // ReSharper disable MemberCanBePrivate.Global

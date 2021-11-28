@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
 // ReSharper disable once MemberCanBePrivate.Global
 
-namespace OpenStore.Domain;
+namespace OpenStore.Shared;
 
 public static class KeyGenerator
 {
-    private static readonly HashAlgorithm Md5 = new MD5CryptoServiceProvider();
+    private static readonly HashAlgorithm Md5 = MD5.Create();
 
     public static Guid GenerateGuid() => Guid.NewGuid();
 

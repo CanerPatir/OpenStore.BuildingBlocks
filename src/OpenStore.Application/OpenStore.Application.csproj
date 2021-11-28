@@ -6,7 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OpenStore.Domain\OpenStore.Domain.csproj"/>
+        <ProjectReference Include="..\OpenStore.Domain\OpenStore.Domain.csproj" />
+        <ProjectReference Include="..\OpenStore.Shared\OpenStore.Shared.csproj" />
     </ItemGroup>
 
 </Project>

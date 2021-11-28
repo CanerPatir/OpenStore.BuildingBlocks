@@ -1,6 +1,4 @@
 using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OpenStore.Infrastructure.Tasks;
 using OpenStore.Infrastructure.Tasks.InMemory;

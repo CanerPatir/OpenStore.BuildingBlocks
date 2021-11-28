@@ -1,5 +1,3 @@
-using System;
-
 namespace OpenStore.Domain.EventSourcing;
 
 [AttributeUsage(AttributeTargets.Method)]

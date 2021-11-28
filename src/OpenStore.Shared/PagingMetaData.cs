@@ -1,6 +1,4 @@
-using System;
-
-namespace OpenStore.Application;
+namespace OpenStore.Shared;
 
 public class PagingMetaData
 {

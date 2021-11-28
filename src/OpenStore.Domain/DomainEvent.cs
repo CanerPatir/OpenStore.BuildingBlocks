@@ -1,5 +1,3 @@
-using System;
-
 namespace OpenStore.Domain;
 
 public abstract record DomainEvent : IDomainEvent

@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace OpenStore.Domain.EventSourcing;
 
 public interface IEventStorageProvider<in TAggregate> 

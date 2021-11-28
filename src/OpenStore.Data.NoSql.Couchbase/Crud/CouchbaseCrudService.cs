@@ -5,6 +5,7 @@ using OpenStore.Application;
 using OpenStore.Application.Crud;
 using OpenStore.Data.Crud;
 using OpenStore.Domain;
+using OpenStore.Shared;
 
 namespace OpenStore.Data.NoSql.Couchbase.Crud;
 
