@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using OpenStore.Application.Exceptions;
 using OpenStore.Domain;
 using OpenStore.Infrastructure.Localization;
-using ApplicationException = OpenStore.Application.Exceptions.ApplicationException;
 
 namespace OpenStore.Infrastructure.Web.ErrorHandling;
 
@@ -37,9 +36,9 @@ public class ApiErrorMiddleware
             case ResourceNotFoundException:
                 context.Response.StatusCode = 404;
                 break;
+            case ValidationException:
             case ApplicationException:
             case DomainException:
-            case ValidationException:
                 logger.LogError(ex.Message, $"OpenStore {ex.GetType().Name}");
                 context.Response.StatusCode = 400;
                 break;
@@ -53,11 +52,12 @@ public class ApiErrorMiddleware
 
         var errorDto = ex switch
         {
+            ValidationException validationException => new OpenStoreWebErrorDto(loc[validationException.Message],
+                validationException.Errors.Select(x => loc[x.Message].ToString())),
             ResourceNotFoundException resourceNotFoundException => new OpenStoreWebErrorDto(loc[resourceNotFoundException.Message], ArraySegment<string>.Empty),
             ApplicationException applicationException => new OpenStoreWebErrorDto(loc[applicationException.Message], ArraySegment<string>.Empty),
             DomainException domainException => new OpenStoreWebErrorDto(loc[domainException.Message], ArraySegment<string>.Empty),
-            ValidationException validationException => new OpenStoreWebErrorDto(loc[validationException.Message],
-                validationException.Errors.Select(x => loc[x.Message].ToString())),
+        
             _ => new OpenStoreWebErrorDto(GenericErrorKey, new[] {GenericErrorKey}),
         };
 

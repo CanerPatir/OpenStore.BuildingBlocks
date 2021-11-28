@@ -1,5 +1,4 @@
-using ApplicationException = OpenStore.Application.Exceptions.ApplicationException;
-
+ 
 namespace OpenStore.Infrastructure.Email;
 
 public class MailSenderException : ApplicationException
