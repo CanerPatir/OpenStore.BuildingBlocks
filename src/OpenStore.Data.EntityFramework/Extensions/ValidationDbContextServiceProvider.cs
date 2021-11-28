@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace OpenStore.Data.EntityFramework.Extensions;
