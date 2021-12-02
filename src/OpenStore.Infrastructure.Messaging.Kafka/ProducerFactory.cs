@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Confluent.Kafka;
 
 namespace OpenStore.Infrastructure.Messaging.Kafka;

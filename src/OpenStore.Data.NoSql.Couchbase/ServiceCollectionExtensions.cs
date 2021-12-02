@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using Couchbase;
 using Couchbase.Extensions.DependencyInjection;

@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
 using OpenStore.Domain;
 using OpenStore.Domain.EventSourcing;

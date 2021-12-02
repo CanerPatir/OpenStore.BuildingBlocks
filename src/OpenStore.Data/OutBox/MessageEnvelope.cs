@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using MediatR;
-using OpenStore.Domain;
 using OpenStore.Shared;
 
 namespace OpenStore.Data.OutBox;

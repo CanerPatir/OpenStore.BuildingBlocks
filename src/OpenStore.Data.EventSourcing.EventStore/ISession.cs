@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using OpenStore.Domain.EventSourcing;
 
 namespace OpenStore.Data.EventSourcing.EventStore;

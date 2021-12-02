@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Couchbase;
 using Couchbase.Core.Exceptions;
 using Couchbase.Extensions.DependencyInjection;

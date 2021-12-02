@@ -1,5 +1,3 @@
-using System;
-
 namespace OpenStore.Data.Search.ElasticSearch;
 
 internal class EnvironmentHelper

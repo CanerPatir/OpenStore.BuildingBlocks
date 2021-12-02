@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace OpenStore.Data.Search.ElasticSearch;
 
 public class ElasticSearchOptions

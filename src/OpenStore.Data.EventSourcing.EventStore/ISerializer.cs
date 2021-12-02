@@ -1,5 +1,3 @@
-using System;
-
 namespace OpenStore.Data.EventSourcing.EventStore;
 
 public interface ISerializer

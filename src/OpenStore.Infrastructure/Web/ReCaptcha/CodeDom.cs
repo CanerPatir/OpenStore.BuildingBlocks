@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace OpenStore.Infrastructure.Web.ReCaptcha
+﻿namespace OpenStore.Infrastructure.Web.ReCaptcha
 {
     public class CompilerError
     {

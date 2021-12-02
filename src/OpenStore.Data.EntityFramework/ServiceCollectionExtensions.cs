@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +23,7 @@ namespace OpenStore.Data.EntityFramework;
 public static class ServiceCollectionExtensions
 {
     private const int OutBoxFetchSize = 2000; // todo: make configurable
-        
+
     public static EntityFrameworkDataSource GetActiveDataSource(this IConfiguration configuration)
     {
         var activeConnection = configuration["Data:ActiveConnection"];
@@ -156,21 +154,36 @@ public static class ServiceCollectionExtensions
                 ;
         });
 
-        //
+        if (outBoxEnabled)
+        {
+            services
+                .AddScoped<IOutBoxService, EntityFrameworkOutBoxService>()
+                .AddScoped<IOutBoxStoreService, EntityFrameworkOutBoxStoreService<TDbContext>>(sp =>
+                    new EntityFrameworkOutBoxStoreService<TDbContext>(
+                        outBoxEnabled,
+                        sp.GetRequiredService<TDbContext>(),
+                        sp.GetRequiredService<IOpenStoreUserContextAccessor>()
+                    )
+                );
+            
+            services.AddHostedService(sp =>
+            {
+                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                return new OutBoxPollHost(outBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
+            });
+        }
+        else
+        {
+            services
+                .AddScoped<IOutBoxStoreService, NullOutBoxStoreService>()
+                .AddScoped<IOutBoxService, NullOutBoxService>();
+        }
+
         services
-            .AddScoped<IOutBoxService, EntityFrameworkOutBoxService>()
-            .AddScoped<IOutBoxStoreService, EntityFrameworkOutBoxStoreService<TDbContext>>(sp =>
-                new EntityFrameworkOutBoxStoreService<TDbContext>(outBoxEnabled, sp.GetRequiredService<TDbContext>(), sp.GetRequiredService<IOpenStoreUserContextAccessor>()))
             .AddScoped<IEntityFrameworkCoreUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
             .AddScoped<IUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
             ;
-            
-        services.AddHostedService(sp =>
-        {
-            var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-            return new OutBoxPollHost(outBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
-        });
-
+ 
         // for generic resolve
         services
             .AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>))

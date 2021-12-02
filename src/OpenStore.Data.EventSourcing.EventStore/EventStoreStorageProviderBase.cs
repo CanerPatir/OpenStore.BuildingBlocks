@@ -1,4 +1,3 @@
-using System;
 using EventStore.ClientAPI;
 using OpenStore.Domain;
 using OpenStore.Domain.EventSourcing;

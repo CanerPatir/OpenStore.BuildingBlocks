@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OpenStore.Infrastructure.Web.ReCaptcha.Versions
+﻿namespace OpenStore.Infrastructure.Web.ReCaptcha.Versions
 {
     /// <summary>
     /// This is the base model for Google Recaptcha version models. You should only add new properties here if their global across all recaptcha versions.

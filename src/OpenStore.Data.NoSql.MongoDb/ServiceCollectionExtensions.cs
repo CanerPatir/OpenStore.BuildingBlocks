@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,12 +18,14 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddMongoDbDataInfrastructure(
         this IServiceCollection services
-        , Action<MongoDbSettings> ravenDbSettingsBuilder
+        , Action<MongoDbSettings> mongoDbSettingsBuilder
         , string databaseName
         , params Assembly[] assemblies)
     {
-        services.Configure(ravenDbSettingsBuilder);
-        return AddMongoServices(services, databaseName, assemblies);
+        var mongoDbSettings = new MongoDbSettings();
+        mongoDbSettingsBuilder(mongoDbSettings);
+        services.Configure(mongoDbSettingsBuilder);
+        return AddMongoServices(services, databaseName, mongoDbSettings.OutBoxEnabled, assemblies);
     }
 
     public static IServiceCollection AddMongoDbDataInfrastructure(
@@ -34,27 +34,39 @@ public static class ServiceCollectionExtensions
         params Assembly[] assemblies)
     {
         services.Configure<MongoDbSettings>(configuration);
-        return AddMongoServices(services, configuration.GetValue<string>("DatabaseName"), assemblies);
+        return AddMongoServices(services, configuration.GetValue<string>("DatabaseName"), configuration.GetValue<bool>("OutboxEnabled"), assemblies);
     }
 
-    private static IServiceCollection AddMongoServices(IServiceCollection services, string databaseName, params Assembly[] assemblies)
+    private static IServiceCollection AddMongoServices(IServiceCollection services, string databaseName, bool outBoxEnabled, params Assembly[] assemblies)
     {
         services.AddSingleton(sp => new MongoClient(sp.GetRequiredService<IOptions<MongoDbSettings>>().Value.MongoClientSettings));
         services.AddSingleton(sp => sp.GetRequiredService<MongoClient>().GetDatabase(databaseName));
 
+        if (outBoxEnabled)
+        {
+            services
+                .AddScoped<IOutBoxService, MongoOutBoxService>()
+                .AddScoped<IOutBoxStoreService, MongoOutBoxStoreService>();
+            
+            services.AddHostedService(sp =>
+            {
+                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                var mongoDbSettings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+
+                return new OutBoxPollHost(mongoDbSettings.OutBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
+            });
+        }
+        else
+        {
+            services
+                .AddScoped<IOutBoxStoreService, NullOutBoxStoreService>()
+                .AddScoped<IOutBoxService, NullOutBoxService>();
+        }
+
         services
-            .AddScoped<IOutBoxService, MongoOutBoxService>()
-            .AddScoped<IOutBoxStoreService, MongoOutBoxStoreService>()
             .AddScoped<IMongoUnitOfWork>(sp => new MongoUnitOfWork(sp.GetRequiredService<IMongoDatabase>()))
             .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IMongoUnitOfWork>());
-            
-        services.AddHostedService(sp =>
-        {
-            var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-            var mongoDbSettings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-
-            return new OutBoxPollHost(mongoDbSettings.OutBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
-        });
+        
 
         if (assemblies != null && assemblies.Any())
         {

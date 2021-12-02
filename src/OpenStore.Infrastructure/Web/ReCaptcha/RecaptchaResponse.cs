@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OpenStore.Infrastructure.Web.ReCaptcha
+﻿namespace OpenStore.Infrastructure.Web.ReCaptcha
 {
     public class RecaptchaResponse
     {
