@@ -6,7 +6,7 @@ using OpenStore.Domain;
 
 namespace OpenStore.Infrastructure.CommandBus;
 
-public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
@@ -15,12 +15,12 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         ILogger<TransactionBehavior<TRequest, TResponse>> logger)
     {
         _logger = logger;
-        _serviceProvider = _serviceProvider;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-        if (!(request is ITransactionalRequest) && !(request is ITransactionalRequest<TResponse>)) return await next();
+        if (request is not ITransactionalRequest && request is not ITransactionalRequest<TResponse>) return await next();
 
         var uow = _serviceProvider.GetService<IUnitOfWork>();
 

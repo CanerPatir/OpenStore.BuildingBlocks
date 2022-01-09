@@ -5,7 +5,7 @@ using OpenStore.Application.Exceptions;
 
 namespace OpenStore.Infrastructure.CommandBus;
 
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly ILoggerFactory _loggerFactory;
 

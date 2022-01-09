@@ -6,7 +6,7 @@ using OpenStore.Application;
 
 namespace OpenStore.Infrastructure.CommandBus;
 
-public class NotifyRequestSuccessBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class NotifyRequestSuccessBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly IServiceProvider _serviceProvider;
 

@@ -9,7 +9,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="$(NetExtensionsPackageVersion)" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(NetExtensionsPackageVersion)" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(NetExtensionsPackageVersion)" />
-        <PackageReference Include="System.Text.Json" Version="$(NetExtensionsPackageVersion)" />
+        <PackageReference Include="System.Text.Json" Version="6.0.1" />
     </ItemGroup>
     
     <ItemGroup>
