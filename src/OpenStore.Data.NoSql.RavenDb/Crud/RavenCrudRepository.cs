@@ -36,7 +36,11 @@ public class RavenCrudRepository<TEntity> : ICrudRepository<TEntity>
         return Task.CompletedTask;
     }
 
-    public void Remove(TEntity entity) => UnitOfWork.Session.Delete(entity);
+    public Task Remove(TEntity entity)
+    {
+        UnitOfWork.Session.Delete(entity);
+        return Task.CompletedTask;
+    }
 
     public void Attach(TEntity entity) => throw new NotSupportedException();
 

@@ -25,7 +25,7 @@ public abstract class EmailSenderBase : IAppEmailSender
             NormalizeMail(mailMessage);
             await SendEmailAsync(mailMessage, CancellationToken.None);
         }
-        catch (MailSenderException e)
+        catch (MailSenderException)
         {
             throw;
         }

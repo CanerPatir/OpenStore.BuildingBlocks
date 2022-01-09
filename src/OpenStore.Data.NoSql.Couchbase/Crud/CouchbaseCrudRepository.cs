@@ -51,11 +51,7 @@ public class CouchbaseCrudRepository<TEntity> : ICrudRepository<TEntity>
 
     public Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default) => _collection.RemoveAsync(id.ToString());
         
-    public void Remove(TEntity entity)
-    {
-        throw new NotSupportedException();
-        _collection.RemoveAsync(entity.Id);
-    }
+    public Task Remove(TEntity entity) => _collection.RemoveAsync(entity.Id);
 
     public void Attach(TEntity entity) => throw new NotSupportedException();
 

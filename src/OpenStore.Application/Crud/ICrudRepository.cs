@@ -10,7 +10,7 @@ public interface ICrudRepository<TEntity>
     Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task RemoveByIdAsync(object id, CancellationToken cancellationToken = default);
-    void Remove(TEntity entity);
+    Task Remove(TEntity entity);
     void Attach(TEntity entity);
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
