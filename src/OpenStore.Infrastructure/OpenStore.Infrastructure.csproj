@@ -11,9 +11,9 @@
 <!--        <PackageReference Include="AutoMapper.Collection" Version="7.0.1" />-->
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="Ben.Demystifier" Version="0.4.1" />
-        <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-        <PackageReference Include="MailKit" Version="3.1.1" />
+        <PackageReference Include="MailKit" Version="3.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(NetPackageVersion)" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
@@ -21,7 +21,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging" Version="$(NetExtensionsPackageVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="$(NetPackageVersion)" />
         <PackageReference Include="ncrontab" Version="3.3.1" />
-        <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
+        <PackageReference Include="RazorLight" Version="2.0.0" />
         <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
         <PackageReference Include="Serilog.Sinks.Graylog" Version="2.3.0" />
@@ -29,7 +29,7 @@
         <PackageReference Include="Storage.Net" Version="9.3.0" />
         <PackageReference Include="Storage.Net.Amazon.Aws" Version="9.3.0" />
         <PackageReference Include="Storage.Net.Microsoft.Azure.Storage" Version="8.1.17" /> 
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
         <PackageReference Include="Polly" Version="7.2.3" />
         <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
