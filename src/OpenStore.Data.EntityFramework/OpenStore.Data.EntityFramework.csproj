@@ -3,16 +3,16 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(NetPackageVersion)" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(NetPackageVersion)" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(NetPackageVersion)">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EfPackageVersion)" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(EfPackageVersion)" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EfPackageVersion)">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(NetPackageVersion)" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(NetPackageVersion)" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(EfPackageVersion)" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(EfPackageVersion)" />
     </ItemGroup>
 
     <ItemGroup>
