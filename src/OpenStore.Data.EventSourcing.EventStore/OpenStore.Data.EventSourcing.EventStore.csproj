@@ -6,10 +6,10 @@
 
     <ItemGroup>
         <PackageReference Include="EventStore.Client" Version="21.2.2" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="$(NetExtensionsPackageVersion)" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(NetExtensionsPackageVersion)" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(NetExtensionsPackageVersion)" />
-        <PackageReference Include="System.Text.Json" Version="6.0.6" />
+        <PackageReference Include="System.Text.Json" Version="$(NetExtensionsPackageVersion)" />
     </ItemGroup>
     
     <ItemGroup>

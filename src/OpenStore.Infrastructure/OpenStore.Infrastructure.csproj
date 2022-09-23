@@ -14,12 +14,12 @@
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
         <PackageReference Include="MailKit" Version="3.4.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(NetPackageVersion)" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="$(NetPackageVersion)" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="$(NetExtensionsPackageVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(NetExtensionsPackageVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="$(NetPackagesVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="$(NetExtensionsPackageVersion)" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="$(NetPackageVersion)" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="$(NetPackagesVersion)" />
         <PackageReference Include="ncrontab" Version="3.3.1" />
         <PackageReference Include="RazorLight" Version="2.1.0" />
         <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
