@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>1.0.15</VersionPrefix>
+        <VersionPrefix>1.0.16</VersionPrefix>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Authors>Caner Patir</Authors>
         <Company>Algorist</Company>
@@ -14,7 +14,7 @@
         <LangVersion>latest</LangVersion>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <NetPackageVersion>6.0.4</NetPackageVersion>
+        <NetPackageVersion>6.0.9</NetPackageVersion>
         <NetExtensionsPackageVersion>6.0.0</NetExtensionsPackageVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <!--<Nullable>enable</Nullable>-->
