@@ -4,7 +4,7 @@ using OpenStore.Domain.EventSourcing;
 namespace OpenStore.Data.EventSourcing.EventStore;
 
 public class EventStoreSnapshotStorageProvider<TAggregate, TSnapshot> : EventStoreStorageProviderBase, ISnapshotStorageProvider<TAggregate, TSnapshot>
-    where TAggregate : EventSourcedAggregateRoot 
+    where TAggregate : EventSourcedAggregateRoot
     where TSnapshot : ISnapshot
 {
     private readonly IEventStoreStorageConnectionProvider _eventStoreStorageConnectionProvider;

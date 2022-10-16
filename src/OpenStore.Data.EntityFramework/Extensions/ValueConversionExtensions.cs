@@ -9,7 +9,6 @@ public static class ValueConversionExtensions
 {
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
-        
     };
 
     public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> propertyBuilder)

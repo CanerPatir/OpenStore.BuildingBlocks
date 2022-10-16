@@ -8,7 +8,8 @@ namespace OpenStore.Data.EventSourcing.EventStore;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddEventStoreDataInfrastructure(this IServiceCollection services, Action<ConnectionSettings> eventStoreSettingsBuilder, params Assembly[] assemblies)
+    public static IServiceCollection AddEventStoreDataInfrastructure(this IServiceCollection services, Action<ConnectionSettings> eventStoreSettingsBuilder,
+        params Assembly[] assemblies)
     {
         services.Configure(eventStoreSettingsBuilder);
         return AddDefaultServices(services, assemblies);

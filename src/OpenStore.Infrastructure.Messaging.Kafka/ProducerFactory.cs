@@ -10,7 +10,7 @@ public class ProducerFactory : IProducerFactory, IDisposable
     {
         _producerConfig = producerConfig;
     }
-        
+
     private readonly IDictionary<Type, IDisposable> _producers = new Dictionary<Type, IDisposable>();
 
     public IProducer<string, TMessage> CreateWithKey<TMessage>()
@@ -19,7 +19,7 @@ public class ProducerFactory : IProducerFactory, IDisposable
         var messageType = typeof(TMessage);
         if (_producers.TryGetValue(messageType, out var val))
         {
-            return (IProducer<string, TMessage>) val;
+            return (IProducer<string, TMessage>)val;
         }
 
         var producer = new ProducerBuilder<string, TMessage>(_producerConfig)
@@ -31,13 +31,13 @@ public class ProducerFactory : IProducerFactory, IDisposable
         return producer;
     }
 
-    public IProducer<Null, TMessage> CreateWithNoKey<TMessage>() 
+    public IProducer<Null, TMessage> CreateWithNoKey<TMessage>()
         where TMessage : class
     {
         var messageType = typeof(TMessage);
         if (_producers.TryGetValue(messageType, out var val))
         {
-            return (IProducer<Null, TMessage>) val;
+            return (IProducer<Null, TMessage>)val;
         }
 
         var producer = new ProducerBuilder<Null, TMessage>(_producerConfig)

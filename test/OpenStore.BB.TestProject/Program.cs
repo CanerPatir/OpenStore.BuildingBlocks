@@ -9,7 +9,7 @@ builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 builder.Services.AddControllersWithViews();
 
 var mvcBuilder = builder.Services.AddControllersWithViews();
-            
+
 builder.Services.AddOpenStoreResxLocalization(mvcBuilder, options =>
 {
     options.Assembly = Assembly.GetEntryAssembly();

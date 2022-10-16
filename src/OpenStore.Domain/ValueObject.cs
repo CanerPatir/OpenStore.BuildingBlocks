@@ -22,10 +22,10 @@ public abstract class ValueObject
         if (obj == null || obj.GetType() != GetType())
             return false;
 
-        var other = (ValueObject) obj;
+        var other = (ValueObject)obj;
         using var thisValues = GetAtomicValues().GetEnumerator();
         using var otherValues = other.GetAtomicValues().GetEnumerator();
-            
+
         while (thisValues.MoveNext() && otherValues.MoveNext())
         {
             if (ReferenceEquals(thisValues.Current, null) ^
@@ -46,5 +46,4 @@ public abstract class ValueObject
             .Select(x => x != null ? x.GetHashCode() : 0)
             .Aggregate((x, y) => x ^ y);
     }
-
 }

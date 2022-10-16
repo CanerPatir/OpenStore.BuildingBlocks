@@ -8,8 +8,8 @@ public class InMemoryProducer : IOpenStoreProducer
     {
         _channelFactory = channelFactory;
     }
-        
-    public Task Produce<TMessage>(string topic, string key, TMessage message, CancellationToken cancellationToken) 
+
+    public Task Produce<TMessage>(string topic, string key, TMessage message, CancellationToken cancellationToken)
         where TMessage : class => Produce(topic, message, cancellationToken);
 
     public async Task Produce<TMessage>(string topic, TMessage message, CancellationToken cancellationToken)
@@ -19,9 +19,9 @@ public class InMemoryProducer : IOpenStoreProducer
         {
             throw new Exception($"Consumer not exists for this message. {typeof(TMessage).FullName}");
         }
-            
+
         var writer = _channelFactory.CreateOrGet<TMessage>().Writer;
-                
+
         await writer.WriteAsync(message, cancellationToken);
     }
 

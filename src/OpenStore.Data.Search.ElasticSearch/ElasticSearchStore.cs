@@ -13,7 +13,7 @@ public class ElasticSearchStore : IElasticSearchStore
 
     private readonly ILogger<ElasticSearchStore> _logger;
     private readonly ElasticSearchOptions _options;
-    private readonly int[] _notRetryStatusCodes = {404, 409};
+    private readonly int[] _notRetryStatusCodes = { 404, 409 };
 
     public ElasticSearchStore(IElasticClient elasticClient, ILogger<ElasticSearchStore> logger, IOptions<ElasticSearchOptions> options)
     {
@@ -45,7 +45,8 @@ public class ElasticSearchStore : IElasticSearchStore
             });
     }
 
-    public async Task IndexManyParallel<TDocument>(string index, IEnumerable<TDocument> documents, Action<BulkIndexDescriptor<TDocument>> indexConfiguration, CancellationToken cancellationToken = default)
+    public async Task IndexManyParallel<TDocument>(string index, IEnumerable<TDocument> documents, Action<BulkIndexDescriptor<TDocument>> indexConfiguration,
+        CancellationToken cancellationToken = default)
         where TDocument : BaseElasticDocument
     {
         await IndexManyChunkParallel(index, documents, indexConfiguration, cancellationToken);
@@ -73,7 +74,7 @@ public class ElasticSearchStore : IElasticSearchStore
 
         return response;
     }
-        
+
     public async Task Index<TDocument>(TDocument document, Action<IndexDescriptor<TDocument>> indexConfiguration = default, CancellationToken cancellationToken = default)
         where TDocument : BaseElasticDocument
     {
@@ -118,7 +119,8 @@ public class ElasticSearchStore : IElasticSearchStore
         }
     }
 
-    private Task IndexManyChunkParallel<TDocument>(string indexName, IEnumerable<TDocument> documents, Action<BulkIndexDescriptor<TDocument>> indexConfiguration, CancellationToken cancellationToken = default)
+    private Task IndexManyChunkParallel<TDocument>(string indexName, IEnumerable<TDocument> documents, Action<BulkIndexDescriptor<TDocument>> indexConfiguration,
+        CancellationToken cancellationToken = default)
         where TDocument : BaseElasticDocument
     {
         var docs = documents.ToArray();
@@ -179,7 +181,7 @@ public class ElasticSearchStore : IElasticSearchStore
 
         if (droppedItems.Any())
         {
-            throw new ElasticsearchClientException(PipelineFailure.BadResponse, $"Some documents not indexed: {string.Join(",", droppedItems.Keys)}", (Exception) null);
+            throw new ElasticsearchClientException(PipelineFailure.BadResponse, $"Some documents not indexed: {string.Join(",", droppedItems.Keys)}", (Exception)null);
         }
 
         return Task.CompletedTask;
@@ -198,7 +200,8 @@ public class ElasticSearchStore : IElasticSearchStore
             );
     }
 
-    public async Task SwitchIndex(string newIndexName, string mainAlias, bool deleteOldIndex, Dictionary<string, string> aliasMapping, CancellationToken cancellationToken = default)
+    public async Task SwitchIndex(string newIndexName, string mainAlias, bool deleteOldIndex, Dictionary<string, string> aliasMapping,
+        CancellationToken cancellationToken = default)
     {
         var bulkAliasDescriptor = new BulkAliasDescriptor();
         var indexOfAlias = await ElasticClient.Indices.GetAliasAsync(null, ad => ad.Name(mainAlias), cancellationToken);

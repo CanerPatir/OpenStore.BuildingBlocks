@@ -10,7 +10,8 @@ public class RavenOutBoxStoreService : OutBoxStoreService
     private readonly IRavenUnitOfWork _uow;
     private readonly RavenDatabaseSettings _ravenDatabaseSettings;
 
-    public RavenOutBoxStoreService(IRavenUnitOfWork uow, IOptions<RavenDatabaseSettings> ravenDatabaseSettingsOptions, IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
+    public RavenOutBoxStoreService(IRavenUnitOfWork uow, IOptions<RavenDatabaseSettings> ravenDatabaseSettingsOptions, IOpenStoreUserContextAccessor openStoreUserContextAccessor) :
+        base(openStoreUserContextAccessor)
     {
         _uow = uow;
         _ravenDatabaseSettings = ravenDatabaseSettingsOptions.Value;
@@ -22,6 +23,7 @@ public class RavenOutBoxStoreService : OutBoxStoreService
         {
             return;
         }
+
         var outBoxMessages = WrapEvents(events);
 
         foreach (var outBoxMessage in outBoxMessages)

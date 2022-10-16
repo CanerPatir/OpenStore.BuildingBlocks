@@ -14,9 +14,9 @@ public class InMemoryConsumerHost<TMessage> : BackgroundService
     private readonly ILogger<InMemoryConsumerHost<TMessage>> _logger;
 
     public InMemoryConsumerHost(
-        ChannelReader<TMessage> reader, 
+        ChannelReader<TMessage> reader,
         IServiceScopeFactory serviceScopeFactory,
-        AsyncRetryPolicy retryPolicy, 
+        AsyncRetryPolicy retryPolicy,
         ILogger<InMemoryConsumerHost<TMessage>> logger)
     {
         _reader = reader;
@@ -37,7 +37,7 @@ public class InMemoryConsumerHost<TMessage> : BackgroundService
 
         await _reader.Completion;
     }
-        
+
     private async Task ExecuteInternal(TMessage message, CancellationToken stoppingToken)
     {
         _logger.LogInformation("InMem message processing");
@@ -63,5 +63,4 @@ public class InMemoryConsumerHost<TMessage> : BackgroundService
             _logger.LogError(ex, "InMem message processing error");
         }
     }
-
 }

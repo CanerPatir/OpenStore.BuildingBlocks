@@ -12,7 +12,8 @@ public class MongoOutBoxStoreService : OutBoxStoreService
     private readonly IMongoCollection<OutBoxMessage> _collection;
     private readonly MongoDbSettings _mongoDbSettings;
 
-    public MongoOutBoxStoreService(IMongoUnitOfWork uow, IOptions<MongoDbSettings> mongoDbSettingsOptions,  IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
+    public MongoOutBoxStoreService(IMongoUnitOfWork uow, IOptions<MongoDbSettings> mongoDbSettingsOptions, IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(
+        openStoreUserContextAccessor)
     {
         _uow = uow;
         _collection = _uow.DatabaseBase.GetCollection<OutBoxMessage>(nameof(OutBoxMessage));
@@ -25,6 +26,7 @@ public class MongoOutBoxStoreService : OutBoxStoreService
         {
             return;
         }
+
         var outBoxMessages = WrapEvents(events).ToList();
         await _collection.InsertManyAsync(_uow.Session, outBoxMessages, new InsertManyOptions(), cancellationToken);
     }

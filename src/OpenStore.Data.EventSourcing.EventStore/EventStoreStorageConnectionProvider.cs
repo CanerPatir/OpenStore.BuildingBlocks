@@ -16,7 +16,7 @@ public class EventStoreStorageConnectionProvider : IEventStoreStorageConnectionP
     private IEventStoreConnection _connection;
     private readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
     private readonly Func<IEventStoreConnection> _eventStoreConnectionFactoryMethod;
-        
+
     public EventStoreStorageConnectionProvider(Func<IEventStoreConnection> eventStoreConnectionFactory)
     {
         _eventStoreConnectionFactoryMethod = eventStoreConnectionFactory;

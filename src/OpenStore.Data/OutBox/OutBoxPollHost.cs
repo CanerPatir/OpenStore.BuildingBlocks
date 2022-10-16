@@ -25,7 +25,7 @@ public class OutBoxPollHost : IHostedService, IDisposable
         {
             return Task.CompletedTask;
         }
-            
+
         _timer = new Timer
         (
             PushMessages,

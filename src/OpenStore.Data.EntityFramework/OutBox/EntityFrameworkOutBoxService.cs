@@ -12,7 +12,7 @@ public class EntityFrameworkOutBoxService : OutBoxService
     private readonly DbContext _context;
 
     public EntityFrameworkOutBoxService(IEntityFrameworkCoreUnitOfWork uow,
-        IMediator mediator, 
+        IMediator mediator,
         ILogger<EntityFrameworkOutBoxService> logger) : base(uow,
         mediator, logger)
     {

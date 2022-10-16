@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OpenStore.Data.EntityFramework.Extensions;
 
-public class StatusGenericHandler: IStatusGeneric
+public class StatusGenericHandler : IStatusGeneric
 {
     internal const string DefaultSuccessMessage = "Success";
     private readonly List<ErrorGeneric> _errors = new List<ErrorGeneric>();
@@ -89,8 +89,9 @@ public class StatusGenericHandler: IStatusGeneric
         {
             _errors.AddRange(string.IsNullOrEmpty(Header)
                 ? status.Errors
-                : status.Errors.Select(x => new ErrorGeneric(Header, x) ));
+                : status.Errors.Select(x => new ErrorGeneric(Header, x)));
         }
+
         if (IsValid && status.Message != DefaultSuccessMessage)
             Message = status.Message;
 
@@ -107,7 +108,7 @@ public class StatusGenericHandler: IStatusGeneric
     {
         separator ??= Environment.NewLine;
         return _errors.Any()
-            ? string.Join(separator, Errors) 
+            ? string.Join(separator, Errors)
             : null;
     }
 }

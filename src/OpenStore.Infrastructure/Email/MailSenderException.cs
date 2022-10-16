@@ -1,4 +1,3 @@
- 
 namespace OpenStore.Infrastructure.Email;
 
 public class MailSenderException : ApplicationException

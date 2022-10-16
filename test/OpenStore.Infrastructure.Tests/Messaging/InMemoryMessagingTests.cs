@@ -24,7 +24,7 @@ public class InMemoryMessagingTests : WithHost
             Message = message;
         }
 
-        public string Message { get;}
+        public string Message { get; }
     }
 
     class TestMessageConsumer : IOpenStoreConsumer<TestMessage>
@@ -35,15 +35,16 @@ public class InMemoryMessagingTests : WithHost
         {
             _testInstance = testInstance;
         }
+
         public Task Consume(TestMessage message, CancellationToken cancellationToken)
         {
             _testInstance.assertionItems.Add(message);
             Interlocked.Increment(ref _testInstance.assertionCounter);
-                
+
             return Task.CompletedTask;
         }
     }
-        
+
     public class TestMessageWithRetry
     {
         public TestMessageWithRetry(string message)
@@ -51,9 +52,9 @@ public class InMemoryMessagingTests : WithHost
             Message = message;
         }
 
-        public string Message { get;}
+        public string Message { get; }
     }
-        
+
     class TestMessageConsumerWithRetry : IOpenStoreConsumer<TestMessageWithRetry>
     {
         private readonly InMemoryMessagingTests _testInstance;
@@ -62,14 +63,14 @@ public class InMemoryMessagingTests : WithHost
         {
             _testInstance = testInstance;
         }
+
         public Task Consume(TestMessageWithRetry message, CancellationToken cancellationToken)
         {
-                
             Interlocked.Increment(ref _testInstance.assertionCounter);
             throw new Exception();
         }
     }
-        
+
     public int assertionCounter = 0;
     public List<TestMessage> assertionItems = new List<TestMessage>();
 
@@ -78,7 +79,7 @@ public class InMemoryMessagingTests : WithHost
     {
         // Arrange
         var producer = GetService<IOpenStoreProducer>();
-            
+
         // Act
         await producer.Produce("", new TestMessage("First"), CancellationToken.None);
         await producer.Produce("", new TestMessage("Second"), CancellationToken.None);
@@ -91,13 +92,13 @@ public class InMemoryMessagingTests : WithHost
         Assert.Equal("First", first.Message);
         Assert.Equal("Second", second.Message);
     }
-        
+
     [Fact]
     public async Task It_should_process_messages_with_retry_single_consumer()
     {
         // Arrange
         var producer = GetService<IOpenStoreProducer>();
-            
+
         // Act
         await producer.Produce("", new TestMessageWithRetry("First"), CancellationToken.None);
 
@@ -105,19 +106,19 @@ public class InMemoryMessagingTests : WithHost
         await Task.Delay(3000);
         Assert.Equal(2, assertionCounter);
     }
-        
+
     [Fact]
     public async Task It_should_process_batch_messages_with_single_consumer()
     {
         // Arrange
         var producer = GetService<IOpenStoreProducer>();
-            
+
         // Act
         for (var i = 0; i < 2000; i++)
         {
             await producer.Produce("", new TestMessage(i.ToString()), CancellationToken.None);
         }
-            
+
         // Assert
         await Task.Delay(200);
         Assert.Equal(2000, assertionCounter);

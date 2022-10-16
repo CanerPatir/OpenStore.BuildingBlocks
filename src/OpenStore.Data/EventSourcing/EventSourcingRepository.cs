@@ -11,6 +11,7 @@ public class EventSourcingRepository<TAggregate, TSnapshot> : IEventSourcingRepo
     where TSnapshot : ISnapshot
 {
     private readonly IEventStorageProvider<TAggregate> _eventStorageProvider;
+
     private readonly ISnapshotStorageProvider<TAggregate, TSnapshot> _snapshotStorageProvider;
     // private readonly IOpenStoreDomainEventNotifier _domainEventNotifier;
 
@@ -83,7 +84,7 @@ public class EventSourcingRepository<TAggregate, TSnapshot> : IEventSourcingRepo
 
         var item = await _eventStorageProvider.GetLastEventAsync(aggregate.Id);
 
-        if (item != null && expectedVersion == (int) StreamState.NoStream)
+        if (item != null && expectedVersion == (int)StreamState.NoStream)
         {
             throw new AggregateCreationException($"Aggregate {item.Id} can't be created as it already exists with version {item.Version + 1}");
         }
@@ -125,7 +126,7 @@ public class EventSourcingRepository<TAggregate, TSnapshot> : IEventSourcingRepo
                     aggregate.Version % _snapshotStorageProvider.SnapshotFrequency < changesToCommit.Count ||
                     aggregate.Version % _snapshotStorageProvider.SnapshotFrequency == 0
                 )
-            )
+               )
             {
                 var snapshot = snapshottable.TakeSnapshot();
                 await _snapshotStorageProvider.SaveSnapshotAsync(snapshot);

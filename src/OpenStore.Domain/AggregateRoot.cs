@@ -5,5 +5,4 @@ namespace OpenStore.Domain;
 /// </summary>
 public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
 {
-        
 }

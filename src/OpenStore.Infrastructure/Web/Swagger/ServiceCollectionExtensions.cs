@@ -11,20 +11,21 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Adds OpenStore module swagger services for only development purpose
     /// </summary>
-    public static IServiceCollection AddOpenStoreSwaggerForModule<TModuleAnyClass>(this IServiceCollection services, IWebHostEnvironment environment, string name, string version = "v1")
+    public static IServiceCollection AddOpenStoreSwaggerForModule<TModuleAnyClass>(this IServiceCollection services, IWebHostEnvironment environment, string name,
+        string version = "v1")
     {
         if (!environment.IsDevelopment())
         {
             return services;
         }
-            
+
         var assembly = typeof(TModuleAnyClass).Assembly;
         services.AddSwaggerGen(c =>
         {
             c.SwaggerGeneratorOptions.DocInclusionPredicate = (docName, apiDesc) => (apiDesc.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
                                                                                     && controllerActionDescriptor.ControllerTypeInfo.Assembly == assembly;
 
-            c.SwaggerDoc(name, new OpenApiInfo {Title = $"OpenStore - {name}", Version = version});
+            c.SwaggerDoc(name, new OpenApiInfo { Title = $"OpenStore - {name}", Version = version });
             c.AddSecurityDefinition(name, new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",

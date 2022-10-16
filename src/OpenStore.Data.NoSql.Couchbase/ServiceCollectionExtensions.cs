@@ -12,7 +12,8 @@ namespace OpenStore.Data.NoSql.Couchbase;
 // todo: support outbox
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddCouchbaseDataInfrastructure(this IServiceCollection services, Action<ClusterOptions> couchbaseSettingsBuilder, string bucketname, params Assembly[] assemblies)
+    public static IServiceCollection AddCouchbaseDataInfrastructure(this IServiceCollection services, Action<ClusterOptions> couchbaseSettingsBuilder, string bucketname,
+        params Assembly[] assemblies)
     {
         services.Configure(couchbaseSettingsBuilder);
         services.AddCouchbase(couchbaseSettingsBuilder);
@@ -46,7 +47,7 @@ public static class ServiceCollectionExtensions
                     .AsImplementedInterfaces()
                     .WithScopedLifetime()
                     ;
-                      
+
                 scan
                     .FromAssemblies(assemblies)
                     //
@@ -54,7 +55,7 @@ public static class ServiceCollectionExtensions
                     .AsImplementedInterfaces()
                     .WithScopedLifetime()
                     ;
-                    
+
                 scan
                     .FromAssemblies(assemblies)
                     //
@@ -62,7 +63,6 @@ public static class ServiceCollectionExtensions
                     .AsImplementedInterfaces()
                     .WithScopedLifetime()
                     ;
-                
             });
         }
 
@@ -74,7 +74,7 @@ public static class ServiceCollectionExtensions
             // .AddScoped(typeof(ITransactionalRepository<>), typeof(CouchbaseRepository<>))
             // .AddScoped(typeof(IQueryableRepository<>), typeof(CouchbaseRepository<>))
             ;
-            
+
         // Crud services
         services
             .AddScoped(typeof(ICrudService<,>), typeof(CouchbaseCrudService<,>))

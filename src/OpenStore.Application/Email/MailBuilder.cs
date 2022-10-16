@@ -46,9 +46,10 @@ public class MailBuilder
         {
             _message.CC.Add(new MailAddress(email));
         }
+
         return this;
     }
-        
+
     public MailBuilder AddBcc(MailAddress bccAddress)
     {
         _message.Bcc.Add(bccAddress);
@@ -61,9 +62,10 @@ public class MailBuilder
         {
             _message.Bcc.Add(new MailAddress(email));
         }
+
         return this;
     }
-        
+
     public MailBuilder AddReplyTo(MailAddress replyToAddress)
     {
         _message.ReplyToList.Add(replyToAddress);
@@ -88,6 +90,7 @@ public class MailBuilder
         {
             _message.To.Add(new MailAddress(email));
         }
+
         return this;
     }
 

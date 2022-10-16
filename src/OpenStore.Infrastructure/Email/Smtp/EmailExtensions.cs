@@ -236,12 +236,12 @@ internal static class EmailExtensions
 
         return part;
     }
-        
+
     private static MailboxAddress ToMailboxAddress(this MailAddress address)
     {
         return address == null ? null : new MailboxAddress(address.DisplayName, address.Address);
     }
-        
+
     private static InternetAddressList ToInternetAddressList(this MailAddressCollection addresses)
     {
         if (addresses == null)

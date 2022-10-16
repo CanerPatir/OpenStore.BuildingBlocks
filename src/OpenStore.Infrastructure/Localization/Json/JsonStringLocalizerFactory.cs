@@ -40,5 +40,4 @@ public class JsonStringLocalizerFactory : IStringLocalizerFactory
         return _cache.GetOrAdd(cacheKey,
             new JsonStringLocalizer(cultureInfo, _localizationResourceLoader, _optionsOptions, _loggerFactory.CreateLogger<JsonStringLocalizer>()));
     }
-
 }

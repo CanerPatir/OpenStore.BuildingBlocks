@@ -14,14 +14,14 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         _loggerFactory = loggerFactory;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var requestType = typeof(TRequest);
         var logger = _loggerFactory.CreateLogger(requestType);
         var scopeVariables = new Dictionary<string, object>
         {
-            {OpenStoreConstants.CorrelationIdKey, Guid.NewGuid()},
-            {"IRequest", requestType.Name}
+            { OpenStoreConstants.CorrelationIdKey, Guid.NewGuid() },
+            { "IRequest", requestType.Name }
         };
         var scope = logger.BeginScope(scopeVariables);
         logger.LogDebug("Handling");
@@ -37,6 +37,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
             {
                 logger.LogError(e.Demystify(), "Handling error");
             }
+
             throw;
         }
         finally

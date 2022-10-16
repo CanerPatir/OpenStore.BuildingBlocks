@@ -1,5 +1,3 @@
-
-
 // ReSharper disable MemberCanBeProtected.Global
 
 namespace OpenStore.Domain;

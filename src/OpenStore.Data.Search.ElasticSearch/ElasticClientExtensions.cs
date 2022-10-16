@@ -95,7 +95,7 @@ public static class ElasticClientExtensions
         await elasticClient.ClearScrollAsync(new ClearScrollRequest(scrollId), cancellationToken);
         return results;
     }
-        
+
     public static async Task CreateIndexWithMapping<T>(this IElasticClient elasticClient, string index, IndexCreateStrategy strategy = IndexCreateStrategy.CreateIfNotExists,
         CancellationToken cancellationToken = default,
         Func<TypeMappingDescriptor<T>, ITypeMapping> mappingDescriptorBuilder = null,
@@ -135,7 +135,7 @@ public static class ElasticClientExtensions
     }
 
     public static async Task CreateIndex<T>(this IElasticClient elasticClient,
-        string index, 
+        string index,
         IndexCreateStrategy strategy = IndexCreateStrategy.CreateIfNotExists,
         CancellationToken cancellationToken = default,
         Action<TypeMappingDescriptor<T>> mappingDescriptorBuilder = null,
@@ -218,8 +218,9 @@ public static class ElasticClientExtensions
         return client.DeleteAsync<TDocument>(id, f => f.Refresh(Refresh.WaitFor), cancellationToken);
     }
 
-    public static Task UpdateAsync<TDocument, TUpdate>(this IElasticClient client, string id, TUpdate updateObject, int retryLevel = 3, CancellationToken cancellationToken = default) 
-        where TDocument : class 
+    public static Task UpdateAsync<TDocument, TUpdate>(this IElasticClient client, string id, TUpdate updateObject, int retryLevel = 3,
+        CancellationToken cancellationToken = default)
+        where TDocument : class
         where TUpdate : class
     {
         return client.UpdateAsync<TDocument, TUpdate>(DocumentPath<TDocument>.Id(id), up => up

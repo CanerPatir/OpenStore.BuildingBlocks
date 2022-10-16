@@ -7,14 +7,18 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
 {
+    using System.Linq;
+    using System.Text;
+    using System.Collections.Generic;
+    using System;
+    
     /// <summary>
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+    #line 1 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
     public partial class RecaptchaV3HiddenInput : RecaptchaV3HiddenInputBase
     {
@@ -24,113 +28,127 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\n<input id=\"");
+            this.Write("\n<input id=\"");
             
-            #line 7 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 7 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Id));
             
             #line default
             #line hidden
-            this.Write("\" name=\"g-recaptcha-response\" type=\"hidden\" value=\"\" />\r\n<script ");
+            this.Write("\" name=\"g-recaptcha-response\" type=\"hidden\" value=\"\" />\n<script ");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
- if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy)) {
+            #line 8 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
+
+    if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy))
+    {
+
             
             #line default
             #line hidden
             this.Write("script-src=\"");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 11 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.ContentSecurityPolicy));
             
             #line default
             #line hidden
             this.Write("\"");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
-}
+            #line 11 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
+
+    }
+
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
- if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy)) {
+            #line 13 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
+
+    if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy))
+    {
+
             
             #line default
             #line hidden
             this.Write("frame-src=\"");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 16 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.ContentSecurityPolicy));
             
             #line default
             #line hidden
             this.Write("\"");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
-}
+            #line 16 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
+
+    }
+
             
             #line default
             #line hidden
             this.Write(" src=\"https://");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 18 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.Site));
             
             #line default
             #line hidden
             this.Write("/recaptcha/api.js?render=");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 18 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.SiteKey));
             
             #line default
             #line hidden
             this.Write("&hl=");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 18 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Language));
             
             #line default
             #line hidden
             this.Write("\" ");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
- if (Model.IsAsync) {
+            #line 18 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
+
+    if (Model.IsAsync)
+    {
+
             
             #line default
             #line hidden
             this.Write("async defer");
             
-            #line 8 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
-}
+            #line 21 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
+
+    }
+
             
             #line default
             #line hidden
-            this.Write(" ></script>\r\n<script>\r\n\tif (typeof grecaptcha !== \'undefined\') {\r\n\t\tgrecaptcha.re" +
-                    "ady(function () {\r\n\t\t\tgrecaptcha.execute(\'");
+            this.Write(" ></script>\n<script>\n\tif (typeof grecaptcha !== 'undefined') {\n\t\tgrecaptcha.ready(function () {\n\t\t\tgrecaptcha.execute('");
             
-            #line 12 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 27 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.SiteKey));
             
             #line default
             #line hidden
-            this.Write("\', { \'action\': \'");
+            this.Write("', { 'action': '");
             
-            #line 12 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 27 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Action));
             
             #line default
             #line hidden
-            this.Write("\' }).then(function (token) {\r\n\t\t\t\tdocument.getElementById(\'");
+            this.Write("' }).then(function (token) {\n\t\t\t\tdocument.getElementById('");
             
-            #line 13 "D:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV3HiddenInput.tt"
+            #line 28 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV3HiddenInput.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Id));
             
             #line default
             #line hidden
-            this.Write("\').value = token;\r\n\t\t\t});\r\n\t\t});\r\n\t}\r\n</script>");
+            this.Write("').value = token;\n\t\t\t});\n\t\t});\n\t}\n</script>");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -146,7 +164,7 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
-        private global::OpenStore.Infrastructure.Web.ReCaptcha.CompilerErrorCollection errorsField;
+        private global::System.CodeDom.Compiler.CompilerErrorCollection errorsField;
         private global::System.Collections.Generic.List<int> indentLengthsField;
         private string currentIndentField = "";
         private bool endsWithNewline;
@@ -174,13 +192,13 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
         /// <summary>
         /// The error collection for the generation process
         /// </summary>
-        public CompilerErrorCollection Errors
+        public System.CodeDom.Compiler.CompilerErrorCollection Errors
         {
             get
             {
                 if ((this.errorsField == null))
                 {
-                    this.errorsField = new global::OpenStore.Infrastructure.Web.ReCaptcha.CompilerErrorCollection();
+                    this.errorsField = new global::System.CodeDom.Compiler.CompilerErrorCollection();
                 }
                 return this.errorsField;
             }
@@ -295,7 +313,7 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
         /// </summary>
         public void Error(string message)
         {
-            CompilerError error = new global::OpenStore.Infrastructure.Web.ReCaptcha.CompilerError();
+            System.CodeDom.Compiler.CompilerError error = new global::System.CodeDom.Compiler.CompilerError();
             error.ErrorText = message;
             this.Errors.Add(error);
         }
@@ -304,7 +322,7 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
         /// </summary>
         public void Warning(string message)
         {
-            CompilerError error = new global::OpenStore.Infrastructure.Web.ReCaptcha.CompilerError();
+            System.CodeDom.Compiler.CompilerError error = new global::System.CodeDom.Compiler.CompilerError();
             error.ErrorText = message;
             error.IsWarning = true;
             this.Errors.Add(error);

@@ -32,7 +32,7 @@ public class MvcErrorMiddleware
 
         var logger = context.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("UseOpenStoreApiExceptionHandling");
         logger.LogError(ex.Demystify(), "OpenStore http request error");
-            
+
         context.Response.Redirect(_errorHandlingPath);
     }
 }

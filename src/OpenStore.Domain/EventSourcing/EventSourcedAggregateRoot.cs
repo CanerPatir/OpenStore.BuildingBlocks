@@ -17,8 +17,8 @@ public abstract class EventSourcedAggregateRoot : AggregateRoot<string>
 
     protected EventSourcedAggregateRoot()
     {
-        Version = (long) StreamState.NoStream;
-        LastCommittedVersion = (long) StreamState.NoStream;
+        Version = (long)StreamState.NoStream;
+        LastCommittedVersion = (long)StreamState.NoStream;
         _eventHandlerCache = ReflectionHelper.FindEventHandlerMethodsInAggregate(GetType());
     }
 

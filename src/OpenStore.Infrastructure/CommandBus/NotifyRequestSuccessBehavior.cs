@@ -15,7 +15,7 @@ public class NotifyRequestSuccessBehavior<TRequest, TResponse> : IPipelineBehavi
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var response = await next();
 
@@ -25,7 +25,7 @@ public class NotifyRequestSuccessBehavior<TRequest, TResponse> : IPipelineBehavi
             var currentUrl = httpContextAccessor?.HttpContext?.GetCurrentUrl();
             var userAgent = httpContextAccessor?.HttpContext?.GetUserAgent();
             var claimsPrincipal = httpContextAccessor?.HttpContext?.User;
-            PublishAndForget((IBaseRequest) request, response is Unit ? null : response, currentUrl, userAgent, claimsPrincipal);
+            PublishAndForget((IBaseRequest)request, response is Unit ? null : response, currentUrl, userAgent, claimsPrincipal);
         }
 
         return response;

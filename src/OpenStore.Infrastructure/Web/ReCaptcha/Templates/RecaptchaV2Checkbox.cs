@@ -7,14 +7,15 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
 {
+    using System;
+    
     /// <summary>
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+    #line 1 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
     public partial class RecaptchaV2Checkbox : RecaptchaV2CheckboxBase
     {
@@ -24,233 +25,273 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\n<div id=\"");
+            this.Write("\n<div id=\"");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 4 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Uid));
             
             #line default
             #line hidden
             this.Write("\" class=\"g-recaptcha\" data-sitekey=\"");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 4 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.SiteKey));
             
             #line default
             #line hidden
             this.Write("\" ");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- if (!string.IsNullOrEmpty(Model.SuccessCallback)) {
+            #line 4 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    if (!string.IsNullOrEmpty(Model.SuccessCallback))
+    {
+
             
             #line default
             #line hidden
             this.Write("data-callback=\"");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 7 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.SuccessCallback));
             
             #line default
             #line hidden
             this.Write("\"");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
-}
+            #line 7 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    }
+
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- if (!string.IsNullOrEmpty(Model.ErrorCallback)) {
+            #line 9 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    if (!string.IsNullOrEmpty(Model.ErrorCallback))
+    {
+
             
             #line default
             #line hidden
             this.Write("data-error-callback=\"");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 12 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.ErrorCallback));
             
             #line default
             #line hidden
             this.Write("\"");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
-}
+            #line 12 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    }
+
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- if (!string.IsNullOrEmpty(Model.ExpiredCallback)) {
+            #line 14 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    if (!string.IsNullOrEmpty(Model.ExpiredCallback))
+    {
+
             
             #line default
             #line hidden
             this.Write("data-expired-callback=\"");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 17 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.ExpiredCallback));
             
             #line default
             #line hidden
             this.Write("\"");
             
-            #line 4 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
-}
+            #line 17 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    }
+
             
             #line default
             #line hidden
-            this.Write("></div>\r\n<script>\r\n\tfunction _");
+            this.Write("></div>\n<script>\n\tfunction _");
             
-            #line 6 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 21 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Uid.ToString().Replace("-", "_")));
             
             #line default
             #line hidden
-            this.Write("() {\r\n\t\tif (typeof grecaptcha !== \'undefined\')\r\n\t\t\tgrecaptcha.render(\'");
+            this.Write("() {\n\t\tif (typeof grecaptcha !== 'undefined')\n\t\t\tgrecaptcha.render('");
             
-            #line 8 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 23 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Uid));
             
             #line default
             #line hidden
-            this.Write("\', {\r\n\t\t\t\t\'sitekey\' : \'");
+            this.Write("', {\n\t\t\t\t'sitekey' : '");
             
-            #line 9 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 24 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.SiteKey));
             
             #line default
             #line hidden
-            this.Write("\',\r\n\t\t\t\t\'theme\' : \'");
+            this.Write("',\n\t\t\t\t'theme' : '");
             
-            #line 10 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 25 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Theme));
             
             #line default
             #line hidden
-            this.Write("\',\r\n\t\t\t\t");
+            this.Write("',\n\t\t\t\t");
             
-            #line 11 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- if (!string.IsNullOrEmpty(Model.SuccessCallback)) { 
+            #line 26 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    if (!string.IsNullOrEmpty(Model.SuccessCallback))
+    {
+
             
             #line default
             #line hidden
-            this.Write("\t\t\t\t\'callback\' : \'");
+            this.Write("\t\t\t\t'callback' : '");
             
-            #line 12 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 30 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.SuccessCallback));
             
             #line default
             #line hidden
-            this.Write("\',\r\n\t\t\t\t");
+            this.Write("',\n\t\t\t\t");
             
-            #line 13 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- } 
+            #line 31 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    }
+
             
             #line default
             #line hidden
             this.Write("\t\t\t\t");
             
-            #line 14 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- if (!string.IsNullOrEmpty(Model.ErrorCallback)) { 
+            #line 34 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    if (!string.IsNullOrEmpty(Model.ErrorCallback))
+    {
+
             
             #line default
             #line hidden
-            this.Write("\t\t\t\t\'error-callback\' : \'");
+            this.Write("\t\t\t\t'error-callback' : '");
             
-            #line 15 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 38 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.ErrorCallback));
             
             #line default
             #line hidden
-            this.Write("\',\r\n\t\t\t\t");
+            this.Write("',\n\t\t\t\t");
             
-            #line 16 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- } 
+            #line 39 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    }
+
             
             #line default
             #line hidden
             this.Write("\t\t\t\t");
             
-            #line 17 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- if (!string.IsNullOrEmpty(Model.ExpiredCallback)) { 
+            #line 42 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    if (!string.IsNullOrEmpty(Model.ExpiredCallback))
+    {
+
             
             #line default
             #line hidden
-            this.Write("\t\t\t\t\'expired-callback\' : \'");
+            this.Write("\t\t\t\t'expired-callback' : '");
             
-            #line 18 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 46 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.ExpiredCallback));
             
             #line default
             #line hidden
-            this.Write("\',\r\n\t\t\t\t");
+            this.Write("',\n\t\t\t\t");
             
-            #line 19 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- } 
+            #line 47 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    }
+
             
             #line default
             #line hidden
-            this.Write("\t\t\t})\r\n\t}\r\n</script>\r\n<script ");
+            this.Write("\t\t\t})\n\t}\n</script>\n<script ");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy)) {
+            #line 53 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy))
+    {
+
             
             #line default
             #line hidden
             this.Write("script-src=\"");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 56 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.ContentSecurityPolicy));
             
             #line default
             #line hidden
             this.Write("\"");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
-}
+            #line 56 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    }
+
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
- if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy)) {
+            #line 58 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy))
+    {
+
             
             #line default
             #line hidden
             this.Write("frame-src=\"");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 61 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.ContentSecurityPolicy));
             
             #line default
             #line hidden
             this.Write("\"");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
-}
+            #line 61 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
+
+    }
+
             
             #line default
             #line hidden
             this.Write(" src=\"https://");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 63 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Settings.Site));
             
             #line default
             #line hidden
             this.Write("/recaptcha/api.js?onload=_");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 63 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Uid.ToString().Replace("-", "_")));
             
             #line default
             #line hidden
             this.Write("&render=explicit&hl=");
             
-            #line 23 "E:\Repository\TimothyMeadows\reCAPTCHA.AspNetCore\reCAPTCHA.AspNetCore\Templates\RecaptchaV2Checkbox.tt"
+            #line 63 "/Users/caner.patir/trendyol-projects/Github/OpenStore.BuildingBlocks/src/OpenStore.Infrastructure/Web/ReCaptcha/Templates/RecaptchaV2Checkbox.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.Language));
             
             #line default
@@ -271,7 +312,7 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;
-        private global::OpenStore.Infrastructure.Web.ReCaptcha.CompilerErrorCollection errorsField;
+        private global::System.CodeDom.Compiler.CompilerErrorCollection errorsField;
         private global::System.Collections.Generic.List<int> indentLengthsField;
         private string currentIndentField = "";
         private bool endsWithNewline;
@@ -299,13 +340,13 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
         /// <summary>
         /// The error collection for the generation process
         /// </summary>
-        public CompilerErrorCollection Errors
+        public System.CodeDom.Compiler.CompilerErrorCollection Errors
         {
             get
             {
                 if ((this.errorsField == null))
                 {
-                    this.errorsField = new global::OpenStore.Infrastructure.Web.ReCaptcha.CompilerErrorCollection();
+                    this.errorsField = new global::System.CodeDom.Compiler.CompilerErrorCollection();
                 }
                 return this.errorsField;
             }
@@ -420,7 +461,7 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
         /// </summary>
         public void Error(string message)
         {
-            CompilerError error = new global::OpenStore.Infrastructure.Web.ReCaptcha.CompilerError();
+            System.CodeDom.Compiler.CompilerError error = new global::System.CodeDom.Compiler.CompilerError();
             error.ErrorText = message;
             this.Errors.Add(error);
         }
@@ -429,7 +470,7 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Templates
         /// </summary>
         public void Warning(string message)
         {
-            CompilerError error = new global::OpenStore.Infrastructure.Web.ReCaptcha.CompilerError();
+            System.CodeDom.Compiler.CompilerError error = new global::System.CodeDom.Compiler.CompilerError();
             error.ErrorText = message;
             error.IsWarning = true;
             this.Errors.Add(error);

@@ -22,7 +22,8 @@ public class ContentJsonLocalizationResourceLoader : IJsonLocalizationResourceLo
         try
         {
             var dictionaries = new Dictionary<CultureInfo, Dictionary<string, string>>();
-            foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(_options.ContentSourcePattern), Path.GetFileName(_options.ContentSourcePattern), SearchOption.TopDirectoryOnly))
+            foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(_options.ContentSourcePattern), Path.GetFileName(_options.ContentSourcePattern),
+                         SearchOption.TopDirectoryOnly))
             {
                 var json = File.ReadAllText(file, Encoding.Default);
 

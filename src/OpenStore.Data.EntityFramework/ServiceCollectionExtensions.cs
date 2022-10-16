@@ -165,7 +165,7 @@ public static class ServiceCollectionExtensions
                         sp.GetRequiredService<IOpenStoreUserContextAccessor>()
                     )
                 );
-            
+
             services.AddHostedService(sp =>
             {
                 var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
@@ -183,7 +183,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IEntityFrameworkCoreUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
             .AddScoped<IUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
             ;
- 
+
         // for generic resolve
         services
             .AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>))

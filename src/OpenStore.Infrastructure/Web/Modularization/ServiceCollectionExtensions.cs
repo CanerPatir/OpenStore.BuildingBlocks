@@ -7,7 +7,6 @@ namespace OpenStore.Infrastructure.Web.Modularization;
 
 public static class ServiceCollectionExtensions
 {
-        
     /// <summary>
     /// Loads controllers with its views just belong given assembly. It is useful for monolith deployment scenario
     /// </summary>
@@ -17,12 +16,12 @@ public static class ServiceCollectionExtensions
     public static IMvcBuilder AddControllersWithViewsForAssemblies(this IServiceCollection services, params Assembly[] assemblies)
     {
         var mvcBuilder = services.AddControllersWithViews();
-           
+
         if (!assemblies.Any()) return mvcBuilder;
-            
-        return ReplaceControllerFeature(new AssemblyBasedControllerFeatureProvider(new HashSet<Assembly>(assemblies)), mvcBuilder) ;
+
+        return ReplaceControllerFeature(new AssemblyBasedControllerFeatureProvider(new HashSet<Assembly>(assemblies)), mvcBuilder);
     }
-        
+
     /// <summary>
     /// Loads controllers just belong given assembly. It is useful for monolith deployment scenario
     /// </summary>
@@ -32,9 +31,9 @@ public static class ServiceCollectionExtensions
     public static IMvcBuilder AddControllersForAssemblies(this IServiceCollection services, params Assembly[] assemblies)
     {
         var mvcBuilder = services.AddControllers();
-           
+
         if (!assemblies.Any()) return mvcBuilder;
-            
+
         return ReplaceControllerFeature(new AssemblyBasedControllerFeatureProvider(new HashSet<Assembly>(assemblies)), mvcBuilder);
     }
 
@@ -51,5 +50,4 @@ public static class ServiceCollectionExtensions
 
         return mvcBuilder;
     }
-
 }

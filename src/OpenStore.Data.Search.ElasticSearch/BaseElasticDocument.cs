@@ -7,7 +7,7 @@ public abstract class BaseElasticDocument
 {
     [Keyword] public string Id { get; set; }
     public long Version { get; set; }
-        
+
     [JsonIgnore] public abstract string Collection { get; } // document type for multi type indexes
     [JsonIgnore] public abstract string IndexName { get; }
 

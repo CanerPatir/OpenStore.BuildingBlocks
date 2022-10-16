@@ -19,7 +19,7 @@ public class Serializer : ISerializer
 
     public T Deserialize<T>(byte[] data) =>
         JsonSerializer.Deserialize<T>(Encoding.UTF8.GetString(data), DefaultSerializerSettings.Value);
-        
+
     public object Deserialize(byte[] data, Type returnType) =>
         JsonSerializer.Deserialize(Encoding.UTF8.GetString(data), returnType, DefaultSerializerSettings.Value);
 }

@@ -29,8 +29,8 @@ public class QueuedTaskTests : WithHost
             await Task.Delay(200, token);
             Interlocked.Increment(ref counter);
         });
-            
-        taskManager.QueueTask( (sp, token) =>
+
+        taskManager.QueueTask((sp, token) =>
         {
             forAssertion.Enqueue("Second");
             Interlocked.Increment(ref counter);
@@ -45,5 +45,4 @@ public class QueuedTaskTests : WithHost
         Assert.Equal("First", first);
         Assert.Equal("Second", second);
     }
-        
 }

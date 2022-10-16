@@ -15,7 +15,7 @@ public class EmbeddedJsonLocalizationResourceLoader : IJsonLocalizationResourceL
     public EmbeddedJsonLocalizationResourceLoader(IOptions<OpenStoreJsonLocalizationOptions> options, ILogger<EmbeddedJsonLocalizationResourceLoader> logger)
     {
         _options = options.Value;
-            
+
         _regex = new Regex(_options.EmbeddedSourceRegexPattern, RegexOptions.Compiled);
         _logger = logger;
     }
@@ -25,7 +25,7 @@ public class EmbeddedJsonLocalizationResourceLoader : IJsonLocalizationResourceL
         try
         {
             var manifestResourceNames = _options.EmbeddedResourceAssembly.GetManifestResourceNames();
-                
+
             var localizationResources = manifestResourceNames.Where(x => _regex.IsMatch(x));
             var dictionaries = new Dictionary<CultureInfo, Dictionary<string, string>>();
             foreach (var resource in localizationResources)

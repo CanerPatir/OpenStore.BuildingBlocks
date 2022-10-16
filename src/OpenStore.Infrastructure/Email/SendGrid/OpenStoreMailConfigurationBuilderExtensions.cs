@@ -13,12 +13,9 @@ public static class OpenStoreMailConfigurationBuilderExtensions
         string configSection = "Mail")
     {
         var services = builder.Services;
-            
-        services.AddSendGrid((sp, options) =>
-        {
-            options.ApiKey = sp.GetRequiredService<IOptions<SendGridSenderConfiguration>>().Value.ApiKey;
-        });
-            
+
+        services.AddSendGrid((sp, options) => { options.ApiKey = sp.GetRequiredService<IOptions<SendGridSenderConfiguration>>().Value.ApiKey; });
+
         services
             .Configure<SendGridSenderConfiguration>(configuration.GetSection(configSection))
             .AddTransient<IAppEmailSender, SendGridEmailSender>();
@@ -31,11 +28,8 @@ public static class OpenStoreMailConfigurationBuilderExtensions
     {
         var services = builder.Services;
 
-        services.AddSendGrid((sp, options) =>
-        {
-            options.ApiKey = sp.GetRequiredService<IOptions<SendGridSenderConfiguration>>().Value.ApiKey;
-        });
-            
+        services.AddSendGrid((sp, options) => { options.ApiKey = sp.GetRequiredService<IOptions<SendGridSenderConfiguration>>().Value.ApiKey; });
+
         services
             .Configure<SendGridSenderConfiguration>(opts =>
             {

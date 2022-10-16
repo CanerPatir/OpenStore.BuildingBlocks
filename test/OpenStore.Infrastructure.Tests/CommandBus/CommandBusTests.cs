@@ -31,7 +31,7 @@ public class CommandBusTests : CommonFixtures.WithIoC
         await mediator.Send(new NotifyingTestRequest());
 
         await Task.Delay(1000);
-            
+
         Assert.Equal(1, Counter);
     }
 }
@@ -46,7 +46,7 @@ public class NotifyingTestRequestHandler : IRequestHandler<NotifyingTestRequest>
         return Unit.Value;
     }
 }
-    
+
 public class RequestSuccessNotificationHandler : INotificationHandler<RequestSuccessNotification>
 {
     public Task Handle(RequestSuccessNotification notification, CancellationToken cancellationToken)

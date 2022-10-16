@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
 
         return services.AddOpenStoreOss(openStoreOssConfig);
     }
-        
+
     public static IServiceCollection AddOpenStoreOss(this IServiceCollection services, OpenStoreOssConfig config)
     {
         return config.Provider switch

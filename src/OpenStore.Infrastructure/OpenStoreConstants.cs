@@ -1,4 +1,3 @@
-
 namespace OpenStore.Infrastructure;
 
 public static class OpenStoreConstants

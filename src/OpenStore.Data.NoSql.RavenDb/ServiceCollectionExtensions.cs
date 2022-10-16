@@ -75,8 +75,8 @@ public static class ServiceCollectionExtensions
             services
                 .AddScoped<IOutBoxStoreService, NullOutBoxStoreService>()
                 .AddScoped<IOutBoxService, NullOutBoxService>();
-        } 
-        
+        }
+
         services
             .AddScoped<IRavenUnitOfWork>(sp => new RavenUnitOfWork(sp.GetRequiredService<IAsyncDocumentSession>()))
             .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IRavenUnitOfWork>());

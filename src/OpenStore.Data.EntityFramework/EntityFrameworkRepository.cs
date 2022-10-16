@@ -21,8 +21,8 @@ public class EntityFrameworkRepository<TAggregateRoot> : Repository<TAggregateRo
 
     public IQueryable<TAggregateRoot> Query => EfUow.Context.Set<TAggregateRoot>();
 
-    public override async Task<TAggregateRoot> GetAsync(object id, CancellationToken token = default) 
-        => await EfUow.Context.Set<TAggregateRoot>().FindAsync(new[] {id}, token);
+    public override async Task<TAggregateRoot> GetAsync(object id, CancellationToken token = default)
+        => await EfUow.Context.Set<TAggregateRoot>().FindAsync(new[] { id }, token);
 
     public override async Task SaveAsync(TAggregateRoot aggregateRoot, CancellationToken token = default)
     {
@@ -30,7 +30,7 @@ public class EntityFrameworkRepository<TAggregateRoot> : Repository<TAggregateRo
         {
             await EfUow.Context.Set<TAggregateRoot>().AddAsync(aggregateRoot, token);
         }
-            
+
         await Uow.SaveChangesAsync(token);
     }
 

@@ -31,12 +31,13 @@ public class ThemeContext : IDisposable
             {
                 TryDisposeProperty(prop.Value as IDisposable);
             }
+
             TryDisposeProperty(Theme as IDisposable);
         }
 
         _disposed = true;
     }
-        
+
     private void TryDisposeProperty(IDisposable obj)
     {
         if (obj == null)

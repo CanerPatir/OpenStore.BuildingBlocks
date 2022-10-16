@@ -21,10 +21,10 @@ public struct ErrorGeneric
     }
 
     internal ErrorGeneric(string prefix, ErrorGeneric existingError)
-    {          
+    {
         Header = string.IsNullOrEmpty(prefix)
             ? existingError.Header
-            : string.IsNullOrEmpty(existingError.Header) 
+            : string.IsNullOrEmpty(existingError.Header)
                 ? prefix
                 : prefix + HeaderSeparator + existingError.Header;
         ErrorResult = existingError.ErrorResult;
@@ -49,5 +49,4 @@ public struct ErrorGeneric
         var start = string.IsNullOrEmpty(Header) ? "" : Header + ": ";
         return start + ErrorResult.ToString();
     }
-
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -14,11 +15,14 @@ public abstract class ModuleStartup
     protected IConfiguration Configuration { get; }
     protected IWebHostEnvironment Environment { get; }
     protected Assembly Assembly => GetType().Assembly;
+
     /// <summary>
     /// Returns true if underlying module is not a sub application
     /// </summary>
     protected bool IsSeparatedService => Assembly.GetEntryAssembly() == Assembly;
+
     protected virtual IEnumerable<string> ModuleSettingFileNames => Enumerable.Empty<string>();
+
     /// <summary>
     /// Returns route prefix of sub application. Returns null if underlying module is not a sub application
     /// </summary>
@@ -31,7 +35,7 @@ public abstract class ModuleStartup
         Configuration = ModuleConfigBuilder.Build(environment, configuration, ModuleSettingFileNames);
         Environment = environment;
     }
-        
+
     public abstract void ConfigureServices(IServiceCollection services);
 
     public abstract void Configure(IApplicationBuilder app, IWebHostEnvironment env);

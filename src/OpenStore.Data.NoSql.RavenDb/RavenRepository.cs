@@ -78,7 +78,7 @@ public class RavenRepository<TAggregateRoot> : Repository<TAggregateRoot>, IRave
             return null;
         }
 
-        var strEntityId = (string) entityId;
+        var strEntityId = (string)entityId;
 
         var collectionName = RavenSession.Advanced.DocumentStore.Conventions.FindCollectionName(typeof(TAggregateRoot));
         var idPrefix = RavenSession.Advanced.DocumentStore.Conventions.TransformTypeCollectionNameToDocumentIdPrefix(collectionName);

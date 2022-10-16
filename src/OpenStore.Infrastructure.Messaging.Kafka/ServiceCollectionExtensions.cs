@@ -42,7 +42,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IOpenStoreProducer, KafkaProducer>();
     }
 
-    public static IServiceCollection AddKafkaConsumer<TConsumer, TMessage>(this IServiceCollection services, string topic, Action<KafkaConsumerOptions> optionsBuilder, int retry = 0)
+    public static IServiceCollection AddKafkaConsumer<TConsumer, TMessage>(this IServiceCollection services, string topic, Action<KafkaConsumerOptions> optionsBuilder,
+        int retry = 0)
         where TConsumer : class, IOpenStoreConsumer<TMessage>
         where TMessage : class
     {
@@ -52,7 +53,8 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddKafkaConsumer<TConsumer, TMessage>(this IServiceCollection services, string topic, IConfigurationSection configurationSection, int retry = 0)
+    public static IServiceCollection AddKafkaConsumer<TConsumer, TMessage>(this IServiceCollection services, string topic, IConfigurationSection configurationSection,
+        int retry = 0)
         where TConsumer : class, IOpenStoreConsumer<TMessage>
         where TMessage : class
     {

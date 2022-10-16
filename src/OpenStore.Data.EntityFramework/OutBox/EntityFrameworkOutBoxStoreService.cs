@@ -13,7 +13,7 @@ public class EntityFrameworkOutBoxStoreService<TDbContext> : OutBoxStoreService
 
     public EntityFrameworkOutBoxStoreService(
         bool outBoxEnabled,
-        TDbContext context, 
+        TDbContext context,
         IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
     {
         _outBoxEnabled = outBoxEnabled;
@@ -26,6 +26,7 @@ public class EntityFrameworkOutBoxStoreService<TDbContext> : OutBoxStoreService
         {
             return;
         }
+
         if (_context is IOutBoxDbContext eventStoreContext)
         {
             await eventStoreContext.OutBoxMessages.AddRangeAsync(WrapEvents(events), cancellationToken);

@@ -9,7 +9,8 @@ public interface IElasticSearchStore
     Task CreateIndex<TDocument>(string index, CancellationToken cancellationToken = default, Action<IndexSettingsDescriptor> indexSettings = default)
         where TDocument : BaseElasticDocument;
 
-    Task IndexManyParallel<TDocument>(string index, IEnumerable<TDocument> documents, Action<BulkIndexDescriptor<TDocument>> indexConfiguration, CancellationToken cancellationToken = default)
+    Task IndexManyParallel<TDocument>(string index, IEnumerable<TDocument> documents, Action<BulkIndexDescriptor<TDocument>> indexConfiguration,
+        CancellationToken cancellationToken = default)
         where TDocument : BaseElasticDocument;
 
     Task<GetResponse<TDocument>> Get<TDocument>(string index, object id, CancellationToken cancellationToken = default)

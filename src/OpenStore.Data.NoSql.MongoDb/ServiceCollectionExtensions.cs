@@ -47,7 +47,7 @@ public static class ServiceCollectionExtensions
             services
                 .AddScoped<IOutBoxService, MongoOutBoxService>()
                 .AddScoped<IOutBoxStoreService, MongoOutBoxStoreService>();
-            
+
             services.AddHostedService(sp =>
             {
                 var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
@@ -66,7 +66,7 @@ public static class ServiceCollectionExtensions
         services
             .AddScoped<IMongoUnitOfWork>(sp => new MongoUnitOfWork(sp.GetRequiredService<IMongoDatabase>()))
             .AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IMongoUnitOfWork>());
-        
+
 
         if (assemblies != null && assemblies.Any())
         {

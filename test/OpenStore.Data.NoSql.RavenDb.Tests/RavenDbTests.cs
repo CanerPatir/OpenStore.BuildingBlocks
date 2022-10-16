@@ -35,10 +35,9 @@ public class RavenDbTests : WithIoC
         {
         }
     }
-        
+
     public class TestDto
     {
-            
     }
 
     private const string TestStoreName = "Test";
@@ -49,10 +48,7 @@ public class RavenDbTests : WithIoC
         var testStore = EmbeddedServer.Instance.GetDocumentStore(TestStoreName);
         services.AddLogging();
         services.AddOpenStoreCore(typeof(RavenDbTests).Assembly);
-        services.AddRavenDbDataInfrastructure(options =>
-        {
-            options.OutBoxEnabled = false;
-        });
+        services.AddRavenDbDataInfrastructure(options => { options.OutBoxEnabled = false; });
         services.AddOpenStoreObjectMapper(configure => { });
         services.AddSingleton<IDocumentStore>(testStore);
     }
@@ -60,7 +56,6 @@ public class RavenDbTests : WithIoC
     [Fact(Skip = "s")]
     public void DiResolve()
     {
-
         // Arrange
 
         // Act
@@ -84,7 +79,7 @@ public class RavenDbTests : WithIoC
         Assert.NotNull(crudService);
     }
 
-        
+
     [Fact(Skip = "s")]
     public async Task Create()
     {
@@ -141,7 +136,7 @@ public class RavenDbTests : WithIoC
         NewServiceScope();
         repo = GetService<IRavenRepository<Test>>();
         var uow = GetService<IUnitOfWork>();
-            
+
         entity = await repo.GetAsync(entity.Id);
         await repo.Delete(entity);
         await uow.SaveChangesAsync();
@@ -181,7 +176,7 @@ public class RavenDbTests : WithIoC
 
         var parameters = new DeleteDatabasesOperation.Parameters
         {
-            DatabaseNames = new[] {TestStoreName},
+            DatabaseNames = new[] { TestStoreName },
             HardDelete = true,
         };
         EmbeddedServer.Instance.GetDocumentStore(TestStoreName).Maintenance.Server.Send(new DeleteDatabasesOperation(parameters));

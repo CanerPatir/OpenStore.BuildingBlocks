@@ -84,21 +84,20 @@ public static class ServiceCollectionExtensions
         {
             throw new ArgumentNullException(nameof(openStoreResxLocalizationOptions.Assembly));
         }
-            
+
         mvcBuilder?
             .AddViewLocalization()
-            .AddDataAnnotationsLocalization(options => {
+            .AddDataAnnotationsLocalization(options =>
+            {
                 options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create("SharedResource", openStoreResxLocalizationOptions.Assembly.FullName);
             });
         if (mvcBuilder != null)
         {
-            services.Replace(ServiceDescriptor.Transient<IViewLocalizer>(sp => new CustomViewLocalizer(sp.GetRequiredService<IHtmlLocalizerFactory>(), openStoreResxLocalizationOptions.Assembly.FullName)));
+            services.Replace(ServiceDescriptor.Transient<IViewLocalizer>(sp =>
+                new CustomViewLocalizer(sp.GetRequiredService<IHtmlLocalizerFactory>(), openStoreResxLocalizationOptions.Assembly.FullName)));
         }
 
-        services.AddLocalization(opt =>
-        {
-            opt.ResourcesPath = openStoreResxLocalizationOptions.ResourcesPath;
-        });
+        services.AddLocalization(opt => { opt.ResourcesPath = openStoreResxLocalizationOptions.ResourcesPath; });
 
         services
             .Configure(optionsBuilder)
@@ -116,7 +115,7 @@ public static class ServiceCollectionExtensions
             })
             .AddSingleton<IOpenStoreLocalizer, OpenStoreLocalizer>()
             ;
-            
+
 
         return services;
     }

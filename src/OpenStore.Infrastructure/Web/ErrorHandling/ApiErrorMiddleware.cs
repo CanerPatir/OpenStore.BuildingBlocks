@@ -57,8 +57,8 @@ public class ApiErrorMiddleware
             ResourceNotFoundException resourceNotFoundException => new OpenStoreWebErrorDto(loc[resourceNotFoundException.Message], ArraySegment<string>.Empty),
             ApplicationException applicationException => new OpenStoreWebErrorDto(loc[applicationException.Message], ArraySegment<string>.Empty),
             DomainException domainException => new OpenStoreWebErrorDto(loc[domainException.Message], ArraySegment<string>.Empty),
-        
-            _ => new OpenStoreWebErrorDto(GenericErrorKey, new[] {GenericErrorKey}),
+
+            _ => new OpenStoreWebErrorDto(GenericErrorKey, new[] { GenericErrorKey }),
         };
 
         context.Response.ContentType = "application/json";

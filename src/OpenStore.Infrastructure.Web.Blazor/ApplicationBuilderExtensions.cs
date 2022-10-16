@@ -20,14 +20,14 @@ public static class ApplicationBuilderExtensions
             {
                 app.UseWebAssemblyDebugging();
             }
-    
+
             first.UsePathBase(path);
             if (!webHostEnvironment.IsDevelopment())
             {
                 // ref: https://docs.telerik.com/blazor-ui/troubleshooting/deployment#reported-issues
                 StaticWebAssetsLoader.UseStaticWebAssets(webHostEnvironment, configuration);
             }
-    
+
             first.UseBlazorFrameworkFiles();
             first.UseStaticFiles();
             first.UseRouting();
@@ -36,10 +36,10 @@ public static class ApplicationBuilderExtensions
             //     context.Response.Headers.Add("blazor-environment", new[] {webHostEnvironment.EnvironmentName});
             //     return next.Invoke();
             // });
-    
+
             first.UseEndpoints(endpoints => { endpoints.MapFallbackToFile(indexHtmlFile ?? "index.html"); });
         });
-    
+
         return app;
     }
 }

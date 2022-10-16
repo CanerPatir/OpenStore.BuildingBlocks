@@ -15,7 +15,7 @@ public static class HttpContextExtensions
     public static string GetUserAgent(this HttpContext httpContext)
     {
         var userAgentHeader = httpContext.Request.Headers[HeaderNames.UserAgent];
-             
+
         return userAgentHeader == StringValues.Empty ? null : userAgentHeader.ToString();
     }
 }

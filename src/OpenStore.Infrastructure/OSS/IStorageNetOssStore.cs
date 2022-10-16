@@ -13,6 +13,6 @@ public interface IStorageNetOssStore : IOpenStoreOss
     public IBlobStorage BlobStorage { get; }
 
     public IAwsS3BlobStorage AsAwsS3();
-        
+
     public IAzureBlobStorage AsAzureBlobStorage();
 }

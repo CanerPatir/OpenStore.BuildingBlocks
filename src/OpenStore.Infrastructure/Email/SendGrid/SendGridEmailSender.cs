@@ -33,16 +33,16 @@ public class SendGridEmailSender : EmailSenderBase, IAppEmailSender
             From = new EmailAddress(mailMessage.From.Address, mailMessage.From.DisplayName),
             Subject = mailMessage.Subject,
         };
-            
+
         if (mailMessage.IsBodyHtml)
         {
             sendGridMessage.HtmlContent = mailMessage.Body;
         }
         else
-        {             
+        {
             sendGridMessage.PlainTextContent = mailMessage.Body;
         }
-            
+
         foreach (var mailAddress in mailMessage.To)
         {
             sendGridMessage.AddTo(mailAddress.Address, mailAddress.DisplayName);
@@ -51,5 +51,5 @@ public class SendGridEmailSender : EmailSenderBase, IAppEmailSender
         return sendGridMessage;
     }
 
-    private bool IsSuccessStatusCode(Response response) => response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= (HttpStatusCode) 299;
+    private bool IsSuccessStatusCode(Response response) => response.StatusCode >= HttpStatusCode.OK && response.StatusCode <= (HttpStatusCode)299;
 }

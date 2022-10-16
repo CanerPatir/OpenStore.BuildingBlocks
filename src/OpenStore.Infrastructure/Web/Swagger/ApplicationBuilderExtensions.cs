@@ -13,7 +13,7 @@ public static class ApplicationBuilderExtensions
         {
             return app;
         }
-            
+
         return app.UseSwagger()
             .UseSwaggerUI(c =>
             {
@@ -21,6 +21,7 @@ public static class ApplicationBuilderExtensions
                 {
                     routePrefix = "/" + routePrefix;
                 }
+
                 c.SwaggerEndpoint($"{routePrefix}/swagger/{name}/swagger.json", $"OpenStore {name} V1");
             });
     }

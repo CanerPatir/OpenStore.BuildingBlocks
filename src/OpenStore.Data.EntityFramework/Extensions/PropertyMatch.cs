@@ -6,7 +6,11 @@ namespace OpenStore.Data.EntityFramework.Extensions;
 /// <summary>
 /// This represents source of the data to go into a method/ctor. It to allow injection of DbContext into access methods
 /// </summary>
-public enum MatchSources { Property, DbContext }
+public enum MatchSources
+{
+    Property,
+    DbContext
+}
 
 /// <summary>
 /// This holds the information on a match between a name/type and a propertyInfo, with a score to set how it did
@@ -18,6 +22,7 @@ public class PropertyMatch
     /// Use "score >= PerfectMatchValue" to check if there is a perfect match
     /// </summary>
     public const double PerfectMatchValue = 0.99999;
+
     /// <summary>
     /// Use "score lessThanOrEqual NoMatchAtAll" to check if there is a perfect match
     /// </summary>
@@ -62,7 +67,7 @@ public class PropertyMatch
     /// <summary>
     /// A Score of 1 means a perfect match. 
     /// </summary>
-    public double Score => (NameMatched ? 0.7 : 0.0) + ((int) TypeMatch / 10.0);
+    public double Score => (NameMatched ? 0.7 : 0.0) + ((int)TypeMatch / 10.0);
 
     /// <summary>
     /// This is the ctor to create a PropertyMatch
@@ -70,10 +75,12 @@ public class PropertyMatch
     /// <param name="nameMatched"></param>
     /// <param name="typeMatch"></param>
     /// <param name="propertyInfo"></param>
-    public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo) 
-        : this(nameMatched, typeMatch, propertyInfo, MatchSources.Property, null) { }
+    public PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo)
+        : this(nameMatched, typeMatch, propertyInfo, MatchSources.Property, null)
+    {
+    }
 
-    internal PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo, 
+    internal PropertyMatch(bool nameMatched, TypeMatchLevels typeMatch, PropertyInfo propertyInfo,
         MatchSources matchSource, Type nonPropertyMatchType)
     {
         NameMatched = nameMatched;
@@ -102,7 +109,7 @@ public class PropertyMatch
         return matchInfo;
     }
 }
-    
+
 /// <summary>
 /// This is the default name/type matching method. You can replace it with your own matcher by 
 /// setting the value of the NameMatcher property in the <see cref="GenericServicesConfig"/> class
@@ -138,7 +145,7 @@ public static class DefaultNameMatcher
         return input.First().ToString().ToUpper() + input.Substring(1);
     }
 }
-    
+
 internal static class SplitterExtension
 {
     private static readonly Regex Reg = new Regex("([a-z,0-9](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", RegexOptions.Compiled);
@@ -153,5 +160,4 @@ internal static class SplitterExtension
     {
         return Reg.Replace(str, "$1 ");
     }
-
 }

@@ -2,7 +2,7 @@ using OpenStore.Domain.EventSourcing;
 
 namespace OpenStore.Data.EventSourcing.EventStore;
 
-public class Session<TAggregate, TSnapshot> : ISession<TAggregate, TSnapshot> 
+public class Session<TAggregate, TSnapshot> : ISession<TAggregate, TSnapshot>
     where TAggregate : EventSourcedAggregateRoot
     where TSnapshot : ISnapshot
 {

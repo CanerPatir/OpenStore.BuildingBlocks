@@ -15,18 +15,18 @@ public static class SerilogExtensions
     {
         webApplicationBuilder.WebHost.ConfigureLogging((context, logging) => logging.ClearProviders());
 
-         webApplicationBuilder.WebHost.UseSerilog((context, loggerConfiguration) => loggerConfiguration.AddDefaults(context.Configuration, context.HostingEnvironment));
+        webApplicationBuilder.WebHost.UseSerilog((context, loggerConfiguration) => loggerConfiguration.AddDefaults(context.Configuration, context.HostingEnvironment));
 
-         return webApplicationBuilder;
-    } 
-    
+        return webApplicationBuilder;
+    }
+
     public static IHostBuilder AddOpenStoreLogging(this IHostBuilder hostBuilder)
     {
         hostBuilder.ConfigureLogging((context, logging) => logging.ClearProviders());
 
         return hostBuilder.UseSerilog((context, loggerConfiguration) => loggerConfiguration.AddDefaults(context.Configuration, context.HostingEnvironment));
-    } 
-        
+    }
+
     // public static IWebHostBuilder AddOpenStoreLogging(this IWebHostBuilder webHostBuilder)
     // {
     //     return webHostBuilder.UseSerilog((context, loggerConfiguration) => loggerConfiguration.AddDefaults(context.Configuration, context.HostingEnvironment));
@@ -36,7 +36,7 @@ public static class SerilogExtensions
     {
         var isX64 = Environment.Is64BitOperatingSystem;
         var isX64Process = Environment.Is64BitProcess;
-            
+
         return loggerConfiguration
             .Enrich.FromLogContext()
             .Enrich.WithProperty("version", Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version)

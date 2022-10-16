@@ -13,7 +13,7 @@ public class JsonStringLocalizer : IStringLocalizer
     private readonly ILogger<JsonStringLocalizer> _logger;
     private readonly OpenStoreJsonLocalizationOptions _options;
 
-    public JsonStringLocalizer(CultureInfo cultureInfo, IJsonLocalizationResourceLoader resourceLoader, 
+    public JsonStringLocalizer(CultureInfo cultureInfo, IJsonLocalizationResourceLoader resourceLoader,
         IOptions<OpenStoreJsonLocalizationOptions> optionsOptions,
         ILogger<JsonStringLocalizer> logger)
     {

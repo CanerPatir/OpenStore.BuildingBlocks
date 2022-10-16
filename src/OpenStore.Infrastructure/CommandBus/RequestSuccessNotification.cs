@@ -17,7 +17,7 @@ public class RequestSuccessNotification : INotification
     }
 
     public IBaseRequest Request { get; }
-        
+
     /// <summary>
     /// Null if does not exist
     /// </summary>

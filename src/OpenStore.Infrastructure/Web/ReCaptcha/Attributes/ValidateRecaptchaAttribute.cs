@@ -19,7 +19,8 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha.Attributes
         /// </summary>
         /// <param name="score">The minimum score you wish to be acceptable for a success.</param>
         /// <param name="errorMessage">Error message you want added to validation model.</param>
-        public ValidateRecaptchaAttribute(double score = 0, string errorMessage = "There was an error validating the google recaptcha response. Please try again, or contact the site owner.")
+        public ValidateRecaptchaAttribute(double score = 0,
+            string errorMessage = "There was an error validating the google recaptcha response. Please try again, or contact the site owner.")
         {
             _minimumScore = score;
             _errorMessage = errorMessage;

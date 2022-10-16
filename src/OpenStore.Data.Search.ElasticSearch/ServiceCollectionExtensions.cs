@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-        
+
     public static IServiceCollection AddElasticSearch(this IServiceCollection services, IConfigurationSection configure)
     {
         services.Configure<ElasticSearchOptions>(configure);

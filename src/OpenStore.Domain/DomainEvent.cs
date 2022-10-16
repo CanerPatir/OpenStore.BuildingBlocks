@@ -8,5 +8,5 @@ public abstract record DomainEvent : IDomainEvent
     }
 
     public string Id { get; }
-    public long Version { get; set; } 
+    public long Version { get; set; }
 }

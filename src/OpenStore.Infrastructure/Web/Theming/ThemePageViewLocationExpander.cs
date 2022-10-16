@@ -10,7 +10,8 @@ public class ThemePageViewLocationExpander : IViewLocationExpander
     {
         if (context.Values.TryGetValue(ThemeKey, out var theme))
         {
-            viewLocations = new[] {
+            viewLocations = new[]
+            {
                 $"/Themes/{theme}/Views/{{1}}/{{0}}.cshtml",
                 $"/Themes/{theme}/Views/Shared/{{0}}.cshtml",
             }.Concat(viewLocations);

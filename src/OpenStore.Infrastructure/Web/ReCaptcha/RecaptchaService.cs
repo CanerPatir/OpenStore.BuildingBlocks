@@ -9,7 +9,7 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha
         public readonly RecaptchaSettings RecaptchaSettings;
         private HttpClient _httpClient;
 
-        public RecaptchaService( IHttpClientFactory httpClientFactory, IOptions<RecaptchaSettings> options)
+        public RecaptchaService(IHttpClientFactory httpClientFactory, IOptions<RecaptchaSettings> options)
         {
             _httpClient = httpClientFactory.CreateClient(RecaptchaServiceCollection.ReCaptchaHttpClientKey);
             RecaptchaSettings = options.Value;
@@ -36,7 +36,8 @@ namespace OpenStore.Infrastructure.Web.ReCaptcha
             if (string.IsNullOrEmpty(responseCode))
                 throw new System.ComponentModel.DataAnnotations.ValidationException("Google recaptcha response is empty?");
 
-            var result = await _httpClient.GetStringAsync($"https://{RecaptchaSettings.Site}/recaptcha/api/siteverify?secret={RecaptchaSettings.SecretKey}&response={responseCode}");
+            var result = await _httpClient.GetStringAsync(
+                $"https://{RecaptchaSettings.Site}/recaptcha/api/siteverify?secret={RecaptchaSettings.SecretKey}&response={responseCode}");
             var captchaResponse = JsonSerializer.Deserialize<RecaptchaResponse>(result);
 
             return captchaResponse;

@@ -10,12 +10,22 @@
 			grecaptcha.render('<#= Model.Id #>', {
 				'sitekey' : '<#= Model.Settings.SiteKey #>',
 				'callback' : _<#= Model.Uid.ToString().Replace("-", "_") #>_,
-				<# if (!string.IsNullOrEmpty(Model.ErrorCallback)) { #>
+				<#
+    if (!string.IsNullOrEmpty(Model.ErrorCallback))
+    {
+#>
 				'error-callback' : '<#= Model.ErrorCallback #>',
-				<# } #>
-				<# if (!string.IsNullOrEmpty(Model.ExpiredCallback)) { #>
+				<#
+    }
+#>
+				<#
+    if (!string.IsNullOrEmpty(Model.ExpiredCallback))
+    {
+#>
 				'expired-callback' : '<#= Model.ExpiredCallback #>',
-				<# } #>
+				<#
+    }
+#>
 			});
 
 			document.getElementById('<#= Model.Id #>').onclick = function(e) {
@@ -27,9 +37,24 @@
 
 	function _<#= Model.Uid.ToString().Replace("-", "_") #>_(token) {
 		document.getElementById('<#= Model.Id #>').form.submit();
-		<# if (!string.IsNullOrEmpty(Model.SuccessCallback)) { #>
+		<#
+    if (!string.IsNullOrEmpty(Model.SuccessCallback))
+    {
+#>
 		<#= Model.SuccessCallback #>(token);
-		<# } #>
+		<#
+    }
+#>
 	}
 </script>
-<script <# if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy)) {#>script-src="<#= Model.Settings.ContentSecurityPolicy #>"<#}#> <# if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy)) {#>frame-src="<#= Model.Settings.ContentSecurityPolicy #>"<#}#> src="https://<#= Model.Settings.Site #>/recaptcha/api.js?onload=_<#= Model.Uid.ToString().Replace("-", "_") #>&render=explicit&hl=<#= Model.Language #>" async defer></script>
+<script <#
+    if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy))
+    {
+#>script-src="<#= Model.Settings.ContentSecurityPolicy #>"<#
+    }
+#> <#
+    if (!string.IsNullOrEmpty(Model.Settings.ContentSecurityPolicy))
+    {
+#>frame-src="<#= Model.Settings.ContentSecurityPolicy #>"<#
+    }
+#> src="https://<#= Model.Settings.Site #>/recaptcha/api.js?onload=_<#= Model.Uid.ToString().Replace("-", "_") #>&render=explicit&hl=<#= Model.Language #>" async defer></script>

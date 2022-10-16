@@ -13,14 +13,16 @@ public enum SpaType
     Angular,
     React
 }
+
 // To learn more about options for serving an Angular SPA from ASP.NET Core,
 // see https://go.microsoft.com/fwlink/?linkid=864501
 public static class ApplicationBuilderExtensions
 {
-    public static IApplicationBuilder UseOpenStoreSpa(this IApplicationBuilder app, string sourcePath, SpaType spaType, string developmentServerProxyUri = null, string npmScript = "start")
+    public static IApplicationBuilder UseOpenStoreSpa(this IApplicationBuilder app, string sourcePath, SpaType spaType, string developmentServerProxyUri = null,
+        string npmScript = "start")
     {
         var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
-            
+
         app.UseSpaStaticFiles();
         if (env.IsDevelopment())
         {
@@ -57,13 +59,15 @@ public static class ApplicationBuilderExtensions
         return app;
     }
 
-    public static IApplicationBuilder UseOpenStoreSpaForPath(this IApplicationBuilder app, string sourcePath, SpaType spaType, PathString pathString, string developmentServerProxyBaseUri = "https://localhost:5001", string npmScript = "start")
+    public static IApplicationBuilder UseOpenStoreSpaForPath(this IApplicationBuilder app, string sourcePath, SpaType spaType, PathString pathString,
+        string developmentServerProxyBaseUri = "https://localhost:5001", string npmScript = "start")
     {
         var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
 
         if (env.IsDevelopment())
         {
-            app.MapWhen(WebPackDevServerMatcher, webpackDevServer => { webpackDevServer.UseSpa(spa => { spa.UseProxyToSpaDevelopmentServer(CombineProxyUri(developmentServerProxyBaseUri, pathString)); }); });
+            app.MapWhen(WebPackDevServerMatcher,
+                webpackDevServer => { webpackDevServer.UseSpa(spa => { spa.UseProxyToSpaDevelopmentServer(CombineProxyUri(developmentServerProxyBaseUri, pathString)); }); });
         }
 
         app.Map(pathString, adminApp =>
@@ -99,7 +103,7 @@ public static class ApplicationBuilderExtensions
     {
         if (proxyBaseUri.EndsWith("/"))
             proxyBaseUri = proxyBaseUri.Remove(proxyBaseUri.Length - 1);
-            
+
         return proxyBaseUri + pathString;
     }
 

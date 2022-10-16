@@ -77,14 +77,14 @@ internal static class ReflectionHelper
 
     public static void InvokeOnAggregate(EventSourcedAggregateRoot aggregate, string methodName, object @event)
     {
-        var method = GetMethod(aggregate.GetType(), methodName, new Type[] {@event.GetType()}); //Find the right method
+        var method = GetMethod(aggregate.GetType(), methodName, new Type[] { @event.GetType() }); //Find the right method
 
         if (method == null)
         {
             throw new AggregateEventOnApplyMethodMissingException($"No event Apply method found on {aggregate.GetType()} for {@event.GetType()}");
         }
 
-        var task = method.Invoke(aggregate, new[] {@event}); //invoke with the event as argument
+        var task = method.Invoke(aggregate, new[] { @event }); //invoke with the event as argument
         if (task != null && task.GetType() == typeof(Task))
             throw new NotSupportedException($"Async event applier not supported on {aggregate.GetType()} for {@event.GetType()}");
     }

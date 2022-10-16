@@ -21,7 +21,7 @@ public abstract class BaseCrudApiController<TEntity, TKey, TDto> : BaseApiContro
     }
 
     [HttpGet]
-    public virtual Task<PagedList<TDto>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize) 
+    public virtual Task<PagedList<TDto>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         => CrudService.GetAll(pageNumber, pageSize, CancellationToken);
 
     [HttpGet("{id}")]

@@ -8,7 +8,8 @@ namespace OpenStore.Infrastructure.Web.Theming;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddThemeSupport(this IServiceCollection services, IConfiguration configuration) => services.AddThemeSupport<ConfigurationThemeResolver>(configuration);
+    public static IServiceCollection AddThemeSupport(this IServiceCollection services, IConfiguration configuration) =>
+        services.AddThemeSupport<ConfigurationThemeResolver>(configuration);
 
     public static IServiceCollection AddThemeSupport<TResolver>(this IServiceCollection services, IConfiguration configuration)
         where TResolver : class, IThemeResolver

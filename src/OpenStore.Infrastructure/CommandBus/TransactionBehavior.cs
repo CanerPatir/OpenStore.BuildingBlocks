@@ -18,7 +18,7 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         if (request is not ITransactionalRequest && request is not ITransactionalRequest<TResponse>) return await next();
 

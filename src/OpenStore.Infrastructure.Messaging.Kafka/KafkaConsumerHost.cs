@@ -65,7 +65,7 @@ public class KafkaConsumerHost<TMessage> : BackgroundService
         {
             using var scope = _serviceScopeFactory.CreateScope();
             var openStoreConsumer = scope.ServiceProvider.GetRequiredService<IOpenStoreConsumer<TMessage>>();
-                
+
             var message = cr.Message.Value;
             if (_retryPolicy != null)
             {

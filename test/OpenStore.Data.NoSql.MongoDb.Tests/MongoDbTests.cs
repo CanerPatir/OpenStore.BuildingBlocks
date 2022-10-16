@@ -41,10 +41,7 @@ public class MongoDbTests : WithIoC
 
         services.AddLogging();
         services.AddOpenStoreCore(typeof(MongoDbTests).Assembly);
-        services.AddMongoDbDataInfrastructure(options =>
-        {
-            options.OutBoxEnabled = false;
-        }, "IntegrationTest");
+        services.AddMongoDbDataInfrastructure(options => { options.OutBoxEnabled = false; }, "IntegrationTest");
         services.AddOpenStoreObjectMapper(configure => { });
         services.AddSingleton(sp => new MongoClient(_runner.ConnectionString));
     }

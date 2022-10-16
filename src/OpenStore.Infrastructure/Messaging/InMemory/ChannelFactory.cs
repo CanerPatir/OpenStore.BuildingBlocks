@@ -13,7 +13,7 @@ public class ChannelFactory : IDisposable
         var messageType = typeof(TMessage);
         if (_channels.TryGetValue(messageType, out var channel))
         {
-            return (Channel<TMessage>) channel;
+            return (Channel<TMessage>)channel;
         }
 
         var createdChannel = Channel.CreateBounded<TMessage>(new BoundedChannelOptions(BoundedCapacity)

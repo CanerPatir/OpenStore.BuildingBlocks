@@ -50,7 +50,7 @@ public class DefaultMailKitSmtpBuilder : IMailKitSmtpBuilder
         {
             throw new Exception("Smtp user name can not be empty.");
         }
-            
+
         if (string.IsNullOrWhiteSpace(SmtpEmailSenderConfiguration.Password))
         {
             throw new Exception("Smtp password can not be empty.");

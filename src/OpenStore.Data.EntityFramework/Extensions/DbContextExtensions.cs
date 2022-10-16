@@ -42,7 +42,8 @@ public static class DbContextExtensions
     /// <param name="config"></param>
     /// <param name="token"></param>
     /// <returns>List of errors, empty if there were no errors</returns>
-    public static async Task<IStatusGeneric> SaveChangesWithValidationAsync(this DbContext context, IOutBoxStoreService outBoxService, IGenericServicesConfig config = null, CancellationToken token = default)
+    public static async Task<IStatusGeneric> SaveChangesWithValidationAsync(this DbContext context, IOutBoxStoreService outBoxService, IGenericServicesConfig config = null,
+        CancellationToken token = default)
     {
         var status = context.ExecuteValidation();
         if (!status.IsValid) return status;
@@ -139,21 +140,22 @@ public static class DbContextExtensions
         {
             if (item.Entity is not ISavingChanges saveEntity) continue;
 
-            if (context is IOutBoxDbContext 
-                && outBoxService is not null 
+            if (context is IOutBoxDbContext
+                && outBoxService is not null
                 && saveEntity.HasUncommittedChanges())
             {
                 var events = saveEntity.GetUncommittedChanges();
-                await outBoxService.StoreMessages(events, cancellationToken);;
+                await outBoxService.StoreMessages(events, cancellationToken);
+                ;
             }
-                
+
             saveEntity.OnSavingChanges();
         }
 
         IStatusGeneric result;
         try
         {
-            result = await context.SaveChangesWithExtrasAsync(config, turnOffChangeTracker,cancellationToken);
+            result = await context.SaveChangesWithExtrasAsync(config, turnOffChangeTracker, cancellationToken);
         }
         catch (DbUpdateConcurrencyException ex)
         {

@@ -40,7 +40,7 @@ public class NoSqlDataSource : IEquatable<NoSqlDataSource>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        return obj.GetType() == GetType() && Equals((NoSqlDataSource) obj);
+        return obj.GetType() == GetType() && Equals((NoSqlDataSource)obj);
     }
 
     public override int GetHashCode()
@@ -48,7 +48,6 @@ public class NoSqlDataSource : IEquatable<NoSqlDataSource>
         return Name != null ? Name.GetHashCode() : 0;
     }
 }
-
 
 public class RavenDbSource : NoSqlDataSource
 {

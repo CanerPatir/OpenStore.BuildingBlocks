@@ -24,7 +24,7 @@ public class DataSeeder<TDbContext>
 
     public static DataSeeder<TDbContext> Create(IServiceProvider serviceProvider) => new DataSeeder<TDbContext>(serviceProvider);
 
-    public  Task Seed(Func<TDbContext, CancellationToken, Task> seedAction, CancellationToken cancellationToken) => Seed((c, p, t) => seedAction(c,t ), cancellationToken);
+    public Task Seed(Func<TDbContext, CancellationToken, Task> seedAction, CancellationToken cancellationToken) => Seed((c, p, t) => seedAction(c, t), cancellationToken);
 
     public async Task Seed(Func<TDbContext, IServiceProvider, CancellationToken, Task> seedAction, CancellationToken cancellationToken)
     {
@@ -37,10 +37,11 @@ public class DataSeeder<TDbContext>
         {
             _logger.LogWarning(e, $"EnsureCreated failed for {GetContextName()}");
         }
+
         var pendingMigrations = await Context.Database.GetPendingMigrationsAsync(cancellationToken);
         try
         {
-            if (pendingMigrations.Any()) 
+            if (pendingMigrations.Any())
                 await Context.Database.MigrateAsync(cancellationToken);
         }
         catch (Exception e)

@@ -10,6 +10,7 @@ public class OpenStoreOssConfig
     public OpenStoreOssProvider Provider { get; set; }
     public FileSystemOssConfig FileSystem { get; set; } = new FileSystemOssConfig();
     public AwsS3OssConfig AwsS3 { get; set; } = new AwsS3OssConfig();
+
     public AzureOssConfig Azure { get; set; } = new AzureOssConfig();
     // public GoogleCloudStorageOssConfig GoogleCloudStorage { get; set; } = new GoogleCloudStorageOssConfig();
 }

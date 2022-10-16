@@ -17,11 +17,11 @@ public static class ApplicationBuilderExtensions
     {
         var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
         app.UseStatusCodePagesWithReExecute(errorHandlingPath, "?statusCode={0}");
-            
-        if (env.IsDevelopment())
-        {
-            return app.UseDeveloperExceptionPage().UseDatabaseErrorPage();
-        }
+
+        // if (env.IsDevelopment())
+        // {
+        //     return app.UseDeveloperExceptionPage().UseDatabaseErrorPage();
+        // }
 
         return app.UseMiddleware<MvcErrorMiddleware>(errorHandlingPath);
     }
@@ -40,5 +40,4 @@ public static class ApplicationBuilderExtensions
     {
         return appBuilder.UseMiddleware<ApiErrorMiddleware>();
     }
-
 }

@@ -28,7 +28,7 @@ public class GenericServicesConfig : IGenericServicesConfig
     public bool DirectAccessValidateOnSave { get; set; }
 
     /// <inheritdoc />
-    public bool DtoAccessValidateOnSave { get; set;  }
+    public bool DtoAccessValidateOnSave { get; set; }
 
     /// <inheritdoc />
     public Func<Exception, DbContext, IStatusGeneric> SaveChangesExceptionHandler { get; set; } = (exception, dbContext) => null; // default is to return null

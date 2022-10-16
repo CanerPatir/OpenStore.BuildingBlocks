@@ -36,7 +36,7 @@ public class EventStoreTests : WithIoC
                 Id = id.ToString()
             };
             stock.ApplyChange(new StockCreate(stock.Id));
-                
+
             return stock;
         }
 
@@ -67,7 +67,6 @@ public class EventStoreTests : WithIoC
         //     embeddedConn.AppendToStreamAsync("testStream", ExpectedVersion.Any,
         //         new EventData(Guid.NewGuid(), "eventType", true, Encoding.UTF8.GetBytes("{\"Foo\":\"Bar\"}"), null)).Wait();
         // }
-       
     }
 
     protected override void ConfigureServices(IServiceCollection services)
@@ -76,7 +75,7 @@ public class EventStoreTests : WithIoC
             .OnDefaultEndpoints()
             .RunInMemory();
         var node = nodeBuilder.Build();
-            
+
         services.AddOpenStoreCore(typeof(EventStoreTests).Assembly);
         services.AddEventStoreDataInfrastructure(settings => { });
         services.AddSingleton<Func<IEventStoreConnection>>(sp => () => EmbeddedEventStoreConnection.Create(node));
@@ -100,7 +99,7 @@ public class EventStoreTests : WithIoC
         Assert.NotNull(eventStorageProvider);
         Assert.NotNull(session);
     }
-        
+
     [Fact(Skip = "todo: ")]
     public async Task Create()
     {

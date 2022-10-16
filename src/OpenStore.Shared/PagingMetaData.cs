@@ -11,7 +11,7 @@ public class PagingMetaData
         CurrentPage = currentPage;
         if (pageSize != null)
         {
-            TotalPages = (int) Math.Ceiling(totalCount / (double) pageSize.Value);
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize.Value);
         }
 
         PageSize = pageSize;

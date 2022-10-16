@@ -120,11 +120,11 @@ public class EntityFrameworkCoreTests : WithEfCore<TestDbContext>
 
         var entity = new TestAggregate("test");
         await repo.SaveAsync(entity);
-            
+
         // Act
         entity.ChangeInventoryCodeAndRegisterEvent("mutated");
         await repo.SaveAsync(entity);
-            
+
         // Assert
         using var scope = NewServiceScope();
         var newRepo = GetService<ITransactionalRepository<TestAggregate>>();

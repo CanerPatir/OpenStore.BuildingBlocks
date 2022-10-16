@@ -8,7 +8,7 @@ namespace OpenStore.Data.EntityFramework.Extensions;
 /// <param name="context">Access to DbContext</param>
 /// <returns></returns>
 public delegate IStatusGeneric BeforeSaveChanges(DbContext context);
-    
+
 /// <summary>
 /// This is the interface for global configuration for GenericServices. 
 /// </summary>

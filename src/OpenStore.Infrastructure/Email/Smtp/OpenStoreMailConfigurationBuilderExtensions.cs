@@ -7,16 +7,16 @@ namespace OpenStore.Infrastructure.Email.Smtp;
 public static class OpenStoreMailConfigurationBuilderExtensions
 {
     public static IOpenStoreMailConfigurationBuilder UseSmtp(this IOpenStoreMailConfigurationBuilder builder,
-        IConfiguration configuration, 
+        IConfiguration configuration,
         string configSection = "Mail")
     {
         var services = builder.Services;
-            
+
         services
             .Configure<SmtpEmailSenderConfiguration>(configuration.GetSection(configSection))
             .AddTransient<IMailKitSmtpBuilder, DefaultMailKitSmtpBuilder>()
             .AddTransient<IAppEmailSender, MailKitEmailSender>();
-            
+
         return builder;
     }
 
@@ -24,7 +24,7 @@ public static class OpenStoreMailConfigurationBuilderExtensions
         SmtpEmailSenderConfiguration smtpEmailSenderConfiguration)
     {
         var services = builder.Services;
-            
+
         services
             .Configure<SmtpEmailSenderConfiguration>(opts =>
             {
@@ -40,7 +40,7 @@ public static class OpenStoreMailConfigurationBuilderExtensions
             })
             .AddTransient<IMailKitSmtpBuilder, DefaultMailKitSmtpBuilder>()
             .AddTransient<IAppEmailSender, MailKitEmailSender>();
-            
+
         return builder;
     }
 }

@@ -12,9 +12,9 @@ public abstract class EventStoreStorageProviderBase
     {
         _serializer = serializer;
     }
-        
+
     protected abstract string GetStreamNamePrefix();
-        
+
     protected string AggregateIdToStreamName(Type t, string id)
     {
         //Ensure first character of type name is in lower case
@@ -26,10 +26,10 @@ public abstract class EventStoreStorageProviderBase
     protected IDomainEvent DeserializeEvent(ResolvedEvent returnedEvent)
     {
         var header = _serializer.Deserialize<EventStoreMetaDataHeader>(returnedEvent.Event.Metadata);
-            
+
         var returnType = Type.GetType(header.ClrType);
 
-        return (IDomainEvent)_serializer.Deserialize(returnedEvent.Event.Data, returnType); 
+        return (IDomainEvent)_serializer.Deserialize(returnedEvent.Event.Data, returnType);
     }
 
     protected EventData SerializeEvent(IDomainEvent @event, long commitNumber)
@@ -49,7 +49,7 @@ public abstract class EventStoreStorageProviderBase
 
         var returnType = Type.GetType(header.ClrType);
 
-        return (TSnapshot) _serializer.Deserialize(returnedEvent.Event.Data, returnType);
+        return (TSnapshot)_serializer.Deserialize(returnedEvent.Event.Data, returnType);
     }
 
     protected EventData SerializeSnapshotEvent<TSnapshot>(TSnapshot snapshot, long commitNumber)
@@ -60,7 +60,7 @@ public abstract class EventStoreStorageProviderBase
             ClrType = GetClrTypeName(snapshot),
             CommitNumber = Convert.ToInt64(commitNumber) // todo: danger
         };
-            
+
         return new EventData(Guid.NewGuid(), snapshot.GetType().Name, true, _serializer.Serialize(snapshot), _serializer.Serialize(header));
     }
 

@@ -47,7 +47,8 @@ public class MongoRepository<TAggregateRoot> : Repository<TAggregateRoot>, IMong
         {
             var version = aggregateRoot.Version;
             aggregateRoot.OnSavingChanges();
-            var result = await MongoCollection.ReplaceOneAsync(MongoUow.Session, x => x.Id == aggregateRoot.Id && x.Version == version, aggregateRoot, new ReplaceOptions() {IsUpsert = false}, token);
+            var result = await MongoCollection.ReplaceOneAsync(MongoUow.Session, x => x.Id == aggregateRoot.Id && x.Version == version, aggregateRoot,
+                new ReplaceOptions() { IsUpsert = false }, token);
             if (!result.IsAcknowledged || result.ModifiedCount == 0)
             {
                 throw new ApplicationException("Document could not be updated");
