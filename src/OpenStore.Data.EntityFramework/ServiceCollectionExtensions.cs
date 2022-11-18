@@ -87,13 +87,14 @@ public static class ServiceCollectionExtensions
                     });
                     break;
                 case EntityFrameworkDataSource.MySql:
-                    options.UseMySql(connStr, ServerVersion.AutoDetect(connStr), dbOpts =>
-                    {
-                        if (!string.IsNullOrWhiteSpace(migrationAssembly))
-                        {
-                            dbOpts.MigrationsAssembly(migrationAssembly);
-                        }
-                    });
+                    throw new NotSupportedException("mysql does not supported");
+                    // options.UseMySql(connStr, ServerVersion.AutoDetect(connStr), dbOpts =>
+                   // {
+                   //     if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                   //     {
+                   //         dbOpts.MigrationsAssembly(migrationAssembly);
+                   //     }
+                   // });
                     break;
                 case EntityFrameworkDataSource.MsSql:
                     options.UseSqlServer(connStr, dbOpts =>
