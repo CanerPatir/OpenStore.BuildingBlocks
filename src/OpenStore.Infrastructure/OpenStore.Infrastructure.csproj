@@ -13,7 +13,7 @@
         <PackageReference Include="Ben.Demystifier" Version="0.4.1" />
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-        <PackageReference Include="MailKit" Version="3.4.2" />
+        <PackageReference Include="MailKit" Version="3.4.3" />
         <PackageReference Include="System.CodeDom" Version="$(NetExtensionsPackageVersion)" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="$(NetExtensionsPackageVersion)" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(NetExtensionsPackageVersion)" />
@@ -28,7 +28,7 @@
         <PackageReference Include="Storage.Net.Microsoft.Azure.Storage" Version="8.1.17" /> 
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
         <PackageReference Include="Polly" Version="7.2.3" />
-        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
         <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
