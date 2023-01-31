@@ -13,10 +13,9 @@ public static class SerilogExtensions
     // TODO: important!! fix module settings for separated service scenarios
     public static WebApplicationBuilder AddOpenStoreLogging(this WebApplicationBuilder webApplicationBuilder)
     {
-        webApplicationBuilder.WebHost.ConfigureLogging((context, logging) => logging.ClearProviders());
-
-        webApplicationBuilder.WebHost.UseSerilog((context, loggerConfiguration) => loggerConfiguration.AddDefaults(context.Configuration, context.HostingEnvironment));
-
+        webApplicationBuilder.Logging.ClearProviders();
+        webApplicationBuilder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration.AddDefaults(context.Configuration, context.HostingEnvironment));
+        
         return webApplicationBuilder;
     }
 

@@ -5,8 +5,9 @@ namespace OpenStore.Infrastructure.Web.Validation;
 
 public static class MvcBuilderExtensions
 {
-    public static IMvcBuilder AddOpenStoreValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null)
+    public static IMvcBuilder AddOpenStoreValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationAutoValidationConfiguration> configurationExpression = null)
     {
-        return mvcBuilder.AddFluentValidation(configurationExpression);
+        mvcBuilder.Services.AddFluentValidationAutoValidation(configurationExpression).AddFluentValidationClientsideAdapters();
+        return mvcBuilder;
     }
 }
