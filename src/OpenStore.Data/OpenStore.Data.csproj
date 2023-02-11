@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Scrutor" Version="4.2.0" />
+        <PackageReference Include="Scrutor" Version="4.2.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(NetExtensionsPackageVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="$(NetExtensionsPackageVersion)" />
     </ItemGroup>
