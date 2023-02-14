@@ -18,7 +18,7 @@ public class EntityFrameworkCoreTests : WithEfCore<TestDbContext>
         services.AddLogging();
         services.AddOpenStoreCore(typeof(EntityFrameworkCoreTests).Assembly);
         services.AddOpenStoreObjectMapper(configure => { });
-        services.AddOpenStoreEfCore<TestDbContext, TestDbContext>("test conn str", EntityFrameworkDataSource.PostgreSql, true);
+        services.AddOpenStoreEfCore<TestDbContext, TestDbContext>(OpenStoreEntityFrameworkSettings.Default);
     }
 
     [Fact]

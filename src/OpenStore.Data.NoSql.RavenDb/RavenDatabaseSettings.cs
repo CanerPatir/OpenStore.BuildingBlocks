@@ -7,4 +7,5 @@ public class RavenDatabaseSettings
     public string CertPath { get; set; }
     public string CertPass { get; set; }
     public bool OutBoxEnabled { get; set; }
+    public int OutBoxFetchSize { get; set; } = 2000;
 }

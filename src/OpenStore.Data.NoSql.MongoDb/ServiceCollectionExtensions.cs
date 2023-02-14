@@ -14,8 +14,6 @@ namespace OpenStore.Data.NoSql.MongoDb;
 
 public static class ServiceCollectionExtensions
 {
-    private const int OutBoxFetchSize = 2000; // todo: make configurable
-
     public static IServiceCollection AddMongoDbDataInfrastructure(
         this IServiceCollection services
         , Action<MongoDbSettings> mongoDbSettingsBuilder
@@ -53,7 +51,7 @@ public static class ServiceCollectionExtensions
                 var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
                 var mongoDbSettings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
 
-                return new OutBoxPollHost(mongoDbSettings.OutBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
+                return new OutBoxPollHost(mongoDbSettings.OutBoxFetchSize, serviceScopeFactory);
             });
         }
         else

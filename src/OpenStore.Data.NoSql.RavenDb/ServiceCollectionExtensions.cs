@@ -63,11 +63,11 @@ public static class ServiceCollectionExtensions
                 .AddScoped<IOutBoxService, RavenOutBoxService>()
                 .AddScoped<IOutBoxStoreService, RavenOutBoxStoreService>();
 
-            services.AddHostedService<OutBoxPollHost>(sp =>
+            services.AddHostedService(sp =>
             {
                 var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
                 var ravenDatabaseSettings = sp.GetRequiredService<IOptions<RavenDatabaseSettings>>().Value;
-                return new OutBoxPollHost(ravenDatabaseSettings.OutBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
+                return new OutBoxPollHost(ravenDatabaseSettings.OutBoxFetchSize, serviceScopeFactory);
             });
         }
         else

@@ -5,28 +5,19 @@ using OpenStore.Domain;
 
 namespace OpenStore.Data.EntityFramework.OutBox;
 
-public class EntityFrameworkOutBoxStoreService<TDbContext> : OutBoxStoreService
-    where TDbContext : DbContext
+public class EntityFrameworkOutBoxStoreService : OutBoxStoreService
 {
-    private readonly bool _outBoxEnabled;
     private readonly DbContext _context;
 
     public EntityFrameworkOutBoxStoreService(
-        bool outBoxEnabled,
-        TDbContext context,
+        DbContext context,
         IOpenStoreUserContextAccessor openStoreUserContextAccessor) : base(openStoreUserContextAccessor)
     {
-        _outBoxEnabled = outBoxEnabled;
         _context = context;
     }
 
     public override async Task StoreMessages(IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)
     {
-        if (_outBoxEnabled is false)
-        {
-            return;
-        }
-
         if (_context is IOutBoxDbContext eventStoreContext)
         {
             await eventStoreContext.OutBoxMessages.AddRangeAsync(WrapEvents(events), cancellationToken);

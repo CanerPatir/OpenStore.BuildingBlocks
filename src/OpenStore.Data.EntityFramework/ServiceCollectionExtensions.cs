@@ -9,34 +9,79 @@ using OpenStore.Data.EntityFramework.Crud;
 using OpenStore.Data.EntityFramework.OutBox;
 using OpenStore.Data.OutBox;
 
+// ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace OpenStore.Data.EntityFramework;
 
 /// <summary>
 /// config json example:
-///   "ActiveConnection": "SqLite",
-///   "ConnectionStrings": {
-///       "SqLite": "Data Source=app.db"
-///   },
+///  Data: {
+///    "ActiveConnection": "SqLite",
+///    "ConnectionStrings": {
+///      "Default": "Data Source=app.db",
+///      "ReadReplica": null
+///    },
+///    "OutBoxEnabled": true,
+///    "OutBoxFetchSize": 2000
+///  }
 /// </summary>
 public static class ServiceCollectionExtensions
 {
-    private const int OutBoxFetchSize = 2000; // todo: make configurable
+    private const string DataConfigurationSectionKey = "Data";
 
     public static EntityFrameworkDataSource GetActiveDataSource(this IConfiguration configuration)
     {
-        var activeConnection = configuration["Data:ActiveConnection"];
+        var activeConnection = configuration[$"{DataConfigurationSectionKey}:{nameof(OpenStoreEntityFrameworkSettings.ActiveConnection)}"];
         return Enum.Parse<EntityFrameworkDataSource>(activeConnection);
     }
 
-    public static string GetActiveConnectionString(this IConfiguration configuration)
+    public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(this IServiceCollection services,
+        IConfiguration configuration,
+        string migrationAssembly = null,
+        Action<DbContextOptionsBuilder> optionsBuilder = null,
+        Assembly[] assemblies = null)
+        where TDbContext : DbContext
+        where TDbContextImplementation : TDbContext
+        where TReadDbContext : DbContext
+        where TReadDbContextImplementation : TReadDbContext
     {
-        var dataSource = configuration.GetActiveDataSource();
-        return configuration[$"Data:ConnectionStrings:{dataSource}"];
+        var openStoreEntityFrameworkConfiguration = configuration.GetSection(DataConfigurationSectionKey).Get<OpenStoreEntityFrameworkSettings>();
+
+        return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(
+            openStoreEntityFrameworkConfiguration,
+            migrationAssembly,
+            optionsBuilder
+        );
     }
 
-    internal static bool GetOutBoxEnabled(this IConfiguration configuration) => bool.Parse(configuration["Data:OutBoxEnabled"]);
+    public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(this IServiceCollection services,
+        OpenStoreEntityFrameworkSettings openStoreEntityFrameworkSettings,
+        string migrationAssembly = null,
+        Action<DbContextOptionsBuilder> optionsBuilder = null,
+        Assembly[] assemblies = null)
+        where TDbContext : DbContext
+        where TDbContextImplementation : TDbContext
+        where TReadDbContext : DbContext
+        where TReadDbContextImplementation : TReadDbContext
+    {
+        if (string.IsNullOrWhiteSpace(openStoreEntityFrameworkSettings.ConnectionStrings.ReadReplica))
+        {
+            throw new InvalidOperationException($"You are trying to configure read replicate database configuration but read replicate connection string wasn't set. " +
+                                                $"Either set {DataConfigurationSectionKey}:{nameof(openStoreEntityFrameworkSettings.ConnectionStrings)}:{nameof(OpenStoreEntityFrameworkSettingsConnectionStrings.ReadReplica)}" +
+                                                $" or call {nameof(AddOpenStoreEfCore)}<TDbContext, TDbContextImplementation> overload.");
+        }
+
+        services.ConfigureDbContext<TReadDbContext, TReadDbContextImplementation>(
+            openStoreEntityFrameworkSettings.ConnectionStrings.ReadReplica,
+            openStoreEntityFrameworkSettings.ActiveConnection,
+            null,
+            optionsBuilder);
+
+        services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(openStoreEntityFrameworkSettings, migrationAssembly, optionsBuilder, assemblies);
+
+        return services;
+    }
 
     public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services,
         IConfiguration configuration,
@@ -46,30 +91,52 @@ public static class ServiceCollectionExtensions
         where TDbContext : DbContext
         where TDbContextImplementation : TDbContext
     {
-        var dataSource = configuration.GetActiveDataSource();
-        var connStr = configuration.GetActiveConnectionString();
-        var outBoxEnabled = configuration.GetOutBoxEnabled();
+        var openStoreEntityFrameworkConfiguration = configuration.GetSection(DataConfigurationSectionKey).Get<OpenStoreEntityFrameworkSettings>();
 
-        return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(connStr, dataSource, outBoxEnabled, migrationAssembly, optionsBuilder);
+        return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(
+            openStoreEntityFrameworkConfiguration,
+            migrationAssembly,
+            optionsBuilder
+        );
     }
 
-    public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(
-        this IServiceCollection services,
-        string connStr,
-        EntityFrameworkDataSource dataSource,
-        bool outBoxEnabled,
+    public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(this IServiceCollection services,
+        OpenStoreEntityFrameworkSettings openStoreEntityFrameworkSettings,
         string migrationAssembly = null,
         Action<DbContextOptionsBuilder> optionsBuilder = null,
         Assembly[] assemblies = null)
         where TDbContext : DbContext
         where TDbContextImplementation : TDbContext
     {
+        services.ConfigureDbContext<TDbContext, TDbContextImplementation>(openStoreEntityFrameworkSettings.ConnectionStrings.Default,
+            openStoreEntityFrameworkSettings.ActiveConnection, migrationAssembly, optionsBuilder);
+        services.ConfigureDataServices<TDbContext>(assemblies);
+        services.ConfigureOutBox<TDbContext>(openStoreEntityFrameworkSettings);
+
+        return services;
+    }
+
+    #region privates
+
+    private static void ConfigureDbContext<TDbContext, TDbContextImplementation>(this IServiceCollection services,
+        string connectionString,
+        EntityFrameworkDataSource activeConnection,
+        string migrationAssembly,
+        Action<DbContextOptionsBuilder> optionsBuilder)
+        where TDbContext : DbContext
+        where TDbContextImplementation : TDbContext
+    {
         services.AddDbContextPool<TDbContext, TDbContextImplementation>((sp, options) =>
         {
-            switch (dataSource)
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("Default connection string could not be null or empty.");
+            }
+
+            switch (activeConnection)
             {
                 case EntityFrameworkDataSource.SqLite:
-                    options.UseSqlite(connStr, dbOpts =>
+                    options.UseSqlite(connectionString, dbOpts =>
                     {
                         if (!string.IsNullOrWhiteSpace(migrationAssembly))
                         {
@@ -78,7 +145,7 @@ public static class ServiceCollectionExtensions
                     });
                     break;
                 case EntityFrameworkDataSource.PostgreSql:
-                    options.UseNpgsql(connStr, dbOpts =>
+                    options.UseNpgsql(connectionString, dbOpts =>
                     {
                         if (!string.IsNullOrWhiteSpace(migrationAssembly))
                         {
@@ -87,7 +154,7 @@ public static class ServiceCollectionExtensions
                     });
                     break;
                 case EntityFrameworkDataSource.MySql:
-                    options.UseMySql(connStr, ServerVersion.AutoDetect(connStr), dbOpts =>
+                    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), dbOpts =>
                     {
                         if (!string.IsNullOrWhiteSpace(migrationAssembly))
                         {
@@ -96,7 +163,7 @@ public static class ServiceCollectionExtensions
                     });
                     break;
                 case EntityFrameworkDataSource.MsSql:
-                    options.UseSqlServer(connStr, dbOpts =>
+                    options.UseSqlServer(connectionString, dbOpts =>
                     {
                         if (!string.IsNullOrWhiteSpace(migrationAssembly))
                         {
@@ -110,13 +177,9 @@ public static class ServiceCollectionExtensions
 
             optionsBuilder?.Invoke(options);
         });
-
-        AddOpenStoreEfCoreDefaults<TDbContext>(services, outBoxEnabled, assemblies);
-
-        return services;
     }
 
-    private static void AddOpenStoreEfCoreDefaults<TDbContext>(IServiceCollection services, bool outBoxEnabled, Assembly[] assemblies)
+    private static void ConfigureDataServices<TDbContext>(this IServiceCollection services, Assembly[] assemblies)
         where TDbContext : DbContext
     {
         // add repositories automatically
@@ -154,31 +217,6 @@ public static class ServiceCollectionExtensions
                 ;
         });
 
-        if (outBoxEnabled)
-        {
-            services
-                .AddScoped<IOutBoxService, EntityFrameworkOutBoxService>()
-                .AddScoped<IOutBoxStoreService, EntityFrameworkOutBoxStoreService<TDbContext>>(sp =>
-                    new EntityFrameworkOutBoxStoreService<TDbContext>(
-                        outBoxEnabled,
-                        sp.GetRequiredService<TDbContext>(),
-                        sp.GetRequiredService<IOpenStoreUserContextAccessor>()
-                    )
-                );
-
-            services.AddHostedService(sp =>
-            {
-                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                return new OutBoxPollHost(outBoxEnabled, OutBoxFetchSize, serviceScopeFactory);
-            });
-        }
-        else
-        {
-            services
-                .AddScoped<IOutBoxStoreService, NullOutBoxStoreService>()
-                .AddScoped<IOutBoxService, NullOutBoxService>();
-        }
-
         services
             .AddScoped<IEntityFrameworkCoreUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
             .AddScoped<IUnitOfWork, EntityFrameworkUnitOfWork<TDbContext>>()
@@ -195,4 +233,36 @@ public static class ServiceCollectionExtensions
         // Crud services
         services.AddScoped(typeof(ICrudService<,>), typeof(EntityFrameworkCrudService<,>));
     }
+
+    private static void ConfigureOutBox<TDbContext>(this IServiceCollection services,
+        OpenStoreEntityFrameworkSettings openStoreEntityFrameworkSettings)
+        where TDbContext : DbContext
+    {
+        var outBoxEnabled = openStoreEntityFrameworkSettings.OutBoxEnabled;
+        if (outBoxEnabled)
+        {
+            services
+                .AddScoped<IOutBoxService, EntityFrameworkOutBoxService>()
+                .AddScoped<IOutBoxStoreService, EntityFrameworkOutBoxStoreService>(sp =>
+                    new EntityFrameworkOutBoxStoreService(
+                        sp.GetRequiredService<TDbContext>(),
+                        sp.GetRequiredService<IOpenStoreUserContextAccessor>()
+                    )
+                );
+
+            services.AddHostedService(sp =>
+            {
+                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                return new OutBoxPollHost(openStoreEntityFrameworkSettings.OutBoxFetchSize, serviceScopeFactory);
+            });
+        }
+        else
+        {
+            services
+                .AddScoped<IOutBoxStoreService, NullOutBoxStoreService>()
+                .AddScoped<IOutBoxService, NullOutBoxService>();
+        }
+    }
+
+    #endregion
 }
