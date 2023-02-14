@@ -18,7 +18,15 @@ public class EntityFrameworkCoreTests : WithEfCore<TestDbContext>
         services.AddLogging();
         services.AddOpenStoreCore(typeof(EntityFrameworkCoreTests).Assembly);
         services.AddOpenStoreObjectMapper(configure => { });
-        services.AddOpenStoreEfCore<TestDbContext, TestDbContext>(OpenStoreEntityFrameworkSettings.Default);
+
+        var testEfSettings = new OpenStoreEntityFrameworkSettings(
+            EntityFrameworkDataSource.SqLite,
+            new OpenStoreEntityFrameworkSettingsConnectionStrings(
+                "",
+                null
+            ),
+            true);
+        services.AddOpenStoreEfCore<TestDbContext, TestDbContext>(testEfSettings);
     }
 
     [Fact]
@@ -33,6 +41,7 @@ public class EntityFrameworkCoreTests : WithEfCore<TestDbContext>
         var outBoxService = GetService<IOutBoxService>();
         var outBoxStoreService = GetService<IOutBoxStoreService>();
         var uow = GetService<IUnitOfWork>();
+        var dbContext = GetService<TestDbContext>();
         var crudService = GetService<ICrudService<TestAggregate, TestDto>>();
 
         // Assert
@@ -42,10 +51,10 @@ public class EntityFrameworkCoreTests : WithEfCore<TestDbContext>
         Assert.NotNull(outBoxService);
         Assert.NotNull(outBoxStoreService);
         Assert.NotNull(uow);
+        Assert.NotNull(dbContext);
         Assert.NotNull(crudService);
     }
-
-
+    
     [Fact]
     public async Task Create()
     {

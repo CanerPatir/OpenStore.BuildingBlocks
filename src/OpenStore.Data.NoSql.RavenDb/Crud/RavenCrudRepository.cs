@@ -41,9 +41,7 @@ public class RavenCrudRepository<TEntity> : ICrudRepository<TEntity>
         UnitOfWork.Session.Delete(entity);
         return Task.CompletedTask;
     }
-
-    public void Attach(TEntity entity) => throw new NotSupportedException();
-
+    
     public Task SaveChangesAsync(CancellationToken cancellationToken = default) => UnitOfWork.SaveChangesAsync(cancellationToken);
 
     private IRavenQueryable<TEntity> RavenQuery(string indexName = null, string collectionName = null, bool isMapReduce = false)

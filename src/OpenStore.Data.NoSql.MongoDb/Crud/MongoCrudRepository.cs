@@ -47,9 +47,7 @@ public class MongoCrudRepository<TEntity> : ICrudRepository<TEntity>
     }
 
     public Task Remove(TEntity entity) => MongoCollection.DeleteOneAsync(UnitOfWork.Session, x => x.Id == entity.Id);
-
-    public void Attach(TEntity entity) => throw new NotSupportedException();
-
+    
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -1,6 +1,3 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OpenStore.Application.Crud;
 using OpenStore.Domain;
@@ -46,8 +43,6 @@ public class EntityFrameworkCrudRepository<TEntity> : ICrudRepository<TEntity>
         Set.Remove(entity);
         return Task.CompletedTask;
     }
-
-    public void Attach(TEntity entity) => Set.Attach(entity);
-
+    
     public virtual Task SaveChangesAsync(CancellationToken cancellationToken = default) => UnitOfWork.SaveChangesAsync(cancellationToken);
 }

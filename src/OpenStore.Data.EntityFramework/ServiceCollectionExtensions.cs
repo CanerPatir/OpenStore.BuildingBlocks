@@ -7,6 +7,7 @@ using OpenStore.Application.Crud;
 using OpenStore.Domain;
 using OpenStore.Data.EntityFramework.Crud;
 using OpenStore.Data.EntityFramework.OutBox;
+using OpenStore.Data.EntityFramework.ReadOnly;
 using OpenStore.Data.OutBox;
 
 // ReSharper disable UnusedMember.Global
@@ -36,48 +37,39 @@ public static class ServiceCollectionExtensions
         return Enum.Parse<EntityFrameworkDataSource>(activeConnection);
     }
 
-    public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(this IServiceCollection services,
+    public static IServiceCollection AddOpenStoreEfCoreWithReadReplica<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(
+        this IServiceCollection services,
         IConfiguration configuration,
         string migrationAssembly = null,
         Action<DbContextOptionsBuilder> optionsBuilder = null,
         Assembly[] assemblies = null)
         where TDbContext : DbContext
         where TDbContextImplementation : TDbContext
-        where TReadDbContext : DbContext
+        where TReadDbContext : ReadOnlyDbContext
         where TReadDbContextImplementation : TReadDbContext
     {
         var openStoreEntityFrameworkConfiguration = configuration.GetSection(DataConfigurationSectionKey).Get<OpenStoreEntityFrameworkSettings>();
 
-        return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(
+        return services.AddOpenStoreEfCoreWithReadReplica<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(
             openStoreEntityFrameworkConfiguration,
             migrationAssembly,
-            optionsBuilder
+            optionsBuilder,
+            assemblies
         );
     }
 
-    public static IServiceCollection AddOpenStoreEfCore<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(this IServiceCollection services,
+    public static IServiceCollection AddOpenStoreEfCoreWithReadReplica<TDbContext, TDbContextImplementation, TReadDbContext, TReadDbContextImplementation>(
+        this IServiceCollection services,
         OpenStoreEntityFrameworkSettings openStoreEntityFrameworkSettings,
         string migrationAssembly = null,
         Action<DbContextOptionsBuilder> optionsBuilder = null,
         Assembly[] assemblies = null)
         where TDbContext : DbContext
         where TDbContextImplementation : TDbContext
-        where TReadDbContext : DbContext
+        where TReadDbContext : ReadOnlyDbContext
         where TReadDbContextImplementation : TReadDbContext
     {
-        if (string.IsNullOrWhiteSpace(openStoreEntityFrameworkSettings.ConnectionStrings.ReadReplica))
-        {
-            throw new InvalidOperationException($"You are trying to configure read replicate database configuration but read replicate connection string wasn't set. " +
-                                                $"Either set {DataConfigurationSectionKey}:{nameof(openStoreEntityFrameworkSettings.ConnectionStrings)}:{nameof(OpenStoreEntityFrameworkSettingsConnectionStrings.ReadReplica)}" +
-                                                $" or call {nameof(AddOpenStoreEfCore)}<TDbContext, TDbContextImplementation> overload.");
-        }
-
-        services.ConfigureDbContext<TReadDbContext, TReadDbContextImplementation>(
-            openStoreEntityFrameworkSettings.ConnectionStrings.ReadReplica,
-            openStoreEntityFrameworkSettings.ActiveConnection,
-            null,
-            optionsBuilder);
-
+        services.ConfigureReadOnlyDbContext<TReadDbContext, TReadDbContextImplementation>(openStoreEntityFrameworkSettings, optionsBuilder);
         services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(openStoreEntityFrameworkSettings, migrationAssembly, optionsBuilder, assemblies);
 
         return services;
@@ -96,7 +88,8 @@ public static class ServiceCollectionExtensions
         return services.AddOpenStoreEfCore<TDbContext, TDbContextImplementation>(
             openStoreEntityFrameworkConfiguration,
             migrationAssembly,
-            optionsBuilder
+            optionsBuilder,
+            assemblies
         );
     }
 
@@ -108,8 +101,7 @@ public static class ServiceCollectionExtensions
         where TDbContext : DbContext
         where TDbContextImplementation : TDbContext
     {
-        services.ConfigureDbContext<TDbContext, TDbContextImplementation>(openStoreEntityFrameworkSettings.ConnectionStrings.Default,
-            openStoreEntityFrameworkSettings.ActiveConnection, migrationAssembly, optionsBuilder);
+        services.ConfigureDbContext<TDbContext, TDbContextImplementation>(openStoreEntityFrameworkSettings, migrationAssembly, optionsBuilder);
         services.ConfigureDataServices<TDbContext>(assemblies);
         services.ConfigureOutBox<TDbContext>(openStoreEntityFrameworkSettings);
 
@@ -119,8 +111,7 @@ public static class ServiceCollectionExtensions
     #region privates
 
     private static void ConfigureDbContext<TDbContext, TDbContextImplementation>(this IServiceCollection services,
-        string connectionString,
-        EntityFrameworkDataSource activeConnection,
+        OpenStoreEntityFrameworkSettings openStoreEntityFrameworkSettings,
         string migrationAssembly,
         Action<DbContextOptionsBuilder> optionsBuilder)
         where TDbContext : DbContext
@@ -128,55 +119,85 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContextPool<TDbContext, TDbContextImplementation>((sp, options) =>
         {
-            if (string.IsNullOrWhiteSpace(connectionString))
+            var connectionString = openStoreEntityFrameworkSettings.ConnectionStrings.Default;
+            if (connectionString is null)
             {
                 throw new InvalidOperationException("Default connection string could not be null or empty.");
             }
 
-            switch (activeConnection)
-            {
-                case EntityFrameworkDataSource.SqLite:
-                    options.UseSqlite(connectionString, dbOpts =>
-                    {
-                        if (!string.IsNullOrWhiteSpace(migrationAssembly))
-                        {
-                            dbOpts.MigrationsAssembly(migrationAssembly);
-                        }
-                    });
-                    break;
-                case EntityFrameworkDataSource.PostgreSql:
-                    options.UseNpgsql(connectionString, dbOpts =>
-                    {
-                        if (!string.IsNullOrWhiteSpace(migrationAssembly))
-                        {
-                            dbOpts.MigrationsAssembly(migrationAssembly);
-                        }
-                    });
-                    break;
-                case EntityFrameworkDataSource.MySql:
-                    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), dbOpts =>
-                    {
-                        if (!string.IsNullOrWhiteSpace(migrationAssembly))
-                        {
-                            dbOpts.MigrationsAssembly(migrationAssembly);
-                        }
-                    });
-                    break;
-                case EntityFrameworkDataSource.MsSql:
-                    options.UseSqlServer(connectionString, dbOpts =>
-                    {
-                        if (!string.IsNullOrWhiteSpace(migrationAssembly))
-                        {
-                            dbOpts.MigrationsAssembly(migrationAssembly);
-                        }
-                    });
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            SelectProvider(options, connectionString, openStoreEntityFrameworkSettings.ActiveConnection, migrationAssembly);
 
             optionsBuilder?.Invoke(options);
         });
+    }
+
+    private static void ConfigureReadOnlyDbContext<TReadOnlyDbContext, TReadOnlyDbContextImplementation>(this IServiceCollection services,
+        OpenStoreEntityFrameworkSettings openStoreEntityFrameworkSettings,
+        Action<DbContextOptionsBuilder> optionsBuilder)
+        where TReadOnlyDbContext : ReadOnlyDbContext
+        where TReadOnlyDbContextImplementation : TReadOnlyDbContext
+    {
+        services.AddDbContextPool<TReadOnlyDbContext, TReadOnlyDbContextImplementation>((sp, options) =>
+        {
+            var connectionString = openStoreEntityFrameworkSettings.ConnectionStrings.ReadReplica;
+            if (connectionString is null)
+            {
+                throw new InvalidOperationException($"You are trying to configure read replicate database configuration but read replicate connection string wasn't set. " +
+                                                    $"Either set {DataConfigurationSectionKey}:{nameof(openStoreEntityFrameworkSettings.ConnectionStrings)}:{nameof(OpenStoreEntityFrameworkSettingsConnectionStrings.ReadReplica)}" +
+                                                    $" or call {nameof(AddOpenStoreEfCoreWithReadReplica)}<TDbContext, TDbContextImplementation> overload.");
+            }
+
+            SelectProvider(options, connectionString, openStoreEntityFrameworkSettings.ActiveConnection, null);
+
+            optionsBuilder?.Invoke(options);
+        });
+
+        services.AddScoped<ReadOnlyDbContext>(sp => sp.GetRequiredService<TReadOnlyDbContextImplementation>());
+    }
+
+    private static void SelectProvider(DbContextOptionsBuilder options, string connectionString, EntityFrameworkDataSource activeDataSource, string migrationAssembly)
+    {
+        switch (activeDataSource)
+        {
+            case EntityFrameworkDataSource.SqLite:
+                options.UseSqlite(connectionString, dbOpts =>
+                {
+                    if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                    {
+                        dbOpts.MigrationsAssembly(migrationAssembly);
+                    }
+                });
+                break;
+            case EntityFrameworkDataSource.PostgreSql:
+                options.UseNpgsql(connectionString, dbOpts =>
+                {
+                    if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                    {
+                        dbOpts.MigrationsAssembly(migrationAssembly);
+                    }
+                });
+                break;
+            case EntityFrameworkDataSource.MySql:
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), dbOpts =>
+                {
+                    if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                    {
+                        dbOpts.MigrationsAssembly(migrationAssembly);
+                    }
+                });
+                break;
+            case EntityFrameworkDataSource.MsSql:
+                options.UseSqlServer(connectionString, dbOpts =>
+                {
+                    if (!string.IsNullOrWhiteSpace(migrationAssembly))
+                    {
+                        dbOpts.MigrationsAssembly(migrationAssembly);
+                    }
+                });
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     private static void ConfigureDataServices<TDbContext>(this IServiceCollection services, Assembly[] assemblies)
@@ -215,6 +236,14 @@ public static class ServiceCollectionExtensions
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
                 ;
+
+            scan
+                .FromAssemblies(assemblyList)
+                //
+                .AddClasses(classes => classes.AssignableTo(typeof(IReadOnlyRepository<>)))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+                ;
         });
 
         services
@@ -228,6 +257,7 @@ public static class ServiceCollectionExtensions
             .AddScoped(typeof(IEntityFrameworkRepository<>), typeof(EntityFrameworkRepository<>))
             .AddScoped(typeof(ITransactionalRepository<>), typeof(EntityFrameworkRepository<>))
             .AddScoped(typeof(ICrudRepository<>), typeof(EntityFrameworkCrudRepository<>))
+            .AddScoped(typeof(IReadOnlyRepository<>), typeof(EntityFrameworkReadOnlyRepository<>))
             ;
 
         // Crud services
