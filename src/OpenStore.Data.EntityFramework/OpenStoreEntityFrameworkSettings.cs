@@ -4,8 +4,8 @@ namespace OpenStore.Data.EntityFramework;
 
 public record OpenStoreEntityFrameworkSettings(
     EntityFrameworkDataSource ActiveConnection,
-    OpenStoreEntityFrameworkSettingsConnectionStrings ConnectionStrings,
-    bool OutBoxEnabled,
+    OpenStoreEntityFrameworkSettingsConnectionStrings ConnectionStrings = null,
+    bool OutBoxEnabled = false,
     int OutBoxFetchSize = 2000
 );
 
