@@ -9,20 +9,10 @@ public static class ServiceCollectionExtensions
     internal static IServiceCollection AddOpenStoreCommandBus(this IServiceCollection services, ServiceLifetime lifetime, params Assembly[] assemblies)
     {
         return services
-                .AddMediatR(assemblies, conf =>
+                .AddMediatR(conf =>
                 {
-                    switch (lifetime)
-                    {
-                        case ServiceLifetime.Singleton:
-                            conf.AsSingleton();
-                            break;
-                        case ServiceLifetime.Scoped:
-                            conf.AsScoped();
-                            break;
-                        case ServiceLifetime.Transient:
-                            conf.AsTransient();
-                            break;
-                    }
+                    conf.RegisterServicesFromAssemblies(assemblies);
+                    conf.Lifetime = lifetime;
                 })
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(NotifyRequestSuccessBehavior<,>))

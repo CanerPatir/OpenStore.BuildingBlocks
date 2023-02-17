@@ -40,11 +40,7 @@ public record NotifyingTestRequest : INotifySuccessRequest;
 
 public class NotifyingTestRequestHandler : IRequestHandler<NotifyingTestRequest>
 {
-    public async Task<Unit> Handle(NotifyingTestRequest request, CancellationToken cancellationToken)
-    {
-        await Task.Delay(400, cancellationToken);
-        return Unit.Value;
-    }
+    public Task Handle(NotifyingTestRequest request, CancellationToken cancellationToken) => Task.Delay(400, cancellationToken);
 }
 
 public class RequestSuccessNotificationHandler : INotificationHandler<RequestSuccessNotification>
