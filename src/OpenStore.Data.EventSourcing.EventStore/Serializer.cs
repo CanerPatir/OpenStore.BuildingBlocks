@@ -5,7 +5,7 @@ namespace OpenStore.Data.EventSourcing.EventStore;
 
 public class Serializer : ISerializer
 {
-    private Lazy<JsonSerializerOptions> DefaultSerializerSettings => new Lazy<JsonSerializerOptions>(GetSerializerSettings);
+    private Lazy<JsonSerializerOptions> DefaultSerializerSettings => new(GetSerializerSettings);
 
     private JsonSerializerOptions GetSerializerSettings()
     {

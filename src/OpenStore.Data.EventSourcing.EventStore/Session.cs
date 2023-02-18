@@ -8,7 +8,7 @@ public class Session<TAggregate, TSnapshot> : ISession<TAggregate, TSnapshot>
 {
     private readonly IEventSourcingRepository<TAggregate, TSnapshot> _repository;
     private readonly IList<TAggregate> _trackedItems = new List<TAggregate>();
-    private readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1, 1);
+    private readonly SemaphoreSlim _syncLock = new(1, 1);
 
     public Session(IEventSourcingRepository<TAggregate, TSnapshot> repository)
     {

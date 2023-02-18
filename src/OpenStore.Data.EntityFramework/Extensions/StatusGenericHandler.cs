@@ -6,7 +6,7 @@ namespace OpenStore.Data.EntityFramework.Extensions;
 public class StatusGenericHandler : IStatusGeneric
 {
     internal const string DefaultSuccessMessage = "Success";
-    private readonly List<ErrorGeneric> _errors = new List<ErrorGeneric>();
+    private readonly List<ErrorGeneric> _errors = new();
     private string _successMessage = DefaultSuccessMessage;
 
     /// <summary>

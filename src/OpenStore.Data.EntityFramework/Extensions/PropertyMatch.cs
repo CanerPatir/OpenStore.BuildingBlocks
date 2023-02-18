@@ -148,7 +148,7 @@ public static class DefaultNameMatcher
 
 internal static class SplitterExtension
 {
-    private static readonly Regex Reg = new Regex("([a-z,0-9](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", RegexOptions.Compiled);
+    private static readonly Regex Reg = new("([a-z,0-9](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", RegexOptions.Compiled);
 
     /// <summary>
     /// This splits up a string based on capital letters

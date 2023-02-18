@@ -4,9 +4,9 @@ namespace OpenStore.Data.NoSql;
 
 public class NoSqlDataSource : IEquatable<NoSqlDataSource>
 {
-    public static readonly RavenDbSource RavenDb = new RavenDbSource();
-    public static readonly CouchbaseSource Couchbase = new CouchbaseSource();
-    public static readonly MongoDbSource MongoDb = new MongoDbSource();
+    public static readonly RavenDbSource RavenDb = new();
+    public static readonly CouchbaseSource Couchbase = new();
+    public static readonly MongoDbSource MongoDb = new();
 
     protected NoSqlDataSource(string name, bool transactional)
     {

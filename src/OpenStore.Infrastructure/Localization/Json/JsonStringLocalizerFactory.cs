@@ -10,7 +10,7 @@ public class JsonStringLocalizerFactory : IStringLocalizerFactory
 {
     private readonly ILoggerFactory _loggerFactory;
     private readonly IJsonLocalizationResourceLoader _localizationResourceLoader;
-    private readonly ConcurrentDictionary<string, IStringLocalizer> _cache = new ConcurrentDictionary<string, IStringLocalizer>();
+    private readonly ConcurrentDictionary<string, IStringLocalizer> _cache = new();
     private IOptions<OpenStoreJsonLocalizationOptions> _optionsOptions;
 
     public JsonStringLocalizerFactory(ILoggerFactory loggerFactory,

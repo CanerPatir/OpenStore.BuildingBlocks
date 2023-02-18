@@ -6,8 +6,7 @@ namespace OpenStore.Domain.EventSourcing.Internal;
 
 internal static class ReflectionHelper
 {
-    private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<Type, string>> AggregateEventHandlerCache =
-        new ConcurrentDictionary<Type, ConcurrentDictionary<Type, string>>();
+    private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<Type, string>> AggregateEventHandlerCache = new();
 
     public static Dictionary<Type, string> FindEventHandlerMethodsInAggregate(Type aggregateType)
     {

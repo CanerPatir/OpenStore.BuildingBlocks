@@ -6,12 +6,12 @@ namespace OpenStore.Data.EntityFramework.ReadOnly;
 public class EntityFrameworkReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     where TEntity : class, IEntity
 {
-    private readonly ReadOnlyDbContext _context;
+    private readonly DbContext _readonlyContext;
 
-    public EntityFrameworkReadOnlyRepository(ReadOnlyDbContext context)
+    public EntityFrameworkReadOnlyRepository(IReadOnlyDbContext context)
     {
-        _context = context;
+        _readonlyContext = (DbContext)context;
     }
 
-    public IQueryable<TEntity> Query => _context.Set<TEntity>().AsNoTracking();
+    public IQueryable<TEntity> Query => _readonlyContext.Set<TEntity>().AsNoTracking();
 }

@@ -6,7 +6,7 @@ namespace OpenStore.Infrastructure.Messaging.Kafka;
 public class DefaultMessageSerializer<T> : ISerializer<T>, IDeserializer<T>
     where T : class
 {
-    private static readonly JsonSerializerOptions Options = new JsonSerializerOptions();
+    private static readonly JsonSerializerOptions Options = new();
 
     public byte[] Serialize(T data, SerializationContext context)
     {

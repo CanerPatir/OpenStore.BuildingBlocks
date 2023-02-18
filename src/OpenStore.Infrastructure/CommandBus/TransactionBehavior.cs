@@ -6,7 +6,8 @@ using OpenStore.Domain;
 
 namespace OpenStore.Infrastructure.CommandBus;
 
-public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;

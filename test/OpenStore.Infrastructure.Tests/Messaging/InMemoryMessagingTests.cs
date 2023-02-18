@@ -72,7 +72,7 @@ public class InMemoryMessagingTests : WithHost
     }
 
     public int assertionCounter = 0;
-    public List<TestMessage> assertionItems = new List<TestMessage>();
+    public List<TestMessage> assertionItems = new();
 
     [Fact]
     public async Task It_should_process_messages_with_single_consumer()

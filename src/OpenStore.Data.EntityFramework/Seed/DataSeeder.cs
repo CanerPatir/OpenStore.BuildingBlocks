@@ -22,7 +22,7 @@ public class DataSeeder<TDbContext>
         _logger = serviceProvider.GetRequiredService<ILogger<DataSeeder<TDbContext>>>();
     }
 
-    public static DataSeeder<TDbContext> Create(IServiceProvider serviceProvider) => new DataSeeder<TDbContext>(serviceProvider);
+    public static DataSeeder<TDbContext> Create(IServiceProvider serviceProvider) => new(serviceProvider);
 
     public Task Seed(Func<TDbContext, CancellationToken, Task> seedAction, CancellationToken cancellationToken) => Seed((c, p, t) => seedAction(c, t), cancellationToken);
 

@@ -47,6 +47,7 @@ public class EntityFrameworkCoreWithReadReplicaTests : WithEfCore<TestDbContext>
         var dbContext = GetService<TestDbContext>();
         var testReadOnlyDbContext = GetService<TestReadOnlyDbContext>();
         var readOnlyDbContext = GetService<ReadOnlyDbContext>();
+        var iReadOnlyDbContext = GetService<IReadOnlyDbContext>();
         var crudService = GetService<ICrudService<TestAggregate, TestDto>>();
 
         // Assert
@@ -60,6 +61,7 @@ public class EntityFrameworkCoreWithReadReplicaTests : WithEfCore<TestDbContext>
         Assert.NotNull(dbContext);
         Assert.NotNull(testReadOnlyDbContext);
         Assert.NotNull(readOnlyDbContext);
+        Assert.NotNull(iReadOnlyDbContext);
         Assert.NotNull(crudService);
     }
 }

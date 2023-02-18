@@ -6,7 +6,7 @@ public class ChannelFactory : IDisposable
 {
     private readonly IDictionary<Type, object> _channels = new Dictionary<Type, object>();
     private const int BoundedCapacity = 1000; // Creates back pressure to block producer when message count reached capacity 
-    private readonly List<Action> _disposeActions = new List<Action>();
+    private readonly List<Action> _disposeActions = new();
 
     public Channel<TMessage> CreateOrGet<TMessage>()
     {

@@ -8,10 +8,10 @@ namespace OpenStore.Infrastructure.OSS;
 public class OpenStoreOssConfig
 {
     public OpenStoreOssProvider Provider { get; set; }
-    public FileSystemOssConfig FileSystem { get; set; } = new FileSystemOssConfig();
-    public AwsS3OssConfig AwsS3 { get; set; } = new AwsS3OssConfig();
+    public FileSystemOssConfig FileSystem { get; set; } = new();
+    public AwsS3OssConfig AwsS3 { get; set; } = new();
 
-    public AzureOssConfig Azure { get; set; } = new AzureOssConfig();
+    public AzureOssConfig Azure { get; set; } = new();
     // public GoogleCloudStorageOssConfig GoogleCloudStorage { get; set; } = new GoogleCloudStorageOssConfig();
 }
 
@@ -39,7 +39,7 @@ public class AwsS3OssConfig
     public string SecretAccessKey { get; set; }
     public string SessionToken { get; set; }
     public string BucketName { get; set; }
-    public AmazonS3Config AmazonS3Config { get; set; } = new AmazonS3Config();
+    public AmazonS3Config AmazonS3Config { get; set; } = new();
 }
 
 public class AzureOssConfig

@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
         Assembly[] assemblies = null)
         where TDbContext : DbContext
         where TDbContextImplementation : TDbContext
-        where TReadDbContext : ReadOnlyDbContext
+        where TReadDbContext : DbContext, IReadOnlyDbContext
         where TReadDbContextImplementation : TReadDbContext
     {
         var openStoreEntityFrameworkConfiguration = configuration.GetSection(DataConfigurationSectionKey).Get<OpenStoreEntityFrameworkSettings>();
@@ -66,7 +66,7 @@ public static class ServiceCollectionExtensions
         Assembly[] assemblies = null)
         where TDbContext : DbContext
         where TDbContextImplementation : TDbContext
-        where TReadDbContext : ReadOnlyDbContext
+        where TReadDbContext : DbContext, IReadOnlyDbContext
         where TReadDbContextImplementation : TReadDbContext
     {
         services.ConfigureReadOnlyDbContext<TReadDbContext, TReadDbContextImplementation>(openStoreEntityFrameworkSettings, optionsBuilder);
@@ -134,7 +134,7 @@ public static class ServiceCollectionExtensions
     private static void ConfigureReadOnlyDbContext<TReadOnlyDbContext, TReadOnlyDbContextImplementation>(this IServiceCollection services,
         OpenStoreEntityFrameworkSettings openStoreEntityFrameworkSettings,
         Action<DbContextOptionsBuilder> optionsBuilder)
-        where TReadOnlyDbContext : ReadOnlyDbContext
+        where TReadOnlyDbContext : DbContext, IReadOnlyDbContext
         where TReadOnlyDbContextImplementation : TReadOnlyDbContext
     {
         services.AddDbContextPool<TReadOnlyDbContext, TReadOnlyDbContextImplementation>((sp, options) =>
@@ -152,7 +152,12 @@ public static class ServiceCollectionExtensions
             optionsBuilder?.Invoke(options);
         });
 
-        services.AddScoped<ReadOnlyDbContext>(sp => sp.GetRequiredService<TReadOnlyDbContextImplementation>());
+        services.AddScoped<IReadOnlyDbContext>(sp => sp.GetRequiredService<TReadOnlyDbContextImplementation>());
+
+        if (typeof(TReadOnlyDbContextImplementation).IsAssignableTo(typeof(ReadOnlyDbContext)))
+        {
+            services.AddScoped<ReadOnlyDbContext>(sp => sp.GetRequiredService<TReadOnlyDbContextImplementation>() as ReadOnlyDbContext);
+        }
     }
 
     private static void SelectProvider(DbContextOptionsBuilder options, string connectionString, EntityFrameworkDataSource activeDataSource, string migrationAssembly)

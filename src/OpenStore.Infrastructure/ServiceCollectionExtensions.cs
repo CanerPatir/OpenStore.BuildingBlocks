@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
         return services.AddOpenStoreCore(ServiceLifetime.Transient, assemblies);
     }
 
+    // ReSharper disable once MemberCanBePrivate.Global
     public static IServiceCollection AddOpenStoreCore(this IServiceCollection services, ServiceLifetime serviceLifetime, params Assembly[] assemblies)
     {
         return services

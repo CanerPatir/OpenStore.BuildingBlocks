@@ -2,7 +2,7 @@
 
 public class Theme
 {
-    public static Theme Default { get; } = new Theme(nameof(Default));
+    public static Theme Default { get; } = new(nameof(Default));
 
     public Theme(string name)
     {
