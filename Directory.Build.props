@@ -14,8 +14,8 @@
         <LangVersion>latest</LangVersion>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <NetPackagesVersion>7.0.5</NetPackagesVersion>
-        <EfPackageVersion>7.0.5</EfPackageVersion>
+        <NetPackagesVersion>7.0.9</NetPackagesVersion>
+        <EfPackageVersion>7.0.9</EfPackageVersion>
         <!--<Nullable>enable</Nullable>-->
     </PropertyGroup>
 </Project>
