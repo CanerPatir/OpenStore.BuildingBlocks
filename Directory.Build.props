@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>1.3.11</VersionPrefix>
+        <VersionPrefix>1.4.0</VersionPrefix>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Authors>Caner Patir</Authors>
         <Company>Algorist</Company>
@@ -12,10 +12,10 @@
         <PackageLicenseUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks/blob/master/LICENCE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/canerpatir/OpenStore.BuildingBlocks</PackageProjectUrl>
         <LangVersion>latest</LangVersion>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <NetPackagesVersion>7.0.10</NetPackagesVersion>
-        <EfPackageVersion>7.0.10</EfPackageVersion>
+        <NetPackagesVersion>8.0.0</NetPackagesVersion>
+        <EfPackageVersion>8.0.0</EfPackageVersion>
         <!--<Nullable>enable</Nullable>-->
     </PropertyGroup>
 </Project>

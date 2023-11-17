@@ -10,11 +10,11 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="Couchbase.Extensions.DependencyInjection" Version="3.4.10" />
-        <PackageReference Include="CouchbaseNetClient" Version="3.4.10" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+        <PackageReference Include="Couchbase.Extensions.DependencyInjection" Version="3.4.13" />
+        <PackageReference Include="CouchbaseNetClient" Version="3.4.13" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(NetPackagesVersion)" />
     </ItemGroup>
 
 </Project>
