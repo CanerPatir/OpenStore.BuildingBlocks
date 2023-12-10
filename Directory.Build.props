@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>1.4.2</VersionPrefix>
+        <VersionPrefix>1.4.3</VersionPrefix>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Authors>Caner Patir</Authors>
         <Company>Algorist</Company>
