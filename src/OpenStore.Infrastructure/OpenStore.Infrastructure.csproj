@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Description>This package contains abstrctions for general infrastructure concerns. It should be get referance only from infrastructure layers of contexts</Description>
     </PropertyGroup>
-
+ 
     <ItemGroup>
         <PackageReference Include="Scrutor" Version="4.2.2"/>
         <PackageReference Include="AutoMapper" Version="12.0.1"/>
@@ -11,27 +11,23 @@
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
         <PackageReference Include="Ben.Demystifier" Version="0.4.1"/>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0"/>
-        <PackageReference Include="MailKit" Version="4.3.0" />
+        <PackageReference Include="MailKit" Version="4.3.0"/>
         <PackageReference Include="System.CodeDom" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="$(NetPackagesVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(NetPackagesVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="$(NetPackagesVersion)" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="$(NetPackagesVersion)"/>
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="$(NetPackagesVersion)"/>
-        <PackageReference Include="ncrontab" Version="3.3.3" />
+        <PackageReference Include="ncrontab" Version="3.3.3"/>
         <PackageReference Include="RazorLight" Version="2.3.1"/>
         <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1"/>
         <PackageReference Include="Storage.Net" Version="9.3.0"/>
         <PackageReference Include="Storage.Net.Amazon.Aws" Version="9.3.0"/>
         <PackageReference Include="Storage.Net.Microsoft.Azure.Storage" Version="8.1.17"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
-        <PackageReference Include="Polly" Version="8.2.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-        <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.1-dev-00561" />
+        <PackageReference Include="Polly" Version="8.2.1"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="8.0.1"/>
+        <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.1-dev-00561"/>
         <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1"/>
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-        <PackageReference Include="Serilog.Sinks.Graylog" Version="3.1.0" />
-        <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.1-dev-00771" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0"/>
+        <PackageReference Include="Serilog.Sinks.Graylog" Version="3.1.1"/>
+        <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.1-dev-00771"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -13,6 +13,8 @@
         <PackageReference Include="Scrutor" Version="4.2.2" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(NetPackagesVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(NetPackagesVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(NetPackagesVersion)" />
     </ItemGroup>
 
 </Project>
