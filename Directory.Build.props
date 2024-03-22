@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>1.5.1</VersionPrefix>
+        <VersionPrefix>1.5.2</VersionPrefix>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Authors>Caner Patir</Authors>
         <Company>Algorist</Company>
@@ -14,7 +14,7 @@
         <LangVersion>latest</LangVersion>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <NetPackagesVersion>8.0.0</NetPackagesVersion>
+        <NetPackagesVersion>8.0.3</NetPackagesVersion>
         <EfPackageVersion>8.0.3</EfPackageVersion>
         <!--<Nullable>enable</Nullable>-->
     </PropertyGroup>
